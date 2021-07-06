@@ -12,6 +12,7 @@ export const environment = {
 //domio produccion https://proeditsclub.com/Tesis
 //domio produccion http://192.168.0.106/empresa1
 //dominio:"http://ciscunl.info:8080/bolsa_empleo"
+
 //  dominio:"http://localhost:81/bolsa_empleo"
 /*
  * For easier debugging in development mode, you can import the following file
