@@ -132,7 +132,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
             this.booleanFormularioCompletado=false;
           }
       },(peroSiTenemosErro)=>{
-        Swal('Ups', peroSiTenemosErro['mensaje'], 'info')
+        Swal('Información', peroSiTenemosErro['mensaje'], 'info')
     });
 
   }
@@ -192,7 +192,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
           this.booleanFormularioCompletado=true;
           this.formEmpleador.disable();
           }else{
-            Swal('Ups', siHacesBien['error'], 'info')
+            Swal('Información', siHacesBien['error'], 'info')
           }
 
       },(peroSiTenemosErro)=>{

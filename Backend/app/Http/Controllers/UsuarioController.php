@@ -154,8 +154,8 @@ class UsuarioController extends Controller
 
     }
     public function RegistrarEstudiante(Request $request,$external_id){
-        $handle = fopen("logRegistroPostulante.txt", "a");
         if($request->json()){
+            $handle = fopen("logRegistroPostulante.txt", "a");
             $datos=$request->json()->all();
             $ObjUsuario=Usuario::where("external_us",$external_id)
             ->where("tipoUsuario",2)
