@@ -116,7 +116,7 @@ class OfertaLaboralController extends Controller
             return response()->json(["mensaje"=>$ObjOfertasLaborales,
                                         "Siglas"=>"OE",200]);
         } catch (\Throwable $th) {
-            return response()->json(["mensaje"=>$ObjOfertasLaborales,
+            return response()->json(["mensaje"=>$th->getMessage(),
                                     "Siglas"=>"ONE",
                                     "error"=>$th->getMessage(),
                                     400]);
@@ -154,7 +154,7 @@ class OfertaLaboralController extends Controller
             ->where("oferta_laboral.estado",3 )->get();
             return response()->json(["mensaje"=>$ObjOfertasLaborales,"Siglas"=>"OE",200]);
         } catch (\Throwable $th) {
-            return response()->json(["mensaje"=>$ObjOfertasLaborales,"Siglas"=>"ONE","error"=>$th,400]);
+            return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","error"=>$th,400]);
         }
     }
 
@@ -344,8 +344,8 @@ class OfertaLaboralController extends Controller
     }
     private function enviarCorreoGestorOfertaValidada($datos,$ObjUsuario){
         //enviar correo del registro el encargado
-        $texto="";
-        $handle = fopen("logRegistroOfertaLaboral.txt", "a");
+        //$texto="";
+        // $handle = fopen("logRegistroOfertaLaboral.txt", "a");
         $plantillaCorreo=null;
         $enviarCorreoBolean=null;
         $arrayGestor=array();
@@ -375,23 +375,23 @@ class OfertaLaboralController extends Controller
                                             "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                             "correo"=>$value['correo'],
                                             );
-                $texto="[".date("Y-m-d H:i:s")."]"
-                ." Oferta laboral validada por el encargado pendiente de publicar por parte del gestor:: Estado del correo enviado al gestor : "
-                .$enviarCorreoBolean
-                ."::: El Correo del gestor  es: ".$value['correo']
-                ."::: El Correo del empleador es :"
-                .$ObjUsuario->correo." ]";
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
+                // $texto="[".date("Y-m-d H:i:s")."]"
+                // ." Oferta laboral validada por el encargado pendiente de publicar por parte del gestor:: Estado del correo enviado al gestor : "
+                // .$enviarCorreoBolean
+                // ."::: El Correo del gestor  es: ".$value['correo']
+                // ."::: El Correo del empleador es :"
+                // .$ObjUsuario->correo." ]";
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
             }
-            fclose($handle);
+            // fclose($handle);
             return $arrayGestor;
         } catch (\Throwable $th) {
-            $texto="[".date("Y-m-d H:i:s")."]"
-            ." Oferta laboral validada por el encargado pendiente de publicar por parte del gestor ERROR ".$th." ]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            // $texto="[".date("Y-m-d H:i:s")."]"
+            // ." Oferta laboral validada por el encargado pendiente de publicar por parte del gestor ERROR ".$th." ]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
             return $arrayGestor=array("error"=>$th->getMessage());
         }
 
@@ -400,7 +400,7 @@ class OfertaLaboralController extends Controller
     private function enviarCorreoEncargadoOfertaRegistrado($datos,$ObjUsuario){
         //enviar correo del registro el encargado
         $texto="";
-        $handle = fopen("logRegistroOfertaLaboral.txt", "a");
+        // $handle = fopen("logRegistroOfertaLaboral.txt", "a");
         //enviamos registro de postulante al encargado a la secretaria
         $usuarioEncargado=Docente::join("usuario","usuario.id","=","docente.fk_usuario")
         ->select("docente.*","usuario.*")
@@ -431,16 +431,16 @@ class OfertaLaboralController extends Controller
                                         "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                         "correo"=>$value['correo'],
                                         );
-            $texto="[".date("Y-m-d H:i:s")."]"
-            ." Registrar oferta laboral :: Estado del correo enviado al empleador : "
-            .$enviarCorreoBolean
-            ."::: El Correo del encargado  es: ".$value['correo']
-            ."::: El Correo del empleador es :"
-            .$ObjUsuario->correo." ]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
+            // $texto="[".date("Y-m-d H:i:s")."]"
+            // ." Registrar oferta laboral :: Estado del correo enviado al empleador : "
+            // .$enviarCorreoBolean
+            // ."::: El Correo del encargado  es: ".$value['correo']
+            // ."::: El Correo del empleador es :"
+            // .$ObjUsuario->correo." ]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
         }
-        fclose($handle);
+        // fclose($handle);
         return $arrayEncargado;
     }
     private function enviarCorreoEncargadoEstadoOferta($external_oferta,$estadoValidacion){
@@ -468,14 +468,14 @@ class OfertaLaboralController extends Controller
                                                     $usuarioEmpleador['correo'],
                                                     getenv("TITULO_CORREO_PUBLICACION_OFERTA")
                                                 );
-            $texto="[".date("Y-m-d H:i:s")."]"
-            ." Estado de validación de oferta laboral : ".$estadoValidacion."
-            :: Estado del correo enviado al empleador : "
-            .$enviarCorreoBolean
-            ."::: El Correo enviado al empleador es : ".$usuarioEmpleador['correo']."]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            // $texto="[".date("Y-m-d H:i:s")."]"
+            // ." Estado de validación de oferta laboral : ".$estadoValidacion."
+            // :: Estado del correo enviado al empleador : "
+            // .$enviarCorreoBolean
+            // ."::: El Correo enviado al empleador es : ".$usuarioEmpleador['correo']."]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
             //recorrer todos los usuario que sean encargado
             $arrayEmpleador=array("razon_empresa"=>$usuarioEmpleador['razon_empresa'],
                                 "nom_representante_legal"=>$usuarioEmpleador['nom_representante_legal'],
@@ -485,11 +485,11 @@ class OfertaLaboralController extends Controller
             return $arrayEmpleador;
             //code...
         } catch (\Throwable $th) {
-            $texto="[".date("Y-m-d H:i:s")."]"
-            ." Estado de validación de oferta laboral : ".$th->getMessage()." ]";
-            fwrite($handle, $th);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            // $texto="[".date("Y-m-d H:i:s")."]"
+            // ." Estado de validación de oferta laboral : ".$th->getMessage()." ]";
+            // fwrite($handle, $th);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
             return  $th->getMessage();
         }
     }
@@ -499,7 +499,7 @@ class OfertaLaboralController extends Controller
     private function notificarPublicacionOfertaLaboral($datosOFertaLaboral){
         $texto="";
         $arrayCorreoEstudiantes=null;
-        $handle = fopen("logRegistroOfertaLaboral.txt", "a");
+        // $handle = fopen("logRegistroOfertaLaboral.txt", "a");
         try {
             $empleador=OfertasLaborales::join("empleador","empleador.id","oferta_laboral.fk_empleador")
             ->where("oferta_laboral.external_of",$datosOFertaLaboral['external_of'])
@@ -536,23 +536,23 @@ class OfertaLaboralController extends Controller
                     "estadoCorreoEnviadoEmpleador"=>$enviarCorreoBoleanEmpleador
                 );
 
-                $texto="[".date("Y-m-d H:i:s")."]"
-                            ." NOTIFICAR PUBLICACIÓN DE OFERTA LABORAL AL EMPLEADOR Y ESTUDIANTES :
-                            ::Estado de enviar correo a los postulantes: ".$enviarCorreoBolean
-                            ."::: El Correo del postulante  es: ".$value['correo']."
-                            ::: Estado de correo enviado al empleador : ".$enviarCorreoBoleanEmpleador."
-                            El correo del empleador es : ".$datosOFertaLaboral['correoUsuarioEmpleador']." ] ";
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
+                // $texto="[".date("Y-m-d H:i:s")."]"
+                //             ." NOTIFICAR PUBLICACIÓN DE OFERTA LABORAL AL EMPLEADOR Y ESTUDIANTES :
+                //             ::Estado de enviar correo a los postulantes: ".$enviarCorreoBolean
+                //             ."::: El Correo del postulante  es: ".$value['correo']."
+                //             ::: Estado de correo enviado al empleador : ".$enviarCorreoBoleanEmpleador."
+                //             El correo del empleador es : ".$datosOFertaLaboral['correoUsuarioEmpleador']." ] ";
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
             }
-            fclose($handle);
+            // fclose($handle);
             return $arrayCorreoEstudiantes;
         } catch (\Throwable $th) {
-                $texto="[".date("Y-m-d H:i:s")."]"
-                ." NOTIFICAR PUBLICACIÓN DE OFERTA LABORAL AL EMPLEADOR Y ESTUDIANTES ERROR: ".$th."  ]";
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
-                fclose($handle);
+                // $texto="[".date("Y-m-d H:i:s")."]"
+                // ." NOTIFICAR PUBLICACIÓN DE OFERTA LABORAL AL EMPLEADOR Y ESTUDIANTES ERROR: ".$th."  ]";
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
+                // fclose($handle);
             return $arrayCorreoEstudiantes=array("error"=>$th->getMessage());
         }
     }
@@ -561,7 +561,7 @@ class OfertaLaboralController extends Controller
     private function notificarFinalizacionOfertaFormularioSISEG($external_of){
         $empleador=$this->buscarUsuarioEmpleador($external_of);
         $texto="";
-        $handle = fopen("logRegistroOfertaLaboral.txt", "a");
+        // $handle = fopen("logRegistroOfertaLaboral.txt", "a");
         try {
             // notificar al empleador que su oferta laboral esta publicada en la plataforma
             $parrafo="Muchas gracias por participar en este proceso, tu oferta laboral ha finalizado,
@@ -579,24 +579,24 @@ class OfertaLaboralController extends Controller
                                                         $empleador['correo'],
                                                         getenv('TITULO_CORREO_APLICAR_OFERTA'));
 
-            $texto="[".date("Y-m-d H:i:s")."]"
-                    ." LLENAR FORMULARIO DEL SISSEG EMPLEADOR :
-                    ::Estado de enviar correo al empleador : ".$enviarCorreoBoleanEmpleador
-                    ."::: El Correo del empleador  es: ".$empleador['correo']." ] ";
+            // $texto="[".date("Y-m-d H:i:s")."]"
+            //         ." LLENAR FORMULARIO DEL SISSEG EMPLEADOR :
+            //         ::Estado de enviar correo al empleador : ".$enviarCorreoBoleanEmpleador
+            //         ."::: El Correo del empleador  es: ".$empleador['correo']." ] ";
             $arrayCorreoEmpleador=array(
                 "estadoEnviarCorreoEmpleadorSISEG"=>$enviarCorreoBoleanEmpleador,
                 "correoEmpleador"=>$empleador['correo']
             );
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
             return $arrayCorreoEmpleador;
         } catch (\Throwable $th) {
-                $texto="[".date("Y-m-d H:i:s")."]"
-                ." LLENAR FORMULARIO DEL SISSEG EMPLEADOR ERROR: ".$th->getMessage()."  ]";
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
-                fclose($handle);
+                // $texto="[".date("Y-m-d H:i:s")."]"
+                // ." LLENAR FORMULARIO DEL SISSEG EMPLEADOR ERROR: ".$th->getMessage()."  ]";
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
+                // fclose($handle);
             return $arrayCorreoEmpleador=array("error"=>$th->getMessage());
         }
 

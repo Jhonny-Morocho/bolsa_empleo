@@ -39,7 +39,7 @@ class EmpleadorController extends Controller{
 
          if($request->json()){
             $texto="";
-            $handle = fopen("logRegistroEmpleador.txt", "a");
+            //$handle = fopen("logRegistroEmpleador.txt", "a");
             $enviarCorreoBolean=null;
              try {
                  // ACTUALIZAR EL ESTADO DE VALIDACION DEL EMPLEADO
@@ -63,14 +63,14 @@ class EmpleadorController extends Controller{
                         $this
                     ->enviarCorreo($plantillaCorreo,$usuarioEmpleador['correo'],getenv("TITULO_CORREO_EMPLEADOR"));
 
-                    $texto="[".date("Y-m-d H:i:s")."]"
-                    ." Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : "
-                    .$enviarCorreoBolean.
-                    " Correo del empleador ".$usuarioEmpleador['correo'].
-                    " ]";
-                    fwrite($handle, $texto);
-                    fwrite($handle, "\r\n\n\n\n");
-                    fclose($handle);
+                    // $texto="[".date("Y-m-d H:i:s")."]"
+                    // ." Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : "
+                    // .$enviarCorreoBolean.
+                    // " Correo del empleador ".$usuarioEmpleador['correo'].
+                    // " ]";
+                    // fwrite($handle, $texto);
+                    // fwrite($handle, "\r\n\n\n\n");
+                    // fclose($handle);
                 }
                 // NOTIFICAR EL EMPLEADOR LA VALIDACION DEL FORMULARIO
                 if($request['estado']==1){//
@@ -83,14 +83,14 @@ class EmpleadorController extends Controller{
                     $enviarCorreoBolean=$this
                     ->enviarCorreo($plantillaHtmlCorreo,$usuarioEmpleador['correo'],getenv("TITULO_CORREO_EMPLEADOR"));
 
-                    $texto="[".date("Y-m-d H:i:s")."]"
-                    ." Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : "
-                    .$enviarCorreoBolean.
-                    " Correo del empleador ".$usuarioEmpleador['correo'].
-                    " ]";
-                    fwrite($handle, $texto);
-                    fwrite($handle, "\r\n\n\n\n");
-                    fclose($handle);
+                    // $texto="[".date("Y-m-d H:i:s")."]"
+                    // ." Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : "
+                    // .$enviarCorreoBolean.
+                    // " Correo del empleador ".$usuarioEmpleador['correo'].
+                    // " ]";
+                    // fwrite($handle, $texto);
+                    // fwrite($handle, "\r\n\n\n\n");
+                    // fclose($handle);
                 }
                 return response()->json(["mensaje"=>"Registro Actualizado",
                                         "estadoCorreoEnviado"=>$enviarCorreoBolean,
@@ -251,7 +251,7 @@ class EmpleadorController extends Controller{
     private function enviarCorreoEncargadoFormEditadoRegistrado($datos,$ObjUsuario,$parrafo){
             //enviar correo del registro el encargado
             $texto="";
-            $handle = fopen("logRegistroEmpleador.txt", "a");
+            // $handle = fopen("logRegistroEmpleador.txt", "a");
             //enviamos registro de postulante a la secretaria a la secretaria
             $usuarioEncargado=Docente::join("usuario","usuario.id","=","docente.fk_usuario")
             ->select("docente.nombre",
@@ -278,16 +278,16 @@ class EmpleadorController extends Controller{
                                             "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                             "correo"=>$value['correo'],
                                             );
-                $texto="[".date("Y-m-d H:i:s")."]"
-                ." Registro Formulario Empleador:: Estado de correo enviado al empleador : "
-                .$enviarCorreoBolean
-                ."::: Correo del encargado  es: ".$value['correo']
-                ." Correo del empleador es :"
-                .$ObjUsuario->correo." ]";
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
+                // $texto="[".date("Y-m-d H:i:s")."]"
+                // ." Registro Formulario Empleador:: Estado de correo enviado al empleador : "
+                // .$enviarCorreoBolean
+                // ."::: Correo del encargado  es: ".$value['correo']
+                // ." Correo del empleador es :"
+                // .$ObjUsuario->correo." ]";
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
             }
-            fclose($handle);
+            // fclose($handle);
 
             return $arrayEncargado;
     }

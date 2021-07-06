@@ -74,7 +74,7 @@ class DocenteController extends Controller
             ->get();
             return response()->json(["mensaje"=>$objDocente,"Siglas"=>"OE",200,]);
         } catch (\Throwable $th) {
-            return response()->json(["mensaje"=>"Error","Siglas"=>"ONE","error"=>$th->getMessage()]);
+            return response()->json(["mensaje"=> $th->getMessage(),"Siglas"=>"ONE","error"=>$th->getMessage()]);
         }
 
     }
@@ -140,7 +140,7 @@ class DocenteController extends Controller
             ->first();
             return response()->json(["mensaje"=>$objDocente,"Siglas"=>"OE",200,]);
         } catch (\Throwable $th) {
-            return response()->json(["mensaje"=>"Error",
+            return response()->json(["mensaje"=>$th->getMessage(),
             "Siglas"=>"ONE",
             "error"=>$th->getMessage(),
             400]);

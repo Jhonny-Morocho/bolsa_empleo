@@ -155,7 +155,7 @@ class UsuarioController extends Controller
     }
     public function RegistrarEstudiante(Request $request,$external_id){
         if($request->json()){
-            $handle = fopen("logRegistroPostulante.txt", "a");
+            // $handle = fopen("logRegistroPostulante.txt", "a");
             $datos=$request->json()->all();
             $ObjUsuario=Usuario::where("external_us",$external_id)
             ->where("tipoUsuario",2)
@@ -163,7 +163,7 @@ class UsuarioController extends Controller
             //verificar si el external user es igual
             if($ObjUsuario['external_us']===$external_id){
                 //creacion de  un objeto para guardar el estudiante
-                $texto="";
+                // $texto="";
 
                 $ObjEstudiante=null;
                 try {
@@ -210,19 +210,19 @@ class UsuarioController extends Controller
                                                     "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                                     "correo"=>$value['correo'],
                                                     );
-                        $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante Correo : ".$enviarCorreoBolean." ]";
-                        fwrite($handle, $texto);
-                        fwrite($handle, "\r\n\n\n\n");
+                        // $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante Correo : ".$enviarCorreoBolean." ]";
+                        // fwrite($handle, $texto);
+                        // fwrite($handle, "\r\n\n\n\n");
                     }
-                    fclose($handle);
+                    // fclose($handle);
                     return response()->json(["mensaje"=>$ObjEstudiante,
                                             "estadoCorreoEnviado"=>$arrayEncargado,
                                             "Siglas"=>"OE"]);
                 } catch (\Throwable $th) {
-                    $texto="[".date("Y-m-d H:i:s")."]" ."Crear usuario Estudiante Error : ".$th." ]";
-                    fwrite($handle, $texto);
-                    fwrite($handle, "\r\n\n\n\n");
-                    fclose($handle);
+                    // $texto="[".date("Y-m-d H:i:s")."]" ."Crear usuario Estudiante Error : ".$th." ]";
+                    // fwrite($handle, $texto);
+                    // fwrite($handle, "\r\n\n\n\n");
+                    // fclose($handle);
                     return response()->json(["mensaje"=>$th->getMessage(),
                                             "request"=>$request->json()->all(),
                                             "Siglas"=>"ONE","error"=>$th->getMessage()]);

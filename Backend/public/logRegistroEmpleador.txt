@@ -166,3 +166,7 @@
 
 
 
+[2021-07-06 17:20:11] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :raulrrv123@gmail.com ]
+
+
+

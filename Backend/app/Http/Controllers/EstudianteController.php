@@ -46,7 +46,7 @@ class EstudianteController extends Controller
     public function actulizarAprobacionEstudiante(Request $request,$external_id){
          if($request->json()){
             $texto="";
-            $handle = fopen("logRegistroPostulante.txt", "a");
+            // $handle = fopen("logRegistroPostulante.txt", "a");
             $arraycorreoRespuesta=array();
              try {
                  $ObjEstudiante = Estudiante::where("external_es","=",$external_id)->update(array( 'estado'=>$request['estado'], 'observaciones'=>$request['observaciones']));
@@ -73,10 +73,10 @@ class EstudianteController extends Controller
 
                 //notificar a la secretaria sobre el nuevo registro //o reenvio de infomracion
 
-                    $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante informacion no validada Correo por parte de la secrataria : ".$enviarCorreoBolean." ]";
-                    fwrite($handle, $texto);
-                    fwrite($handle, "\r\n\n\n\n");
-                    fclose($handle);
+                    // $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante informacion no validada Correo por parte de la secrataria : ".$enviarCorreoBolean." ]";
+                    // fwrite($handle, $texto);
+                    // fwrite($handle, "\r\n\n\n\n");
+                    // fclose($handle);
                 }
 
                  // la secretartia notifica al postulante de su registro exitoso, se notifica al encargado y al postulante
@@ -124,11 +124,11 @@ class EstudianteController extends Controller
                                                      "estadoEnvioCorreo"=>$enviarCorreoBoolean,
                                                      "correo"=>$value['correo'],
                                                      );
-                        $texto="[".date("Y-m-d H:i:s")."]" ." Aprobar validacion de formulario de estudiante notficar al estudiante y al encargado Correo  : ".$enviarCorreoBolean." El correo del encargado es : ".$value['correo']."  ]";
-                        fwrite($handle, $texto);
-                        fwrite($handle, "\r\n\n\n\n");
+                        // $texto="[".date("Y-m-d H:i:s")."]" ." Aprobar validacion de formulario de estudiante notficar al estudiante y al encargado Correo  : ".$enviarCorreoBolean." El correo del encargado es : ".$value['correo']."  ]";
+                        // fwrite($handle, $texto);
+                        // fwrite($handle, "\r\n\n\n\n");
                     }
-                    fclose($handle);
+                    // fclose($handle);
                 }
                  // si la validacion no es exitosa se le comina al estudiante que revise su informaicon
                 return response()->json(["mensaje"=>$ObjEstudiante,"Siglas"=>"OE",
@@ -150,7 +150,7 @@ class EstudianteController extends Controller
 
         if($request->json()){
             $texto="";
-            $handle = fopen("logRegistroPostulante.txt", "a");
+            // $handle = fopen("logRegistroPostulante.txt", "a");
             $arraycorreoRespuesta=array();
             try {
                 $ObjUsuario = usuario::where("external_us",$external_id)->first();
@@ -195,11 +195,11 @@ class EstudianteController extends Controller
                                                         "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                                         "correo"=>$value['correo'],
                                                         );
-                            $texto="[".date("Y-m-d H:i:s")."]" ." Reenviando Formulario a la secretaria con los datos corregidos Correo  : ".$enviarCorreoBolean." ]";
-                            fwrite($handle, $texto);
+                            // $texto="[".date("Y-m-d H:i:s")."]" ." Reenviando Formulario a la secretaria con los datos corregidos Correo  : ".$enviarCorreoBolean." ]";
+                            // fwrite($handle, $texto);
                         }
-                        fwrite($handle, "\r\n\n\n\n");
-                        fclose($handle);
+                        // fwrite($handle, "\r\n\n\n\n");
+                        // fclose($handle);
 
                     return response()->json(["mensaje"=> $ObjEstudiante,
                                                 "etadoCorreo"=> $arraycorreoRespuesta,
@@ -251,7 +251,7 @@ class EstudianteController extends Controller
                 return $this->retornarRespuestaEstudianteEncontrado($ObjeEstudiante);
 
             } catch (\Throwable $th) {
-                return response()->json(["mensaje"=>"No se encontro el estudiante "+$request['external_es'],"Siglas"=>"ONE","error"=>$th]);
+                return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","error"=>$th]);
             }
 
         }else{

@@ -7,7 +7,7 @@ use App\Models\Ciudades;
 
 class CiudadesController extends Controller
 {
-    
+
     // Listar todos los paises
     public function listarCiudades($external_id){
         $ObjCiudades=null;
@@ -19,9 +19,9 @@ class CiudadesController extends Controller
             ->get();
             return response()->json(["mensaje"=>$ObjCiudades,"Siglas"=>"OE",200]);
         } catch (\Throwable $th) {
-            return response()->json(["mensaje"=>$ObjCiudades,"Siglas"=>"ONE","error"=>$th,400]);
+            return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","error"=>$th,400]);
         }
     }
 
-    
+
 }

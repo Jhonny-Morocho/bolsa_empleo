@@ -68,8 +68,8 @@ class NotificarUsuarios extends Command
     }
 
     private function notificarOfertaLaboralExpirada(){
-        $texto="";
-        $handle = fopen("log.txt", "a");
+        // $texto="";
+        // $handle = fopen("log.txt", "a");
         try {
             //selecinar todas la ofertas laborales que hayan expirado su tiemppo
             $ObjOfertaLaboral=OfertasLaborales::join("empleador","empleador.id","=","oferta_laboral.fk_empleador")
@@ -99,26 +99,27 @@ class NotificarUsuarios extends Command
                 $plantillaCorreo=$this->templateHtmlCorreo($value['nom_representante_legal'],$parrafoMensaje);
                 //enviamos el corrreo
                 $enviarCorreoBolean=$this->enviarCorreo( $plantillaCorreo,$value['correo'],getenv("TITULO_CORREO_OFERTA_LABORAL"));
-                $texto="[".date("Y-m-d H:i:s")."]" ." Update Oferta laboral validacion Expirado :::
-                ::Correo del empleador :".$value['correo']."
-                ::Se actualizo el registro de oferta laboral : ".( $ofertaLaboralBoleand ? 'true' : 'false') ."
-                :: ↑↑ Estado de envio de correo al empleador: ".($enviarCorreoBolean ? 'true' : 'false');
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
+                // $texto="[".date("Y-m-d H:i:s")."]" ." Update Oferta laboral validacion Expirado :::
+                // ::Correo del empleador :".$value['correo']."
+                // ::Se actualizo el registro de oferta laboral : ".( $ofertaLaboralBoleand ? 'true' : 'false') ."
+                // :: ↑↑ Estado de envio de correo al empleador: ".($enviarCorreoBolean ? 'true' : 'false');
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
             }
-            fclose($handle);
+            // fclose($handle);
 
         } catch (\Throwable $th) {
-            $texto="[".date("Y-m-d H:i:s")."]" ." Update Oferta laboral validacion Expirado :::"
-            ."::ERROR del empleador :".$th." ]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            die($th->getMessage());
+            // $texto="[".date("Y-m-d H:i:s")."]" ." Update Oferta laboral validacion Expirado :::"
+            // ."::ERROR del empleador :".$th." ]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
         }
     }
     //nofiticar al postulante que su registro ha expirado
     private function notificarEstudiante(){
-        $handle = fopen("log.txt", "a");
+        // $handle = fopen("log.txt", "a");
         try {
             $usuario=Estudiante::join("usuario","usuario.id","=","estudiante.fk_usuario")
             ->select("estudiante.*","usuario.*")
@@ -140,22 +141,23 @@ class NotificarUsuarios extends Command
                 ->update(array( 'estado'=>0,"observaciones"=>$observaciones));
                 $plantillaCorreo=$this->templateHtmlCorreo(($value['nombre'].' '.$value['apellido']),$parrafoMensaje);
                 $enviarCorreoBolean=$this->enviarCorreo( $plantillaCorreo,$value['correo'],getenv("TITULO_CORREO_POSTULANTE"));
-                $texto="[".date("Y-m-d H:i:s")."]" ." Update Estudiante Registro Expirado :".$value['correo']." = ".( $estudianteBooleand ? 'true' : 'false') ." ↑↑ Enviar Correo : ".($enviarCorreoBolean ? 'true' : 'false');
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
+                // $texto="[".date("Y-m-d H:i:s")."]" ." Update Estudiante Registro Expirado :".$value['correo']." = ".( $estudianteBooleand ? 'true' : 'false') ." ↑↑ Enviar Correo : ".($enviarCorreoBolean ? 'true' : 'false');
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
             }
-            fclose($handle);
+            // fclose($handle);
         } catch (\Throwable $th) {
-            $texto="[".date("Y-m-d H:i:s")."]" ." Error : ".$th." ]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            die($th->getMessage());
+            // $texto="[".date("Y-m-d H:i:s")."]" ." Error : ".$th." ]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
         }
     }
     //el tiempo de validacion del formulario re registro del empleador expiro
     private function notificarEmpleador(){
-        $texto="";
-        $handle = fopen("log.txt", "a");
+        // $texto="";
+        // $handle = fopen("log.txt", "a");
         try {
 
             $usuario=Empleador::join("usuario","usuario.id","=","empleador.fk_usuario")
@@ -183,25 +185,25 @@ class NotificarUsuarios extends Command
                                     $parrafoMensaje
                                 );
                 $enviarCorreoBolean=$this->enviarCorreo( $plantillaHtml,$value['correo'],getenv("TITULO_CORREO_POSTULANTE"));
-                $texto="[".date("Y-m-d H:i:s")."]" ." Update Empleador registro Expirado :".$value['correo']." = ".( $empleadorBooleand ? 'true' : 'false') ." ↑↑ Enviar Correo : ".($enviarCorreoBolean ? 'true' : 'false');
-                fwrite($handle, $texto);
-                fwrite($handle, "\r\n\n\n\n");
+                // $texto="[".date("Y-m-d H:i:s")."]" ." Update Empleador registro Expirado :".$value['correo']." = ".( $empleadorBooleand ? 'true' : 'false') ." ↑↑ Enviar Correo : ".($enviarCorreoBolean ? 'true' : 'false');
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
             }
-            fclose($handle);
+            // fclose($handle);
         } catch (\Throwable $th) {
             echo $th->getMessage();
-            $texto="[".date("Y-m-d H:i:s")."]" ." Error : ".$th->getMessage()." ]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            // $texto="[".date("Y-m-d H:i:s")."]" ." Error : ".$th->getMessage()." ]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
         }
     }
 
     //comunicar al gestor para que publique la oferta
     private function notificarOfertaLaboralExpiradaDePublicarGestor(){
         //enviar correo del registro el encargado
-        $texto="";
-        $handle = fopen("log.txt", "a");
+        // $texto="";
+        // $handle = fopen("log.txt", "a");
         try {
             //selecinar todas la ofertas laborales que hayan expirado su tiemppo de publicacion por parte del gestor
             $ObjOfertaLaboral=OfertasLaborales::join("empleador","empleador.id","=","oferta_laboral.fk_empleador")
@@ -243,36 +245,37 @@ class NotificarUsuarios extends Command
                     $ObjOfertaLaboralUpdate=OfertasLaborales::where("external_of","=", $extnernal_of)
                     ->update(array('estado'=>2));
                     //========================================
-                    $texto="[".date("Y-m-d H:i:s")."]"
-                    ." Oferta laboral pendiente de publicar expirada por parte del gestor
-                    :: Estado del correo enviado al gestor : "
-                    .$enviarCorreoBolean
-                    ."::: El Correo del gestor  es: ".$value['correo']."
-                    :::Estado de la oferta actualizado : ".($ObjOfertaLaboralUpdate ? 'true' : 'false')."
-                    ::: El nombre de la oferta laboral es: ".$puesto."
-                    ::: El Correo del empleador es :"
-                    .$value['correo']." ]";
-                    fwrite($handle, $texto);
-                    fwrite($handle, "\r\n\n\n\n");
+                    // $texto="[".date("Y-m-d H:i:s")."]"
+                    // ." Oferta laboral pendiente de publicar expirada por parte del gestor
+                    // :: Estado del correo enviado al gestor : "
+                    // .$enviarCorreoBolean
+                    // ."::: El Correo del gestor  es: ".$value['correo']."
+                    // :::Estado de la oferta actualizado : ".($ObjOfertaLaboralUpdate ? 'true' : 'false')."
+                    // ::: El nombre de la oferta laboral es: ".$puesto."
+                    // ::: El Correo del empleador es :"
+                    // .$value['correo']." ]";
+                    // fwrite($handle, $texto);
+                    // fwrite($handle, "\r\n\n\n\n");
                 }
             }
-            fclose($handle);
+            // fclose($handle);
 
         } catch (\Throwable $th) {
-            $texto="[".date("Y-m-d H:i:s")."]"
-            ." Oferta laboral pendiente de publicar expirada por parte del gestor ERROR: "
-            .$th->getMessage()." ]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            die($th->getMessage());
+            // $texto="[".date("Y-m-d H:i:s")."]"
+            // ." Oferta laboral pendiente de publicar expirada por parte del gestor ERROR: "
+            // .$th->getMessage()." ]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
             return $th->getMessage();
         }
     }
     private function notificarSeleccionarPostulanteEmpleador(){
         //cuando se haya inscrito el primer postulante comienza a contabilizar los 8 dias
         //1.Buscamos cuales son los usuarios que se han escrito en una determiada oferta que esten pubicas
-        $texto="";
-        $handle = fopen("log.txt", "a");
+        // $texto="";
+        // $handle = fopen("log.txt", "a");
 
         try {
             //lista todoas las ofertas que este publicadas
@@ -335,20 +338,21 @@ class NotificarUsuarios extends Command
                                                             getenv("TITULO_CORREO_APLICAR_OFERTA"));
                     }
 
-                    $texto="[".date("Y-m-d H:i:s")."]" ." NOTIFCAR LOS 8 DIAS PARA CONFIRMAR CONTRATACIÓN :
-                    Nombre del empleador ".$value['nom_representante_legal']."
-                    Cambiar de estado a la oferta laboral a finalizado: ".($ofertaLaboralEstado ? 'true' : 'false')."
-                    Oferta laboral ".$value['puesto']."
-                    Correo del empleador ".$value['correo']." = Estado enviar correo empleador: ".( $enviarCorreoBolean ? 'true' : 'false');
-                    fwrite($handle, $texto);
-                    fwrite($handle, "\r\n\n\n\n");
+                    // $texto="[".date("Y-m-d H:i:s")."]" ." NOTIFCAR LOS 8 DIAS PARA CONFIRMAR CONTRATACIÓN :
+                    // Nombre del empleador ".$value['nom_representante_legal']."
+                    // Cambiar de estado a la oferta laboral a finalizado: ".($ofertaLaboralEstado ? 'true' : 'false')."
+                    // Oferta laboral ".$value['puesto']."
+                    // Correo del empleador ".$value['correo']." = Estado enviar correo empleador: ".( $enviarCorreoBolean ? 'true' : 'false');
+                    // fwrite($handle, $texto);
+                    // fwrite($handle, "\r\n\n\n\n");
                 }
             }
         } catch (\Throwable $th) {
-            $texto="[".date("Y-m-d H:i:s")."]" ."NOTIFCAR LOS 8 DIAS PARA CONFIRMAR CONTRATACIÓN Error : ".$th->getMessage()." ]";
-            fwrite($handle, $texto);
-            fwrite($handle, "\r\n\n\n\n");
-            fclose($handle);
+            die($th->getMessage());
+            // $texto="[".date("Y-m-d H:i:s")."]" ."NOTIFCAR LOS 8 DIAS PARA CONFIRMAR CONTRATACIÓN Error : ".$th->getMessage()." ]";
+            // fwrite($handle, $texto);
+            // fwrite($handle, "\r\n\n\n\n");
+            // fclose($handle);
         }
 
 
