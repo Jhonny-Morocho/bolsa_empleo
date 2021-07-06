@@ -1,0 +1,168 @@
+[2021-04-25 12:07:38] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador empresa2@hotmail.com ]
+
+
+
+[2021-04-25 12:17:21] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador empresa2@hotmail.com ]
+
+
+
+[2021-04-27 22:24:10] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :udemy@hotmail.com ]
+
+
+
+[2021-04-28 21:34:46] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador7@hotmail.com ]
+
+
+
+[2021-04-28 21:36:35] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador7@hotmail.com ]
+
+
+
+[2021-04-28 21:39:58] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador7@hotmail.com ]
+
+
+
+[2021-04-29 00:42:08] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador udemy@hotmail.com ]
+
+
+
+[2021-05-04 02:08:41] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 02:10:46] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 02:13:28] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 02:16:29] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 02:23:48] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 02:41:20] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 02:42:07] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 02:42:24] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 22:36:10] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 22:38:54] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 23:24:14] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-05-04 23:27:17] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador1unl@gmail.com ]
+
+
+
+[2021-07-01 20:39:38] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-01 20:43:20] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-01 20:44:51] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:02:33] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:10:14] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:12:52] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:14:44] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:15:48] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:19:57] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:21:09] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:21:53] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-02 23:22:58] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-03 00:47:29] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador@hotmail.com ]
+
+
+
+[2021-07-03 00:48:00] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador@hotmail.com ]
+
+
+
+[2021-07-03 00:49:49] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador udemy@hotmail.com ]
+
+
+
+[2021-07-03 00:50:46] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador@hotmail.com ]
+
+
+
+[2021-07-03 00:51:33] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador@hotmail.com ]
+
+
+
+[2021-07-03 00:53:08] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador@hotmail.com ]
+
+
+
+[2021-07-03 00:53:21] Registro Formulario Empleador:: Estado de correo enviado al empleador : false::: Correo del encargado  es: encargado.unl@gmail.com Correo del empleador es :empleador@hotmail.com ]
+
+
+
+[2021-07-03 20:14:35] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador udemy@hotmail.com ]
+
+
+
+[2021-07-03 20:14:41] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador udemy@hotmail.com ]
+
+
+
+[2021-07-03 20:31:50] Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador1unl@gmail.com ]
+
+
+
+[2021-07-03 20:35:00] Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : false Correo del empleador empleador1unl@gmail.com ]
+
+
+
