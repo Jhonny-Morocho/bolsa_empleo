@@ -17,14 +17,18 @@ import {ValidadoresService} from 'src/app/servicios/validadores.service';
 })
 export class FormularioInfoEmpleadorComponent implements OnInit {
   instanciaEmpleador:EmpleadorModel;
-  booleanFormularioCompletado:boolean;
   arrayProvincias:ProvinciasModels []=[];
   arrayCiudad:CiudadesModel []=[];
   formEmpleador:FormGroup;
+
+  formRevisadoButNoValido:boolean;
+  formValidadoExito:boolean;
+  formNoRevisado:boolean;
+  nuevoRegistro:boolean;
+
+
+  modoEdicionForm:boolean;
   //reviso si existe una obervacion si existe entonces en formulario si ha sido revisadop
-  obervaciones:boolean;
-  //validacion de formulario true/false
-  formValidado:boolean;
   constructor(private servicioEmpleador_:SerivicioEmpleadorService,
               private servicioCiudades:ServicioCiudades,
               private formBuilder:FormBuilder,
@@ -44,12 +48,12 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
 
   crearFormulario(){
     this.formEmpleador=this.formBuilder.group({
-      razonSocial:['',[Validators.required,Validators.maxLength(30)]],
-      tipoEmpresa:['',[Validators.required,Validators.maxLength(30)]],
+      razonSocial:['',[Validators.required,Validators.maxLength(30),this.validacionPersonalizada.soloTextoPuntoRazonEmpresa]],
+      tipoEmpresa:['',[Validators.required,Validators.maxLength(30),this.validacionPersonalizada.soloTextoPuntoRazonEmpresa]],
       actividadEconomica:['',[Validators.required,Validators.maxLength(100)]],
       numeroRuc:['',[Validators.required,Validators.maxLength(13),this.validacionPersonalizada.rucNoValido]],
       cedula:['',[Validators.required,Validators.maxLength(20)]],
-      nomRepresentanteLegal:['',[Validators.required,Validators.maxLength(30)]],
+      nomRepresentanteLegal:['',[Validators.required,Validators.maxLength(30),this.validacionPersonalizada.soloTextoPuntoRazonEmpresa]],
       telefono:['',[Validators.required,Validators.maxLength(15),this.validacionPersonalizada.soloNumeros]],
       provincia:['',[Validators.required,]],
       ciudad:['',[Validators.required,]],
@@ -81,8 +85,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
       siHacesBien=>{
             // si esta registradoo en la BD el formulario completo entonces presento los datos
           if(siHacesBien['Siglas']=="OE"){
-            // por lo tanto formulario completo ==true
-            this.booleanFormularioCompletado=true;
+            this.nuevoRegistro=false;
             //registro de empleador encontrado, ya esta creado el empleador en el BD
             this.instanciaEmpleador.actividad_ruc=siHacesBien['mensaje']['actividad_ruc'];
             this.instanciaEmpleador.cedula=siHacesBien['mensaje']['cedula'];
@@ -97,39 +100,39 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
             this.instanciaEmpleador.tipo_empresa=siHacesBien['mensaje']['tipo_empresa'];
             this.instanciaEmpleador.observaciones=siHacesBien['mensaje']['observaciones'];
             this.instanciaEmpleador.estado=siHacesBien['mensaje']['estado'];
-            //cargo los datos al formulario
-            this.formEmpleador.setValue({
-              razonSocial:this.instanciaEmpleador.razon_empresa,
-              tipoEmpresa:this.instanciaEmpleador.tipo_empresa,
-              actividadEconomica:this.instanciaEmpleador.actividad_ruc,
-              numeroRuc:this.instanciaEmpleador.num_ruc,
-              cedula:this.instanciaEmpleador.cedula,
-              nomRepresentanteLegal:this.instanciaEmpleador.nom_representante_legal,
-              telefono:this.instanciaEmpleador.telefono,
-              provincia:this.instanciaEmpleador.fk_provincia,
-              ciudad:this.instanciaEmpleador.fk_ciudad,
-              direcionDomicilio:this.instanciaEmpleador.direccion,
-            });
+              //cargo los datos al formulario
+              this.formEmpleador.setValue({
+                razonSocial:this.instanciaEmpleador.razon_empresa,
+                tipoEmpresa:this.instanciaEmpleador.tipo_empresa,
+                actividadEconomica:this.instanciaEmpleador.actividad_ruc,
+                numeroRuc:this.instanciaEmpleador.num_ruc,
+                cedula:this.instanciaEmpleador.cedula,
+                nomRepresentanteLegal:this.instanciaEmpleador.nom_representante_legal,
+                telefono:this.instanciaEmpleador.telefono,
+                provincia:this.instanciaEmpleador.fk_provincia,
+                ciudad:this.instanciaEmpleador.fk_ciudad,
+                direcionDomicilio:this.instanciaEmpleador.direccion,
+              });
               //ahun no lo revisan al formulario
               if(this.instanciaEmpleador.estado==0 && this.instanciaEmpleador.observaciones==''){
-                this.formValidado=false;
-                this.obervaciones=false;
-
+                this.modoEdicionForm=false;
+                this.formNoRevisado=true;
                 this.formEmpleador.disable();
               }
               //ya lo revisaron al formulaorio,pero no fue validado
               if(this.instanciaEmpleador.estado==0 && this.instanciaEmpleador.observaciones!=''){
-                this.formValidado=false;
-                this.obervaciones=true;
+                this.formRevisadoButNoValido=true;
+                this.modoEdicionForm=true;
               }
               //lo revisaron y lo validaron
               if(this.instanciaEmpleador.estado==1 && this.instanciaEmpleador.observaciones!=''){
-                this.formValidado=true;
-                this.obervaciones=true;
+                this.modoEdicionForm=false;
+                this.formValidadoExito=true;
                 this.formEmpleador.disable();
               }
           }else{
-            this.booleanFormularioCompletado=false;
+            this.modoEdicionForm=true;
+            this.nuevoRegistro=true;
           }
       },(peroSiTenemosErro)=>{
         Swal('Información', peroSiTenemosErro['mensaje'], 'info')
@@ -174,62 +177,24 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
     this.instanciaEmpleador.estado=0;
     this.instanciaEmpleador.observaciones="";
 
-    this.servicioEmpleador_.crearEmpleador(this.instanciaEmpleador).subscribe(
-      siHacesBien=>{
-        Swal.close();
-        if(siHacesBien['Siglas']=="OE"){
-          const toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-          });
-          toast({
-            type: 'success',
-            title: 'Registrado'
-          })
-          //bloqueo el formulario
-          this.booleanFormularioCompletado=true;
-          this.formEmpleador.disable();
-          }else{
-            Swal('Información', siHacesBien['error'], 'info')
-          }
-
-      },(peroSiTenemosErro)=>{
-        Swal({
-          title:'Error',
-          type:'error',
-          text:peroSiTenemosErro['mensaje']
-        });
-    });
+    //============= actualizar empleador =====================//
+    //============= actualizar empleador =====================//
+    if(this.nuevoRegistro){
+      this.crearEmpleador();
+      return;
+    }
+    //============= registro empleador =====================//
+    //============= registro empleador =====================//
+    if(!this.nuevoRegistro){
+      this.editarEmpleador();
+      return;
+    }
 
   }
 
   //editar form de empleador
   editarEmpleador(){
-    if(this.formEmpleador.invalid){
-      const toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-      });
-      toast({
-        type: 'error',
-        title: 'Debe llenar todos los campos correctamente'
-      })
-      return Object.values(this.formEmpleador.controls).forEach(contol=>{
-        contol.markAsTouched();
-      });
-    }
-    Swal({
-      allowOutsideClick:false,
-      type:'info',
-      text:'Espere por favor'
-    });
-    Swal.showLoading();
     //LAS OBERSIACIONE LE BORRO O LE PONGO EN VACIO POR QUE SE SUPONE QUE VUELVE A INTENTAR
-    this.instanciaEmpleador.observaciones="";
     this.servicioEmpleador_.actulizarDatosEmpleador(this.instanciaEmpleador).subscribe(
       siHacesBien=>{
         Swal.close();
@@ -246,12 +211,13 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
           })
           //desactivar los campos
           this.formEmpleador.disable();
+          this.modoEdicionForm=false;
+          this.formNoRevisado=true;
+          this.formRevisadoButNoValido=false;
           //descativamos el formulario//si no existe observaciones el formualrio no ha sido revisado
-          this.obervaciones=false;
-          //si el usuario esta el estado en 1// estado cero
-          this.formValidado=false;
+
           }else{
-             Swal('Ups', siHacesBien['mensaje'], 'info')
+             Swal('Información', siHacesBien['mensaje'], 'info')
           }
       },(peroSiTenemosErro)=>{
          Swal({
@@ -262,7 +228,38 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
     });
   }
 
+  crearEmpleador(){
+    this.servicioEmpleador_.crearEmpleador(this.instanciaEmpleador).subscribe(
+      siHacesBien=>{
+        Swal.close();
+        if(siHacesBien['Siglas']=="OE"){
+          const toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+          toast({
+            type: 'success',
+            title: 'Registrado'
+          })
+          //bloqueo el formulario
+          this.modoEdicionForm=false;
+          this.nuevoRegistro=false;
+          this.formNoRevisado=true;
+          this.formEmpleador.disable();
+          }else{
+            Swal('Información', siHacesBien['error'], 'info')
+          }
 
+      },(peroSiTenemosErro)=>{
+        Swal({
+          title:'Error',
+          type:'error',
+          text:peroSiTenemosErro['mensaje']
+        });
+    });
+  }
 
 
   get razonSocialNoValido(){
@@ -270,6 +267,9 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
   }
   get razonSocialVacio(){
     return this.formEmpleador.get('razonSocial').value;
+  }
+  get razonSocialSoloTexto(){
+    return this.formEmpleador.controls['razonSocial'].errors['soloTextoPuntoRazonEmpresa'] ;
   }
 
 
@@ -282,6 +282,10 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
   get tipoEmpresaVacio(){
     return this.formEmpleador.get('tipoEmpresa').value;
   }
+  get tipoEmpresaSoloTexto(){
+    return this.formEmpleador.controls['tipoEmpresa'].errors['soloTextoPuntoRazonEmpresa'] ;
+  }
+
 
 
 
@@ -318,7 +322,13 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
     return this.formEmpleador.get('nomRepresentanteLegal').invalid &&  this.formEmpleador.get('nomRepresentanteLegal').touched;
   }
   get nombreRepresentanteVacio(){
-    return this.formEmpleador.get('cedula').value;
+    return this.formEmpleador.get('nomRepresentanteLegal').value;
+  }
+  get nombreRepresentanteSoloTexto(){
+    return this.formEmpleador.controls['nomRepresentanteLegal'].errors['soloTextoPuntoRazonEmpresa'] ;
+  }
+  get nomRepresentanteVacia(){
+    return this.formEmpleador.get('nomRepresentanteLegal').value;
   }
 
 

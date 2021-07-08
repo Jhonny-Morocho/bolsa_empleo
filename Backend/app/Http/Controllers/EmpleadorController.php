@@ -138,11 +138,10 @@ class EmpleadorController extends Controller{
                                                  "estadoCorreoEnviado"=>$arrayEncargado,
                                                     "Siglas"=>"OE"]);
                     }else{
-                       return response()->json(["mensaje"=>"No existe registro del empleador","Siglas"=>"ONE"]);
+                       return response()->json(["mensaje"=>"No se puede actualizar por que este usuario ahun no ha llenado el formulario de registro de empleador","Siglas"=>"ONE"]);
                     }
-
                }else{
-                   return response()->json(["mensaje"=>"No se encontro el usuario external_em","Siglas"=>"ONE"]);
+                   return response()->json(["mensaje"=>"Este usuario su identificar no coincid con el de la base de datos","Siglas"=>"ONE"]);
                }
             } catch (\Throwable $th) {
                return response()->json(["mensaje"=>$th->getMessage(),
@@ -150,7 +149,6 @@ class EmpleadorController extends Controller{
                                         "objEmpelador"=>$request->json()->all(),
                                         "Siglas"=>"ONE","error"=>$th->getMessage()]);
             }
-
         }else{
            return response()->json(["mensaje"=>"La data no tiene formato deseado","Siglas"=>"DNF",400]);
         }
