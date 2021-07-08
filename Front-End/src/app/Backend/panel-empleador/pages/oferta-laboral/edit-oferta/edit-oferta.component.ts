@@ -35,7 +35,7 @@ export class EditOfertaComponent implements OnInit {
       puesto:['',[Validators.required,Validators.maxLength(50)]],
       descripcion:['',[Validators.required,Validators.maxLength(200)]],
       lugar:['',[Validators.required,Validators.maxLength(100)]],
-      requisitos:['',[Validators.required,Validators.maxLength(100)]],
+      requisitos:['',[Validators.required,Validators.maxLength(500)]],
     });
   }
   textAreaEditor(estado:boolean){
@@ -140,7 +140,7 @@ export class EditOfertaComponent implements OnInit {
           })
           this.router.navigateByUrl("/panel-empleador/oferta-laboral");
         }else{
-          Swal('Ups', siHacesBien['mensaje'], 'info')
+          Swal('Información', siHacesBien['mensaje'], 'info')
         }
 
       },error=>{
@@ -168,5 +168,12 @@ export class EditOfertaComponent implements OnInit {
 
   get requisitosNoValido(){
     return this.formOfertaLaboral.get('requisitos').invalid &&  this.formOfertaLaboral.get('requisitos').touched;
+  }
+
+  get requisitosLimite(){
+    return ((this.formOfertaLaboral.get('requisitos').value).length)>500;
+  }
+  get requisitosVacio(){
+    return this.formOfertaLaboral.get('requisitos').value;
   }
 }

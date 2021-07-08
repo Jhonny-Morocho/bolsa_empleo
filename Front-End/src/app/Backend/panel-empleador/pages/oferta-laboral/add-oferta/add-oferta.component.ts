@@ -34,7 +34,7 @@ export class AddOfertaComponent implements OnInit {
       puesto:['',[Validators.required,Validators.maxLength(50)]],
       descripcion:['',[Validators.required,Validators.maxLength(200)]],
       lugar:['',[Validators.required,Validators.maxLength(100)]],
-      requisitos:['',[Validators.required,Validators.maxLength(100)]],
+      requisitos:['',[Validators.required,Validators.maxLength(500)]],
     });
   }
   onSubMitRegistroOfertaLaboral(){
@@ -80,9 +80,9 @@ export class AddOfertaComponent implements OnInit {
               type: 'success',
               title: 'Registrado'
             })
-            this.router.navigateByUrl('panel-admin/validar-oferta-laboral');
+            this.router.navigateByUrl('panel-empleador/oferta-laboral');
           }else{
-            Swal('Ups', siHaceBien['mensaje'], 'info')
+            Swal('Información', siHaceBien['mensaje'], 'info')
           }
        },error=>{
          Swal('Error', error['mensaje'], 'error')
@@ -108,5 +108,10 @@ export class AddOfertaComponent implements OnInit {
   get requisitosNoValido(){
     return this.formOfertaLaboral.get('requisitos').invalid &&  this.formOfertaLaboral.get('requisitos').touched;
   }
-
+  get requisitosLimite(){
+    return ((this.formOfertaLaboral.get('requisitos').value).length)>500;
+  }
+  get requisitosVacio(){
+    return this.formOfertaLaboral.get('requisitos').value;
+  }
 }

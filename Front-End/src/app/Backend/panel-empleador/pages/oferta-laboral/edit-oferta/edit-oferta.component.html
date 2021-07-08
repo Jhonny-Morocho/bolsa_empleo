@@ -71,7 +71,8 @@
                     </textarea>
                 <!-- mensajes de validacion -->
                  <div class="invalid-feedback" *ngIf="requisitosNoValido" >
-                  <p > <i class="fas fa-info-circle"></i> El campo requisitos es requerido</p>
+                  <p *ngIf="requisitosVacio==''"> <i class="fas fa-info-circle"></i> El campo requisitos es requerido</p>
+                  <p *ngIf="requisitosLimite && requisitosVacio!=='' "> <i class="fas fa-info-circle"></i> Este campo solo acepta 500 caracteres</p>
                 </div>
                 <!-- end mensajes de validacion -->
                 </div>

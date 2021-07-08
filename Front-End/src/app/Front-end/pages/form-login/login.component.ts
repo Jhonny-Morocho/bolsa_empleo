@@ -85,12 +85,12 @@ export class LoginAdminComponent implements OnInit {
         this._servicioAdmin.recuperarPassword(this.instanciaModeloUsuarioLogin).subscribe(
            siHaceBien=>{
              if (siHaceBien['Siglas']=="OE") {
-                Swal('Contraseña actualizada','Se ha enviado la nueva contraseña a su correo','success')
+                Swal('Contraseña actualizada','Se ha enviado la nueva contraseña temporal a su correo','success')
              }else{
                 Swal('No se pudo actualizar su contraseña',siHaceBien['mensaje'],'info')
              }
            },siHaceMal=>{
-            Swal('ERROR',siHaceMal['error'],'error')
+            Swal('ERROR',siHaceMal['mensaje'],'error')
            }
          );
       }
@@ -180,7 +180,7 @@ export class LoginAdminComponent implements OnInit {
         Swal({
           title:'Error',
           type:'error',
-          text:peroSiTenemosErro['error']
+          text:peroSiTenemosErro['mensaje']
         });
       }
     );
