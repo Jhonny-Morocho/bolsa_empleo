@@ -17,12 +17,12 @@ export class FormularioInfoPostulanteComponent implements OnInit {
   formPostulante:FormGroup;
   fechaActual:string;
   fechaMinima:string='1905-12-31';
-  booleanFormularioCompletado:boolean;
-  //reviso si existe una obervacion si existe entonces en formulario si ha sido revisadop
-  obervaciones:boolean;
-  //validacion de formulario true/false
-  formValidado:boolean;
-  //tipo de genero
+
+  formRevisadoButNoValido:boolean;
+  formValidadoExito:boolean;
+  formNoRevisado:boolean;
+  nuevoRegistro:boolean;
+  modoEdicionForm:boolean;
 
   constructor(private servicioPostulante_:SerivicioPostulanteService,
               private formulario:FormBuilder,
@@ -41,6 +41,191 @@ export class FormularioInfoPostulanteComponent implements OnInit {
   }
 
 
+
+
+  crearFormulario(){
+    this.formPostulante=this.formulario.group({
+      nombresCompleto:['',[Validators.required,this.validadorPersonalizado.soloTexto,Validators.maxLength(20)]],
+      apellidosCompleto:['',[Validators.required,this.validadorPersonalizado.soloTexto,Validators.maxLength(20)]],
+      documentoIndentidad:['',[Validators.required,Validators.maxLength(20)]],
+      telefono:['',[Validators.required,this.validadorPersonalizado.soloNumeros,Validators.maxLength(15)]],
+      fechaNacimiento:[this.fechaActual,[Validators.required,this.validadorPersonalizado.noFechaMayorActualPostulante]],
+      genero:['',[Validators.required,]],
+      direccionDomicilio:['',[Validators.required,Validators.maxLength(30)]],
+    });
+  }
+
+  cargarDatosFormulario(){
+    this.servicioPostulante_.listarFormPostulante().subscribe(
+      siHacesBien=>{
+           // si esta registradoo en la BD el formulario completo entonces presento los datos
+          if(siHacesBien['Siglas']=="OE"){
+              this.nuevoRegistro=false;
+              this.instanciaPostulante.observaciones=siHacesBien['mensaje']['observaciones']
+              this.instanciaPostulante.estado=siHacesBien['mensaje']['estado'];
+              this.instanciaPostulante.nombre=siHacesBien['mensaje']['nombre'];
+              this.instanciaPostulante.apellido=siHacesBien['mensaje']['apellido'];
+              this.instanciaPostulante.cedula=siHacesBien['mensaje']['cedula'];
+              this.instanciaPostulante.fecha_nacimiento=siHacesBien['mensaje']['fecha_nacimiento'];
+              this.instanciaPostulante.telefono=siHacesBien['mensaje']['telefono'];
+              this.instanciaPostulante.genero=siHacesBien['mensaje']['genero'];
+              this.instanciaPostulante.direccion_domicilio=siHacesBien['mensaje']['direccion_domicilio'];
+
+              //cargo los datos al formulario
+              this.formPostulante.setValue({
+              nombresCompleto:this.instanciaPostulante.nombre,
+              apellidosCompleto:this.instanciaPostulante.apellido,
+              documentoIndentidad:this.instanciaPostulante.cedula,
+              telefono:this.instanciaPostulante.telefono,
+              fechaNacimiento:this.instanciaPostulante.fecha_nacimiento,
+              genero:this.instanciaPostulante.genero,
+              direccionDomicilio:this.instanciaPostulante.direccion_domicilio
+              });
+              //ahun no lo revisan al formulario
+              if(this.instanciaPostulante.estado==0 && this.instanciaPostulante.observaciones==''){
+                this.modoEdicionForm=false;
+                this.formNoRevisado=true;
+                this.formPostulante.disable();
+              }
+              //ya lo revisaron al formulaorio,pero no fue validado
+              if(this.instanciaPostulante.estado==0 && this.instanciaPostulante.observaciones!=''){
+                this.formRevisadoButNoValido=true;
+                this.modoEdicionForm=true;
+              }
+              //lo revisaron y lo validaron
+              if(this.instanciaPostulante.estado==1 && this.instanciaPostulante.observaciones!=''){
+                this.modoEdicionForm=false;
+                this.formValidadoExito=true;
+                this.formPostulante.disable();
+              }
+
+          }else{
+            this.modoEdicionForm=true;
+            this.nuevoRegistro=true;
+          }
+      },(peroSiTenemosErro)=>{
+        Swal('Error', peroSiTenemosErro['error'], 'error')
+    });
+
+  }
+  crearPostulante(){
+    this.servicioPostulante_.crearPostulante(this.instanciaPostulante).subscribe(
+      siHacesBien=>{
+        Swal.close();
+        if(siHacesBien['Siglas']=="OE"){
+          const toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+          toast({
+            type: 'success',
+            title: 'Registrado'
+          })
+          //activar y desactivar el boton para modo edicion
+          this.modoEdicionForm=false;
+          //´significa q ya se registro no es la primera vez
+          this.nuevoRegistro=false;
+          //imprime alerta de tiempo de espera de validacion
+          this.formNoRevisado=true;
+          this.formPostulante.disable();
+        }else{
+            Swal('Información', siHacesBien['mensaje'], 'info')
+        }
+
+      },(peroSiTenemosErro)=>{
+        Swal({
+          title:'Error',
+          type:'error',
+          text:peroSiTenemosErro['mensaje']
+        });
+    });
+  }
+
+  //creacion usuario estudiante
+  registrarPostulante(){
+    if(this.formPostulante.invalid){
+      const toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
+      toast({
+        type: 'error',
+        title: 'Debe llenar todos los campos correctamente'
+      })
+      return Object.values(this.formPostulante.controls).forEach(contol=>{
+        contol.markAsTouched();
+      });
+    }
+     Swal({
+      allowOutsideClick:false,
+      type:'info',
+      text:'Espere por favor'
+    });
+    Swal.showLoading();
+    this.instanciaPostulante.estado=0;
+    this.instanciaPostulante.observaciones="";
+    this.instanciaPostulante.nombre=this.formPostulante.value.nombresCompleto;
+    this.instanciaPostulante.apellido=this.formPostulante.value.apellidosCompleto;
+    this.instanciaPostulante.cedula=this.formPostulante.value.documentoIndentidad;
+    this.instanciaPostulante.fecha_nacimiento=this.formPostulante.value.fechaNacimiento;
+    this.instanciaPostulante.telefono=this.formPostulante.value.telefono;
+    this.instanciaPostulante.genero=this.formPostulante.value.genero;
+    this.instanciaPostulante.direccion_domicilio=this.formPostulante.value.direccionDomicilio;
+
+    //============= nuevo empleador =====================//
+    //============= nuevo empleador =====================//
+    if(this.nuevoRegistro){
+      this.crearPostulante();
+      return;
+    }
+
+    //============= actualizar empleador =====================//
+    //============= actualizar empleador =====================//
+    if(!this.nuevoRegistro){
+      this.editarPostulante();
+      return;
+    }
+
+
+  }
+
+  //editar
+  editarPostulante(){
+    //LAS OBERSIACIONE LE BORRO O LE PONGO EN VACIO POR QUE SE SUPONE QUE VUELVE A INTENTAR
+    this.servicioPostulante_.actulizarDatosPostulante(this.instanciaPostulante).subscribe(
+      siHacesBien=>{
+        Swal.close();
+        if(siHacesBien['Siglas']=="OE"){
+          const toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+          toast({
+            type: 'success',
+            title: 'Actualizado'
+          })
+          this.formPostulante.disable();
+          this.modoEdicionForm=false;
+          this.formNoRevisado=true;
+          this.formRevisadoButNoValido=false;
+          }else{
+             Swal('Información', siHacesBien['mensaje'], 'info')
+          }
+      },(peroSiTenemosErro)=>{
+         Swal({
+          title:'Error',
+          type:'error',
+          text:peroSiTenemosErro['mensaje']
+         });
+    });
+
+  }
 
   // ==== para hacer validacion y activar la clase en css ====//
   get generoNoValido(){
@@ -92,238 +277,5 @@ export class FormularioInfoPostulanteComponent implements OnInit {
   //input direccion de domicilio
   get direccionNoValida(){
     return this.formPostulante.get('direccionDomicilio').invalid && this.formPostulante.get('direccionDomicilio').touched;
-  }
-  crearFormulario(){
-    this.formPostulante=this.formulario.group({
-      nombresCompleto:['',
-                  [
-                    Validators.required,
-                    this.validadorPersonalizado.soloTexto,
-                    Validators.maxLength(20)
-
-                  ]
-              ],
-      apellidosCompleto:['',
-                   [
-                      Validators.required,
-                      this.validadorPersonalizado.soloTexto,
-                      Validators.maxLength(20)
-                   ]
-               ],
-      documentoIndentidad:['',
-                    [
-                      Validators.required,
-                      Validators.maxLength(20)
-                    ]
-                  ],
-      telefono:['',
-                  [
-                    Validators.required,
-                    this.validadorPersonalizado.soloNumeros,
-                    Validators.maxLength(15)
-                  ]
-                ],
-      fechaNacimiento:[this.fechaActual,
-                    [
-                      Validators.required,
-                      this.validadorPersonalizado.noFechaMayorActualPostulante
-                    ]
-                  ],
-      genero:['',
-                [
-                  Validators.required,
-                ]
-              ],
-      direccionDomicilio:['',
-                [
-                  Validators.required,
-                  Validators.maxLength(30)
-                ]
-             ],
-    });
-  }
-
-  cargarDatosFormulario(){
-    this.servicioPostulante_.listarFormPostulante().subscribe(
-      siHacesBien=>{
-           // si esta registradoo en la BD el formulario completo entonces presento los datos
-          if(siHacesBien['Siglas']=="OE"){
-              this.booleanFormularioCompletado=true;
-              this.instanciaPostulante.observaciones=siHacesBien['mensaje']['observaciones']
-              this.instanciaPostulante.estado=siHacesBien['mensaje']['estado'];
-              this.instanciaPostulante.nombre=siHacesBien['mensaje']['nombre'];
-              this.instanciaPostulante.apellido=siHacesBien['mensaje']['apellido'];
-              this.instanciaPostulante.cedula=siHacesBien['mensaje']['cedula'];
-              this.instanciaPostulante.fecha_nacimiento=siHacesBien['mensaje']['fecha_nacimiento'];
-              this.instanciaPostulante.telefono=siHacesBien['mensaje']['telefono'];
-              this.instanciaPostulante.genero=siHacesBien['mensaje']['genero'];
-              this.instanciaPostulante.direccion_domicilio=siHacesBien['mensaje']['direccion_domicilio'];
-
-              //cargo los datos al formulario
-              this.formPostulante.setValue({
-              nombresCompleto:this.instanciaPostulante.nombre,
-              apellidosCompleto:this.instanciaPostulante.apellido,
-              documentoIndentidad:this.instanciaPostulante.cedula,
-              telefono:this.instanciaPostulante.telefono,
-              fechaNacimiento:this.instanciaPostulante.fecha_nacimiento,
-              genero:this.instanciaPostulante.genero,
-              direccionDomicilio:this.instanciaPostulante.direccion_domicilio
-              });
-            //ahun no lo revisan al formulario
-            if(this.instanciaPostulante.estado==0 && this.instanciaPostulante.observaciones==''){
-              this.formValidado=false;
-              this.obervaciones=false;
-
-              this.formPostulante.disable();
-            }
-            //ya lo revisaron al formulaorio,pero no fue validado
-            if(this.instanciaPostulante.estado==0 && this.instanciaPostulante.observaciones!=''){
-              this.formValidado=false;
-              this.obervaciones=true;
-            }
-            //lo revisaron y lo validaron
-            if(this.instanciaPostulante.estado==1 && this.instanciaPostulante.observaciones!=''){
-              this.formValidado=true;
-              this.obervaciones=true;
-              //this.booleanFormularioCompletado=true;
-
-              this.formPostulante.disable();
-            }
-
-          }else{
-            this.booleanFormularioCompletado=false;
-          }
-      },(peroSiTenemosErro)=>{
-        Swal('Error', peroSiTenemosErro['error'], 'error')
-    });
-
-  }
-
-  //creacion usuario estudiante
-  registrarPostulante(){
-    if(this.formPostulante.invalid){
-      const toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-      });
-      toast({
-        type: 'error',
-        title: 'Debe llenar todos los campos correctamente'
-      })
-      return Object.values(this.formPostulante.controls).forEach(contol=>{
-        contol.markAsTouched();
-      });
-    }
-     Swal({
-      allowOutsideClick:false,
-      type:'info',
-      text:'Espere por favor'
-    });
-    Swal.showLoading();
-    this.instanciaPostulante.estado=0;
-    this.instanciaPostulante.observaciones="";
-    this.instanciaPostulante.nombre=this.formPostulante.value.nombresCompleto;
-    this.instanciaPostulante.apellido=this.formPostulante.value.apellidosCompleto;
-    this.instanciaPostulante.cedula=this.formPostulante.value.documentoIndentidad;
-    this.instanciaPostulante.fecha_nacimiento=this.formPostulante.value.fechaNacimiento;
-    this.instanciaPostulante.telefono=this.formPostulante.value.telefono;
-    this.instanciaPostulante.genero=this.formPostulante.value.genero;
-    this.instanciaPostulante.direccion_domicilio=this.formPostulante.value.direccionDomicilio;
-    this.servicioPostulante_.crearPostulante(this.instanciaPostulante).subscribe(
-      siHacesBien=>{
-        Swal.close();
-        if(siHacesBien['Siglas']=="OE"){
-          const toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-          });
-          toast({
-            type: 'success',
-            title: 'Registrado'
-          })
-          this.booleanFormularioCompletado=true;
-          this.formValidado=false;
-          this.obervaciones=false;
-          this.formPostulante.disable();
-        }else{
-            Swal('Información', siHacesBien['mensaje'], 'info')
-        }
-
-      },(peroSiTenemosErro)=>{
-        Swal({
-          title:'Error',
-          type:'error',
-          text:peroSiTenemosErro['mensaje']
-        });
-    });
-  }
-
-  //editar
-  editarPostulante(){
-    if(this.formPostulante.invalid){
-      const toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000
-      });
-      toast({
-        type: 'error',
-        title: 'Debe llenar todos los campos correctamente'
-      })
-      return Object.values(this.formPostulante.controls).forEach(contol=>{
-        contol.markAsTouched();
-      });
-    }
-    this.instanciaPostulante.estado=0;
-    this.instanciaPostulante.observaciones="";
-    this.instanciaPostulante.nombre=this.formPostulante.value.nombresCompleto;
-    this.instanciaPostulante.apellido=this.formPostulante.value.apellidosCompleto;
-    this.instanciaPostulante.cedula=this.formPostulante.value.documentoIndentidad;
-    this.instanciaPostulante.fecha_nacimiento=this.formPostulante.value.fechaNacimiento;
-    this.instanciaPostulante.telefono=this.formPostulante.value.telefono;
-    this.instanciaPostulante.genero=this.formPostulante.value.genero;
-    this.instanciaPostulante.direccion_domicilio=this.formPostulante.value.direccionDomicilio;
-     Swal({
-      allowOutsideClick:false,
-      type:'info',
-      text:'Espere por favor'
-    });
-    Swal.showLoading();
-    //LAS OBERSIACIONE LE BORRO O LE PONGO EN VACIO POR QUE SE SUPONE QUE VUELVE A INTENTAR
-    this.servicioPostulante_.actulizarDatosPostulante(this.instanciaPostulante).subscribe(
-      siHacesBien=>{
-        Swal.close();
-        if(siHacesBien['Siglas']=="OE"){
-          const toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-          });
-          toast({
-            type: 'success',
-            title: 'Actualizado'
-          })
-          //descativamos el formulario//si no existe observaciones el formualrio no ha sido revisado
-          this.obervaciones=false;
-          //si el usuario esta el estado en 1// estado cero
-          this.formValidado=false;
-          this.formPostulante.disable();
-          }else{
-             Swal('Info', siHacesBien['mensaje'], 'info')
-          }
-      },(peroSiTenemosErro)=>{
-         Swal({
-          title:'Error',
-          type:'error',
-          text:peroSiTenemosErro['mensaje']
-         });
-    });
-
   }
 }
