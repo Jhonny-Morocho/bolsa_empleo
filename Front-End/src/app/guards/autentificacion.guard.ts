@@ -16,9 +16,9 @@ export class AutentificacionGuard implements CanActivate {
          return true;
      }else{
         Swal({
-          title:'Error',
+          title:'Información',
           type:'error',
-          text:'La session ha expirado '
+          text:'La sesion ha expirado '
         });
          console.log(this.authnServicioAdmin_.estaAutenticado());
          this.router_.navigateByUrl('/home')

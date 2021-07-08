@@ -86,6 +86,7 @@ export class AutenticacionUserService {
      let hoy = new Date();
      hoy.setSeconds( 36000 );
      localStorage.setItem('expira',hoy.getTime().toString());
+
   }
 
   cerrarSession(){
@@ -113,17 +114,13 @@ export class AutenticacionUserService {
       return false;
     }
     // pregutnar si le session a expirado del local starge
-     const expira=Number(localStorage.getItem('expira'));
-     const expiraDate=new Date();
-     expiraDate.setSeconds(expira);
-     const tiempoHoy=new Date();
-      if(expiraDate>tiempoHoy){
-        return true;
-      }else{
-        return false;
-      }
-
-    //return this.correo.length>2;
+     const tiempoInicio=Number(localStorage.getItem('expira'));
+     const expiraDate=new Date().getTime();
+    if(tiempoInicio>expiraDate){
+      return true;
+    }else{
+      return false;
+    }
   }
   crearNuevoUsuario(modelUsuario:UsuarioModel){
     //envio el json tal como esta en el backen

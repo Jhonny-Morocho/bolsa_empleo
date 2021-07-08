@@ -62,9 +62,8 @@ export class ReactivarOfertaComponent implements OnInit {
               this.instanciaOfertaLaboral.external_of=suHacesBien["mensaje"]['external_of'];
               this.instanciaOfertaLaboral.obervaciones=suHacesBien["mensaje"]['obervaciones'];
               this.instanciaOfertaLaboral.estado=suHacesBien["mensaje"]['estado'];
-              $("#itemRequisitos").html(this.instanciaOfertaLaboral.requisitos);
             }else{
-              Swal('Ups',suHacesBien['mensaje'], 'info');
+              Swal('Información',suHacesBien['mensaje'], 'info');
               this.ofertaEncontrada=false;
             }
         },peroSiTenemosErro=>{
