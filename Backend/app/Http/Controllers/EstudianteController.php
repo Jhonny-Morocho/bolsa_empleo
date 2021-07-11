@@ -224,10 +224,15 @@ class EstudianteController extends Controller
     }
 
      // Listar todos los postulante estado cero y no cero//con sus datos de formulario
-    public  function listarEstudiantes(){
+    public  function listarEstudiantes($external_us){
         //obtener todos los usuarios que sean postulante
         try {
             $ObjeEstudiante=null;
+            $esEncargado=Usuario::where('external_us',$external_us)->where("estado",1)->where("tipoUsuario",3)->first();
+            //validamos si la secrataria es la persona q esta visualizando los datos
+            if(!$esEncargado){
+                return response()->json(["mensaje"=>$ObjeEstudiante,"Siglas"=>"UNPV","respuesta"=>"El usuario no tiene permisos para visulizar esta información"]);
+            }
             $ObjeEstudiante=Estudiante::join("usuario","usuario.id","=","estudiante.fk_usuario")
             ->select("usuario.*","estudiante.*")
             ->where("usuario.tipoUsuario",2)

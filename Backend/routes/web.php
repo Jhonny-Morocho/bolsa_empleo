@@ -37,7 +37,7 @@ try {
         $router->post('/estudiante/FormEstudiante','EstudianteController@FormEstudiante');
         $router->post('/empleador/formEmpleador','EmpleadorController@FormEmpleador');
         //consular todos los postulante que tienen formularior registrado
-        $router->get('/estudiante/listarEstudiantes','EstudianteController@listarEstudiantes');
+        $router->get('/estudiante/listarEstudiantes/{external_us}','EstudianteController@listarEstudiantes');
         $router->get('/empleador/listarEmpleadores','EmpleadorController@listarEmpleadores');
         $router->post('/estudiante/obtenerPostulanteExternal_es','EstudianteController@obtenerPostulanteExternal_es');
         $router->post('/empleador/obtenerEmpleadorExternal_em','EmpleadorController@obtenerEmpleadorExternal_em');

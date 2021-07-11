@@ -164,7 +164,6 @@ class UsuarioController extends Controller
             if($ObjUsuario['external_us']===$external_id){
                 //creacion de  un objeto para guardar el estudiante
                 // $texto="";
-
                 $ObjEstudiante=null;
                 try {
                     //code...
@@ -193,7 +192,7 @@ class UsuarioController extends Controller
                     $arrayEncargado=null;
                     $parrafo="Se ha registrado el nuevo postulante ".$datos["nombre"]." ".$datos["apellido"].". Con correo: ". $ObjUsuario->correo;
                     foreach ($usuarioSecrataria as $key => $value) {
-                        //tengo q redacatra el menaje a la secretaria
+                        //tengo q redactar el menaje a la secretaria
                         $plantillaCorreo=$this->templateHtmlCorreo(
                                                 $value["nombre"]." ".$value["apellido"],
                                                 $parrafo
@@ -229,7 +228,7 @@ class UsuarioController extends Controller
                 }
 
             }else{
-                return response()->json(["mensaje"=>"Operación No Exitosa no coincide el external user","Siglas"=>"ONE"]);
+                return response()->json(["mensaje"=>"Operación no exitosa no coincide el external_us en la Base de datos","Siglas"=>"ONE"]);
             }
         }else{
             return response()->json(["mensaje"=>"La data no tiene formato deseado","Siglas"=>"DNF",400]);
@@ -239,7 +238,6 @@ class UsuarioController extends Controller
     public function login(Request $request){
 
         if($request->json()){
-
             // ========= VALIDACION DEL USUARIO ANTES DE INICIAR EL LOGIN ====
             //existe el usuario
             $usuario=null;
@@ -256,7 +254,7 @@ class UsuarioController extends Controller
 
                         } catch (\Throwable $th) {
                             //throw $th;
-                            return response()->json(["mensaje"=>"El rol del usuario no se encontro","Siglas"=>"TUNE",400,"error"=>$th->getMessage()]);
+                            return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"TUNE",400,"error"=>$th->getMessage()]);
                         }
                     }else{
                         return response()->json(["mensaje"=>"Contraseña Incorrecta","Siglas"=>"PI",400]);

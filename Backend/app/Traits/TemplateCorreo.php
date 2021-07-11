@@ -64,6 +64,7 @@ trait TemplateCorreo {
             $mail->addReplyTo(getenv("CORREO_MODULO"),'Proceso de Inserción Laboral');
             $mail->Subject=($tituloCorreo);
             $mail->addAddress($para);
+            // $mail->Port= 587;
             $mail->msgHTML($templateHtml);
             $envio=$mail->Send();
             if ($envio==true) {
