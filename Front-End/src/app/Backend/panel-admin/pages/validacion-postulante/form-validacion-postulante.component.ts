@@ -127,14 +127,14 @@ export class FormInfoPostulanteComponent implements OnInit {
             })
             this.router.navigateByUrl('/panel-admin/tareas');
           }else{
-            Swal('Ups', siHacesBien['mensaje'], 'info')
+            Swal('Información', siHacesBien['mensaje'], 'info')
           }
 
       },(peroSiTenemosErro)=>{
        Swal({
-           title:'Error al registrar informacion',
+           title:'Error',
            type:'error',
-           text:peroSiTenemosErro['mensaje']
+           text:peroSiTenemosErro['statusText']
          });
       }
     );

@@ -56,9 +56,14 @@ class TitulosAcademicosController extends Controller
             try {
                 //buscar si existe el usuario que realiza la peticion
                 $ObjUsuario=Usuario::where("external_us",$external_id)->first();
+                if(!$ObjUsuario){
+                    return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",200,]);
+                }
                 //busco si ese usuario es un estudiante
-                $Objestudiante=Estudiante::where("fk_usuario","=",$ObjUsuario->id)->first();
-                //die(json_encode($datos));
+                $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
+                if(!$Objestudiante){
+                    return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro","Siglas"=>"UNV",200,]);
+                }
                 $ObjTituloAcademico=new TitulosAcademicos();
                 $ObjTituloAcademico->fk_estudiante=$Objestudiante->id;
                 $ObjTituloAcademico->titulo_obtenido=$datos["titulo_obtenido"];

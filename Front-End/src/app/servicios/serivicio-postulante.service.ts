@@ -95,6 +95,7 @@ export class SerivicioPostulanteService {
   actulizarAprobacionPostulante(estado:Number,external_es:string,observaciones:string){
     const autenficacionDatos={
       estado:estado,
+      external_us_secretaria:localStorage.getItem('external_us'),
       observaciones:observaciones
     }
     return this._httCliente.post(

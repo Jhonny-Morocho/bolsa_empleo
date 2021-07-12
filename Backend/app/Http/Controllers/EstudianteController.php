@@ -45,13 +45,26 @@ class EstudianteController extends Controller
      //actulizar dato de postulante//estudainte
     public function actulizarAprobacionEstudiante(Request $request,$external_id){
          if($request->json()){
-            $texto="";
+            //$texto="";
             // $handle = fopen("logRegistroPostulante.txt", "a");
             $arraycorreoRespuesta=array();
              try {
-                 $ObjEstudiante = Estudiante::where("external_es","=",$external_id)->update(array( 'estado'=>$request['estado'], 'observaciones'=>$request['observaciones']));
+                $esSecretaria=Usuario::where('external_us',$request['external_us_secretaria'])->where("estado",1)->where("tipoUsuario",3)->first();
+                //validamos si la secrataria es la persona q esta visualizando los datos
+                 if(!$esSecretaria){
+                    return response()->json(["mensaje"=>"No tiene permisos para realizar esta accion",
+                                            "Siglas"=>"NTP",
+                                            "respuesta"=>"El usuario no tiene permisos para realizar esta acción"]);
+                 }
+
+                 $existePostulante=Estudiante::where('external_es',$external_id)->first();
+                 //validar si el usuario estudainte existe con el external_us
+                 if(!$existePostulante){
+                    return response()->json(["mensaje"=>"Usuario estudiante no encontrado","Siglas"=>"UENE"]);
+                 }
+                 $ObjEstudiante = Estudiante::where("external_es",$external_id)->update(array( 'estado'=>$request['estado'], 'observaciones'=>$request['observaciones']));
                  //notificar al correo sobre la aprobacion y no aprobacion
-                 $usuarioEstudiante=Estudiante::join("usuario","usuario.id","=","estudiante.fk_usuario")
+                 $usuarioEstudiante=Estudiante::join("usuario","usuario.id","estudiante.fk_usuario")
                  ->select("estudiante.*","usuario.*")
                  ->where("usuario.tipoUsuario",2)
                  ->where("external_es",$external_id)
@@ -70,15 +83,7 @@ class EstudianteController extends Controller
                                         $plantillaCorreo,$usuarioEstudiante['correo'],
                                         getenv("TITULO_CORREO_POSTULANTE")
                                         );
-
-                //notificar a la secretaria sobre el nuevo registro //o reenvio de infomracion
-
-                    // $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante informacion no validada Correo por parte de la secrataria : ".$enviarCorreoBolean." ]";
-                    // fwrite($handle, $texto);
-                    // fwrite($handle, "\r\n\n\n\n");
-                    // fclose($handle);
                 }
-
                  // la secretartia notifica al postulante de su registro exitoso, se notifica al encargado y al postulante
                 if($request['estado']==1){// validacion exitosa
                     //ENVIAMOS LOS CORREOS TANTO AL ENCARGADO Y AL POSTULANTE
@@ -130,15 +135,19 @@ class EstudianteController extends Controller
                     }
                     // fclose($handle);
                 }
-                 // si la validacion no es exitosa se le comina al estudiante que revise su informaicon
-                return response()->json(["mensaje"=>$ObjEstudiante,"Siglas"=>"OE",
+                // si la validacion no es exitosa se le comina al estudiante que revise su informaicon
+                return response()->json(
+                                            [ "mensaje"=>$ObjEstudiante,
+                                            "Siglas"=>"OE",
                                             "correoEstadoEstudiante"=> $enviarCorreoBolean,
                                             "correoEstadoEncargado"=> $arraycorreoRespuesta,
-                                            "respuesta"=>"Operacion Exitosa"]);
+                                            "respuesta"=>"Operación Exitosa"
+                                            ]
+                                        );
 
-             } catch (\Throwable $th) {
-                return response()->json(["mensaje"=>"No se puede actulizar el postulante","Siglas"=>"ONE","error"=>$th]);
-             }
+            } catch (\Throwable $th) {
+                return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","error"=>$th]);
+            }
 
          }else{
             return response()->json(["mensaje"=>"La data no tiene formato deseado","Siglas"=>"DNF",400]);
@@ -228,9 +237,9 @@ class EstudianteController extends Controller
         //obtener todos los usuarios que sean postulante
         try {
             $ObjeEstudiante=null;
-            $esEncargado=Usuario::where('external_us',$external_us)->where("estado",1)->where("tipoUsuario",3)->first();
+            $esSecretaria=Usuario::where('external_us',$external_us)->where("estado",1)->where("tipoUsuario",3)->first();
             //validamos si la secrataria es la persona q esta visualizando los datos
-            if(!$esEncargado){
+            if(!$esSecretaria){
                 return response()->json(["mensaje"=>$ObjeEstudiante,"Siglas"=>"UNPV","respuesta"=>"El usuario no tiene permisos para visulizar esta información"]);
             }
             $ObjeEstudiante=Estudiante::join("usuario","usuario.id","=","estudiante.fk_usuario")
