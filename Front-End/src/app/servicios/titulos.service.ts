@@ -94,7 +94,8 @@ export class TituloService {
     //actulizar estado de validacion del postulante//aprobado y no aprobado
   actulizarDatosTitulo(modeloTitulo:TituloModel){
     const autenficacionDatos={
-      ...modeloTitulo
+      ...modeloTitulo,
+      external_us:localStorage.getItem('external_us')
     }
 
       return this._httCliente.post(
@@ -110,7 +111,8 @@ export class TituloService {
   //actulizar estado de validacion del postulante//aprobado y no aprobado
   eliminarTitulo(modeloTitulo:TituloModel){
     const autenficacionDatos={
-      ...modeloTitulo
+      ...modeloTitulo,
+      external_us:localStorage.getItem('external_us')
     }
     return this._httCliente.post(
       `${this.urlDominio_}${this.urlELiminarTitulo}`,autenficacionDatos

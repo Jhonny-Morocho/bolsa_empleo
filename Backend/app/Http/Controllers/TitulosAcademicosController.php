@@ -62,7 +62,7 @@ class TitulosAcademicosController extends Controller
                 //busco si ese usuario es un estudiante
                 $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
                 if(!$Objestudiante){
-                    return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro","Siglas"=>"UNV",200,]);
+                    return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro, no puede realizar esta acción","Siglas"=>"UNV",200,]);
                 }
                 $ObjTituloAcademico=new TitulosAcademicos();
                 $ObjTituloAcademico->fk_estudiante=$Objestudiante->id;
@@ -90,6 +90,17 @@ class TitulosAcademicosController extends Controller
             $actulizoArchivo=false;
             $archivoEliminado=null;
             try {
+                //buscar si existe el usuario que realiza la peticion
+                $ObjUsuario=Usuario::where("external_us",$request['external_us'])->first();
+                if(!$ObjUsuario){
+                    return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",200,]);
+                }
+                //busco si ese usuario es un estudiante
+                $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
+                if(!$Objestudiante){
+                    return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro, no puede realizar esta acción","Siglas"=>"UNV",200,]);
+                }
+
                 //actulizo el archivo , por lo cual actulizo la evidencias_url
                 if($request['evidencias_url']!=null){
                     $actulizoArchivo=true;
@@ -139,6 +150,19 @@ class TitulosAcademicosController extends Controller
     //terminar de hacer
     public function eliminarTitulo(Request $request){
         try {
+            if(!$request->json()){
+                return response()->json(["mensaje"=>"Los datos no tienene el formato deseado","Siglas"=>"DNF",400]);
+            }
+            //buscar si existe el usuario que realiza la peticion
+            $ObjUsuario=Usuario::where("external_us",$request['external_us'])->first();
+            if(!$ObjUsuario){
+                return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",200,]);
+            }
+             //busco si ese usuario es un estudiante
+            $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
+             if(!$Objestudiante){
+                 return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro","Siglas"=>"UNV",200,]);
+            }
             //actualizo el texto plano
             $ObjTituloAcademico=TitulosAcademicos::where("external_ti","=", $request['external_ti'])->update(array('estado'=>$request['estado']));
             //borro el archivo

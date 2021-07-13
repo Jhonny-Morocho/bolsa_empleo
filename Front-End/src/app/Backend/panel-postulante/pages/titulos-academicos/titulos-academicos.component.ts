@@ -71,20 +71,24 @@ export class TitulosAcademicosComponent implements OnInit {
           this.servicioTitulo.eliminarTitulo(this.instanciaTituloAcademico).subscribe(
             siHaceBien=>{
               //elimino visualmente
-              this.tituloAcademico.splice(index,1); //desde la posición 2, eliminamos 1 elemento
-              const toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 6000,
+              if(siHaceBien['Siglas']=='OE'){
+                this.tituloAcademico.splice(index,1); //desde la posición 2, eliminamos 1 elemento
+                const toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 6000,
 
-              });
-              toast({
-                type: 'success',
-                title: 'El registro ha sido eliminado'
-              })
+                });
+                toast({
+                  type: 'success',
+                  title: 'El registro ha sido eliminado'
+                })
+              }else{
+                Swal('Información',siHaceBien['mensaje'], 'info');
+              }
             },(peroSiTenemosErro)=>{
-              Swal('Ups',peroSiTenemosErro['mensaje'], 'info');
+              Swal('Error',peroSiTenemosErro['statusText'], 'error');
             }
           );
         }
