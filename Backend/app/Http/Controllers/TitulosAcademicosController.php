@@ -90,8 +90,8 @@ class TitulosAcademicosController extends Controller
             $actulizoArchivo=false;
             $archivoEliminado=null;
             try {
-                //buscar si existe el usuario que realiza la peticion
-                $ObjUsuario=Usuario::where("external_us",$request['external_us'])->first();
+                //buscar el usuario de tipo estudiante
+                $ObjUsuario=Usuario::where("external_us",$request['external_us'])->where("tipoUsuario",2)->first();
                 if(!$ObjUsuario){
                     return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",200,]);
                 }
@@ -99,6 +99,10 @@ class TitulosAcademicosController extends Controller
                 $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
                 if(!$Objestudiante){
                     return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro, no puede realizar esta acción","Siglas"=>"UNV",200,]);
+                }
+                $existeTitulo=TitulosAcademicos::where("external_ti",$external_id)->first();
+                if(!$existeTitulo){
+                    return response()->json(["mensaje"=>"El registro con el identificador ".$external_id." no se encontro","Siglas"=>"RNE",200,]);
                 }
 
                 //actulizo el archivo , por lo cual actulizo la evidencias_url
@@ -134,7 +138,8 @@ class TitulosAcademicosController extends Controller
                                          "archivoEliminado"=>$archivoEliminado,
                                          "actulizoArchivo"=>$actulizoArchivo,
                                          "resques"=>$request->json()->all(),
-                                         "respuesta"=>$ObjTituloAcademico,"Siglas"=>"OE",200]);
+                                         "respuesta"=>$ObjTituloAcademico,
+                                         "Siglas"=>"OE",200]);
                 //respuesta exitoso o no en la inserrccion
             } catch (\Throwable $th) {
                 return response()->json(["mensaje"=>$th->getMessage(),
@@ -210,9 +215,9 @@ class TitulosAcademicosController extends Controller
 
     private function retornarTituloEncontrado($ObjTitulo){
         if($ObjTitulo!=null){
-            return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"OE","respuesta"=>"Operacion  Exitosa"]);
+            return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"OE","respuesta"=>"Operación  Exitosa"]);
         }else{
-            return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"ONE","respuesta"=>"Operacion No Exitosa, no se encontro el titulo"]);
+            return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"TNE","respuesta"=>"Título no encontrado"]);
         }
     }
 

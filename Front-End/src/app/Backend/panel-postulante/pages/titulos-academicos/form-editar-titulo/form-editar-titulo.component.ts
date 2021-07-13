@@ -153,7 +153,7 @@ export class FormEditarTituloComponent implements OnInit {
               Swal('Ups',siHacesBienFormData['mensaje'], 'info')
             }
         },(erroSubirFormData)=>{
-          Swal('Error',erroSubirFormData['mensaje'], 'error')
+          Swal('Error',erroSubirFormData['statusText'], 'error')
       });
     }
     //caso contrario solo actualizo  los datos de texto plano

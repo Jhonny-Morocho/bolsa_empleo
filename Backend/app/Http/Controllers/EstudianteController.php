@@ -167,7 +167,7 @@ class EstudianteController extends Controller
                         $ObjEstudiante =
                         estudiante::where("fk_usuario","=", $ObjUsuario->id)
                                     ->update(
-                                            array( 'cedula'=>$request['cedula'],
+                                            array('cedula'=>$request['cedula'],
                                             'telefono'=>$request['telefono'],
                                             'nombre'=>$request['nombre'],
                                             'apellido'=>$request['apellido'],
