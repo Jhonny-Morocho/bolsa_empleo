@@ -234,7 +234,8 @@ class EmpleadorController extends Controller{
                 $parrafo="Existe un nuevo empleador pendiente en aprobar la información del mismo";
                 $arrayEncargado=$this->enviarCorreoEncargadoFormEditadoRegistrado($datos,$ObjUsuario,$parrafo);
 
-                return response()->json(["mensaje"=> "Registro Exitoso","Siglas"=>"OE",
+                return response()->json(["mensaje"=> "Registro Exitoso",
+                                            "Siglas"=>"OE",
                                             "estadoCorreoEnviado"=>$arrayEncargado,
                                             "respuestaEmpleador"=>$ObjEmpleador,200]);
             } catch (\Throwable $th) {
