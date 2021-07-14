@@ -188,22 +188,22 @@ export class FormAddCursoComponent implements OnInit {
                           title: 'Registrado'
                         })
                         this.router.navigateByUrl('/panel-postulante/cursos-capacitaciones');
-
-                      }else{
-                        Swal('Ups',siHacesBienJson['mensaje'], 'info')
+                        return;
                       }
+                      Swal('Información',siHacesBienJson['mensaje'], 'info')
+
                     },(erroSubirJson)=>{
                        Swal({
                          title:'Error',
                          type:'error',
-                         text:erroSubirJson['mensaje']
+                         text:erroSubirJson['statusText']
                        });
                   });
-           }else{
-             Swal('Ups', siHacesBienFormData['mensaje'], 'info')
-          }
+            return;
+           }
+          Swal('Información', siHacesBienFormData['mensaje'], 'info')
       },(erroSubirFormData)=>{
-        Swal('Error',erroSubirFormData['mensaje'], 'error')
+        Swal('Error',erroSubirFormData['statusText'], 'error')
     });
     //2.guardamos la data
   }

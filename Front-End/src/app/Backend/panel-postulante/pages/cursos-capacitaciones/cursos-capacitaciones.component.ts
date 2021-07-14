@@ -98,20 +98,24 @@ export class CursosCapacitacionesComponent implements OnInit {
          this.instanciaCursosCapacitaciones.external_cu=external_cu;
          this.servicioCursosCapacitacione.eliminarCursoCapacitacion(this.instanciaCursosCapacitaciones).subscribe(
            siHaceBien=>{
-             //elimino visualmente
-             this.cursosCapacitaciones.splice(index,1); //desde la posición 2, eliminamos 1 elemento
-              const toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000
-              });
-              toast({
-                type: 'success',
-                title: 'Registro eliminado'
-              })
+             if(siHaceBien['Siglas']=='OE'){
+               //elimino visualmente
+               this.cursosCapacitaciones.splice(index,1); //desde la posición 2, eliminamos 1 elemento
+                const toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 5000
+                });
+                toast({
+                  type: 'success',
+                  title: 'Registro eliminado'
+                })
+                return;
+             }
+             Swal('Información',siHaceBien['mensaje'], 'info')
            },(peroSiTenemosErro)=>{
-             Swal('Ups',peroSiTenemosErro['mensaje'], 'info')
+             Swal('Error',peroSiTenemosErro['statusText'], 'error')
            }
          );
        }

@@ -113,10 +113,12 @@ export class FormEditarCursoComponent implements OnInit {
                 pais:this.instanciaCursosCapacitaciones.fk_pais
               });
             }else{
-              Swal('Info',siHacesBien['mensaje'], 'info');
+              Swal('Información',siHacesBien['mensaje'], 'info');
+              this.router.navigateByUrl('/panel-postulante/cursos-capacitaciones');
             }
         },peroSiTenemosErro=>{
-          Swal('Error',peroSiTenemosErro['mensaje'], 'error');
+          Swal('Error',peroSiTenemosErro['statusText'], 'error');
+          this.router.navigateByUrl('/panel-postulante/cursos-capacitaciones');
         }
       )
     });
@@ -174,10 +176,10 @@ export class FormEditarCursoComponent implements OnInit {
             this.guardatosPlano();
             //estado del registro es 1
             }else{
-              Swal('Info', siHacesBienFormData['mensaje'], 'info');
+              Swal('Información', siHacesBienFormData['mensaje'], 'info');
             }
         },(erroSubirFormData)=>{
-          Swal('Error', erroSubirFormData['mensaje'], 'error');
+          Swal('Error', erroSubirFormData['statusText'], 'error');
       });
     }else{
         this.instanciaCursosCapacitaciones.evidencia_url=null;
@@ -211,13 +213,13 @@ export class FormEditarCursoComponent implements OnInit {
           })
           this.router.navigateByUrl('/panel-postulante/cursos-capacitaciones');
         }else{
-          Swal('Ups',siHacesBienJson['mensaje'], 'info')
+          Swal('Infomración',siHacesBienJson['mensaje'], 'info')
         }
       },(erroSubirJson)=>{
           Swal({
             title:'Error',
             type:'error',
-            text:erroSubirJson['mensaje']
+            text:erroSubirJson['statusText']
           });
     });
   }

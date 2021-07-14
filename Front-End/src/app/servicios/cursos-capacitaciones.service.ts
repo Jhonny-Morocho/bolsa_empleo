@@ -28,7 +28,8 @@ export class CursosCapacitacionesService {
   }
   crearCursoCapacitaciones(modeloCursosCapacitaciones:CursosCapacitacionesModel){
     const autenficacionDatos={
-       ...modeloCursosCapacitaciones
+       ...modeloCursosCapacitaciones,
+       external_us:localStorage.getItem('external_us')
      }
      return this._httCliente.post(`${this.urlDominio_}${this.urlBackendCrearCursoCapacitacion}${localStorage.getItem("external_us")}`,autenficacionDatos
      ).pipe(
@@ -94,7 +95,8 @@ export class CursosCapacitacionesService {
     //actulizar estado de validacion del postulante//aprobado y no aprobado
   actulizarDatosCursosCapacitaciones(modeloCursosCapacitaciones:CursosCapacitacionesModel){
     const autenficacionDatos={
-      ...modeloCursosCapacitaciones
+      ...modeloCursosCapacitaciones,
+      external_us:localStorage.getItem('external_us')
     }
     //retorna la respuesata
 
@@ -111,7 +113,8 @@ export class CursosCapacitacionesService {
   //actulizar estado de validacion del postulante//aprobado y no aprobado
   eliminarCursoCapacitacion(modeloCursosCapacitaciones:CursosCapacitacionesModel){
     const autenficacionDatos={
-      ...modeloCursosCapacitaciones
+      ...modeloCursosCapacitaciones,
+      external_us:localStorage.getItem('external_us')
     }
     //retorna la respuesata
       return this._httCliente.post(

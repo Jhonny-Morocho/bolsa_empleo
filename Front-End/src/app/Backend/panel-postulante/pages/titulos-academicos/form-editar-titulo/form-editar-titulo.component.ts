@@ -99,10 +99,12 @@ export class FormEditarTituloComponent implements OnInit {
                 detalles_adiciones:this.instanciaTituloAcademico.detalles_adiciones
               });
             }else{
-              Swal('Ups', siHaceBien['mensaje'], 'info')
+              Swal('Información', siHaceBien['mensaje'], 'info')
+              this.router.navigateByUrl('/panel-postulante/titulos-academicos');
             }
         },peroSiTenemosErro=>{
-          Swal('Error', peroSiTenemosErro['mensaje'], 'error')
+          Swal('Error', peroSiTenemosErro['statusText'], 'error')
+          this.router.navigateByUrl('/panel-postulante/titulos-academicos');
         }
       )
     });
@@ -150,7 +152,7 @@ export class FormEditarTituloComponent implements OnInit {
             this.instanciaTituloAcademico.evidencias_url=siHacesBienFormData['nombreArchivo'];
             this.guardatosPlano();
             }else{
-              Swal('Ups',siHacesBienFormData['mensaje'], 'info')
+              Swal('Información',siHacesBienFormData['mensaje'], 'info')
             }
         },(erroSubirFormData)=>{
           Swal('Error',erroSubirFormData['statusText'], 'error')
@@ -194,7 +196,7 @@ export class FormEditarTituloComponent implements OnInit {
           Swal({
             title:'Error',
             type:'error',
-            text:erroSubirJson['mensaje']
+            text:erroSubirJson['statusText']
           });
     });
   }

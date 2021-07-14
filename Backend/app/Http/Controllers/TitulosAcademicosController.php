@@ -168,6 +168,10 @@ class TitulosAcademicosController extends Controller
              if(!$Objestudiante){
                  return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro","Siglas"=>"UNV",200,]);
             }
+            $existeTitulo=TitulosAcademicos::where("external_ti",$request['external_ti'])->first();
+            if(!$existeTitulo){
+                return response()->json(["mensaje"=>"El registro con el identificador ".$request['external_ti']." no se encontro","Siglas"=>"RNE",200,]);
+            }
             //actualizo el texto plano
             $ObjTituloAcademico=TitulosAcademicos::where("external_ti","=", $request['external_ti'])->update(array('estado'=>$request['estado']));
             //borro el archivo
@@ -217,7 +221,7 @@ class TitulosAcademicosController extends Controller
         if($ObjTitulo!=null){
             return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"OE","respuesta"=>"Operación  Exitosa"]);
         }else{
-            return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"TNE","respuesta"=>"Título no encontrado"]);
+            return response()->json(["mensaje"=>"No se encontró el registro con el identificador asignado","Siglas"=>"TNE","respuesta"=>"Título no encontrado"]);
         }
     }
 

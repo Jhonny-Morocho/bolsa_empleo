@@ -56,9 +56,15 @@ class CursosCapacitacionesController extends Controller
             //obtengo todos los datos y lo guardo en la variable datos
             $datos=$request->json()->all();
             //buscar si existe el usuario que realiza la peticion
-             $ObjUsuario=Usuario::where("external_us",$external_id)->first();
-            //pregunto si el extern_us es del usuario que realiza la peticion
-            $Objestudiante=Estudiante::where("fk_usuario","=",$ObjUsuario->id)->first();
+            $ObjUsuario=Usuario::where("external_us",$external_id)->first();
+            if(!$ObjUsuario){
+                return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",200,]);
+            }
+            //busco si ese usuario es un estudiante
+            $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
+            if(!$Objestudiante){
+                return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro, no puede realizar esta acción","Siglas"=>"UNV",200,]);
+            }
             //creamos un objeto de tipo usuario para enviar los datos
             try {
                 //code...
@@ -102,11 +108,25 @@ class CursosCapacitacionesController extends Controller
         }
     }
     public function actulizarCursoCapacitaciones(Request $request,$external_id){
-        //die(json_encode($request->json()->all()));
         if($request->json()){
             $actulizoArchivo=false;
             $archivoEliminado=null;
             try {
+                //buscar el usuario de tipo estudiante
+                $ObjUsuario=Usuario::where("external_us",$request['external_us'])->where("tipoUsuario",2)->first();
+                if(!$ObjUsuario){
+                    return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",200,]);
+                }
+                //busco si ese usuario es un estudiante
+                $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
+                if(!$Objestudiante){
+                    return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro, no puede realizar esta acción","Siglas"=>"UNV",200,]);
+                }
+                $existeCurso=CursosCapacitaciones::where("external_cu",$external_id)->first();
+                if(!$existeCurso){
+                    return response()->json(["mensaje"=>"El registro con el identificador ".$external_id." no se encontro","Siglas"=>"RNE",200,]);
+                }
+
                 //actulizo el archivo , por lo cual actulizo la evidencias_url
                 if($request['evidencia_url']!=null){
                     $actulizoArchivo=true;
@@ -173,12 +193,29 @@ class CursosCapacitacionesController extends Controller
         if($ObjTitulo!=null){
             return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"OE","respuesta"=>"Operación  Exitosa"]);
         }else{
-            return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"ONE","respuesta"=>"No se encontro el título"]);
+            return response()->json(["mensaje"=>"No se encontró el registro con el identificador asignado","Siglas"=>"ONE","respuesta"=>"No se encontro el título"]);
         }
     }
      //terminar de hacer
      public function eliminarCursoCapicitacion(Request $request){
         try {
+            if(!$request->json()){
+                return response()->json(["mensaje"=>"Los datos no tienene el formato deseado","Siglas"=>"DNF",400]);
+            }
+            //buscar si existe el usuario que realiza la peticion
+            $ObjUsuario=Usuario::where("external_us",$request['external_us'])->first();
+            if(!$ObjUsuario){
+                return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",200,]);
+            }
+             //busco si ese usuario es un estudiante
+            $Objestudiante=Estudiante::where("fk_usuario",$ObjUsuario->id)->where('estado',1)->first();
+             if(!$Objestudiante){
+                 return response()->json(["mensaje"=>"Este usuario aún no ha sido validado su registro","Siglas"=>"UNV",200,]);
+            }
+            $existeCurso=CursosCapacitaciones::where("external_cu",$request['external_cu'])->first();
+            if(!$existeCurso){
+                return response()->json(["mensaje"=>"El registro con el identificador ".$request['external_cu']." no se encontro","Siglas"=>"RNE",200,]);
+            }
             //actualizo el texto plano
             $ObjTituloAcademico=CursosCapacitaciones::where("external_cu","=", $request['external_cu'])->update(array('estado'=>$request['estado']));
             //borro el archivo
