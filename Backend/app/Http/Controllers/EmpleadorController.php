@@ -207,6 +207,14 @@ class EmpleadorController extends Controller{
                 $ObjUsuario=Usuario::where("external_us",$external_id)
                 ->where("tipoUsuario",6)
                 ->first();
+                if(!$ObjUsuario){
+                    return response()->json(["mensaje"=>"El usuario ".$external_id." no tiene creada aún una cuenta ","Siglas"=>"UNE",200,]);
+                }
+                $existeEmleador=Empleador::where('fk_usuario',$ObjUsuario->id)->first();
+                //si tiene una cuenta creada entonces no podra registrarse dos veces
+                if($existeEmleador){
+                    return response()->json(["mensaje"=>"Usted ya está registrado","Siglas"=>"UEE",200,]);
+                }
                 $ObjEmpleador=new Empleador();
                 $ObjEmpleador->fk_usuario=$ObjUsuario->id;
                 $ObjEmpleador->razon_empresa=$datos["razon_empresa"];

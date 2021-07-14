@@ -157,79 +157,83 @@ class UsuarioController extends Controller
         if($request->json()){
             // $handle = fopen("logRegistroPostulante.txt", "a");
             $datos=$request->json()->all();
-            $ObjUsuario=Usuario::where("external_us",$external_id)
-            ->where("tipoUsuario",2)
-            ->first();
-            //verificar si el external user es igual
-            if($ObjUsuario['external_us']===$external_id){
+            try {
+                $ObjUsuario=Usuario::where("external_us",$external_id)
+                ->where("tipoUsuario",2)
+                ->first();
+                //validar si el usuario existe
+                if(!$ObjUsuario){
+                    return response()->json(["mensaje"=>"El usuario ".$external_id." no tiene creada aún una cuenta ","Siglas"=>"UNE",200,]);
+                }
+                $existeEstudiante=Estudiante::where('fk_usuario',$ObjUsuario->id)->first();
+                //si tiene una cuenta creada entonces no podra registrarse dos veces
+                if($existeEstudiante){
+                    return response()->json(["mensaje"=>"Usted ya está registrado","Siglas"=>"UEE",200,]);
+                }
                 //creacion de  un objeto para guardar el estudiante
                 // $texto="";
                 $ObjEstudiante=null;
-                try {
-                    //code...
-                    $ObjEstudiante=new Estudiante();
-                    $ObjEstudiante->fk_usuario=$ObjUsuario->id;
-                    $ObjEstudiante->nombre=$datos["nombre"];
-                    $ObjEstudiante->apellido=$datos["apellido"];
-                    $ObjEstudiante->cedula=$datos["cedula"];
-                    $ObjEstudiante->telefono=$datos["telefono"];
-                    $ObjEstudiante->genero=$datos["genero"];
-                    $ObjEstudiante->fecha_nacimiento=$datos["fecha_nacimiento"];
-                    $ObjEstudiante->direccion_domicilio=$datos["direccion_domicilio"];
-                    $ObjEstudiante->observaciones=$datos["observaciones"];
-                    $ObjEstudiante->external_es="Es".Utilidades\UUID::v4();
-                    $ObjEstudiante->estado=$datos["estado"];
-                    $ObjEstudiante->save();
+                //code...
+                $ObjEstudiante=new Estudiante();
+                $ObjEstudiante->fk_usuario=$ObjUsuario->id;
+                $ObjEstudiante->nombre=$datos["nombre"];
+                $ObjEstudiante->apellido=$datos["apellido"];
+                $ObjEstudiante->cedula=$datos["cedula"];
+                $ObjEstudiante->telefono=$datos["telefono"];
+                $ObjEstudiante->genero=$datos["genero"];
+                $ObjEstudiante->fecha_nacimiento=$datos["fecha_nacimiento"];
+                $ObjEstudiante->direccion_domicilio=$datos["direccion_domicilio"];
+                $ObjEstudiante->observaciones=$datos["observaciones"];
+                $ObjEstudiante->external_es="Es".Utilidades\UUID::v4();
+                $ObjEstudiante->estado=$datos["estado"];
+                $ObjEstudiante->save();
 
-                    //enviamos registro de postulante a la secretaria a la secretaria
-                    $usuarioSecrataria=Docente::join("usuario","usuario.id","=","docente.fk_usuario")
-                    ->select("docente.*","usuario.*")
-                    ->where("usuario.estado",1)
-                    ->where("usuario.tipoUsuario",3)
-                    ->get();
+                //enviamos registro de postulante a la secretaria a la secretaria
+                $usuarioSecrataria=Docente::join("usuario","usuario.id","=","docente.fk_usuario")
+                ->select("docente.*","usuario.*")
+                ->where("usuario.estado",1)
+                ->where("usuario.tipoUsuario",3)
+                ->get();
 
-                    //recorremo todoss los usuario que sean secretaria
-                    $arrayEncargado=null;
-                    $parrafo="Se ha registrado el nuevo postulante ".$datos["nombre"]." ".$datos["apellido"].". Con correo: ". $ObjUsuario->correo;
-                    foreach ($usuarioSecrataria as $key => $value) {
-                        //tengo q redactar el menaje a la secretaria
-                        $plantillaCorreo=$this->templateHtmlCorreo(
-                                                $value["nombre"]." ".$value["apellido"],
-                                                $parrafo
-                                            );
+                //recorremo todoss los usuario que sean secretaria
+                $arrayEncargado=null;
+                $parrafo="Se ha registrado el nuevo postulante ".$datos["nombre"]." ".$datos["apellido"].". Con correo: ". $ObjUsuario->correo;
+                foreach ($usuarioSecrataria as $key => $value) {
+                    //tengo q redactar el menaje a la secretaria
+                    $plantillaCorreo=$this->templateHtmlCorreo(
+                                            $value["nombre"]." ".$value["apellido"],
+                                            $parrafo
+                                        );
 
-                        $enviarCorreoBolean=
-                                $this->enviarCorreo(
-                                    $plantillaCorreo,
-                                    $value['correo'],
-                                    getenv("TITULO_CORREO_POSTULANTE")
-                                    );
-                        $arrayEncargado[$key]=array("nombre"=>$value['nombre'],
-                                                    "apellido"=>$value['apellido'],
-                                                    "estadoEnvioCorreo"=>$enviarCorreoBolean,
-                                                    "correo"=>$value['correo'],
-                                                    );
-                        // $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante Correo : ".$enviarCorreoBolean." ]";
-                        // fwrite($handle, $texto);
-                        // fwrite($handle, "\r\n\n\n\n");
-                    }
-                    // fclose($handle);
-                    return response()->json(["mensaje"=>$ObjEstudiante,
-                                            "estadoCorreoEnviado"=>$arrayEncargado,
-                                            "Siglas"=>"OE"]);
-                } catch (\Throwable $th) {
-                    // $texto="[".date("Y-m-d H:i:s")."]" ."Crear usuario Estudiante Error : ".$th." ]";
+                    $enviarCorreoBolean=
+                            $this->enviarCorreo(
+                                $plantillaCorreo,
+                                $value['correo'],
+                                getenv("TITULO_CORREO_POSTULANTE")
+                                );
+                    $arrayEncargado[$key]=array("nombre"=>$value['nombre'],
+                                                "apellido"=>$value['apellido'],
+                                                "estadoEnvioCorreo"=>$enviarCorreoBolean,
+                                                "correo"=>$value['correo'],
+                                                );
+                    // $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante Correo : ".$enviarCorreoBolean." ]";
                     // fwrite($handle, $texto);
                     // fwrite($handle, "\r\n\n\n\n");
-                    // fclose($handle);
-                    return response()->json(["mensaje"=>$th->getMessage(),
-                                            "request"=>$request->json()->all(),
-                                            "Siglas"=>"ONE","error"=>$th->getMessage()]);
                 }
-
-            }else{
-                return response()->json(["mensaje"=>"Operación no exitosa no coincide el external_us en la Base de datos","Siglas"=>"ONE"]);
+                // fclose($handle);
+                return response()->json(["mensaje"=>$ObjEstudiante,
+                                        "estadoCorreoEnviado"=>$arrayEncargado,
+                                        "Siglas"=>"OE"]);
+            } catch (\Throwable $th) {
+                // $texto="[".date("Y-m-d H:i:s")."]" ."Crear usuario Estudiante Error : ".$th." ]";
+                // fwrite($handle, $texto);
+                // fwrite($handle, "\r\n\n\n\n");
+                // fclose($handle);
+                return response()->json(["mensaje"=>$th->getMessage(),
+                                        "request"=>$request->json()->all(),
+                                        "Siglas"=>"ONE","error"=>$th->getMessage()]);
             }
+
         }else{
             return response()->json(["mensaje"=>"La data no tiene formato deseado","Siglas"=>"DNF",400]);
         }
