@@ -19,6 +19,8 @@ export class FormMiPerfilComponent implements OnInit {
     this.servicioUsuario.estaAutenticado();
     this.instanciaUsuario=new UsuarioModel();
     this.cargarDatosFormulario();
+    //responsibo
+    $("body").removeClass("sidebar-open");
   }
    // ==== para hacer validacion y activar la clase en css ====//
   get passwordNoValido(){

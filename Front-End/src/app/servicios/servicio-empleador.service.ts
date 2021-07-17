@@ -95,7 +95,8 @@ export class SerivicioEmpleadorService {
   actulizarAprobacionEmpleador(estado:Number,external_es:string,observaciones:string){
     const autenficacionDatos={
       estado:estado,
-      observaciones:observaciones
+      observaciones:observaciones,
+      external_us:localStorage.getItem('external_us')
     }
     return this._httCliente.post(
       `${this.urlDominio_}${this.urlValidarEmpleador}${external_es}`,autenficacionDatos

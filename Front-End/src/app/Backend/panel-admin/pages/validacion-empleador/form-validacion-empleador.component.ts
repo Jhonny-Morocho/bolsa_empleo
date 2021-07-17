@@ -35,8 +35,8 @@ export class FormValidacionEmpleadorComponent implements OnInit {
     this.instanciaEmpleador=new EmpleadorModel;
     this.provincias();
     this.cargarDataFormulario();
-    //responsibo
-    $("body").removeClass("sidebar-open");
+     //responsibo
+     $("body").removeClass("sidebar-open");
   }
   crearFormulario(){
     this.formEmpleador=this.formBuilder.group({
@@ -169,30 +169,19 @@ export class FormValidacionEmpleadorComponent implements OnInit {
         })
         this.router.navigateByUrl('/panel-admin/tareas');
         }else{
-          Swal('Ups', siHacesBien['mensaje'], 'info')
+          Swal('Información', siHacesBien['mensaje'], 'info')
         }
 
     },(peroSiTenemosErro)=>{
      Swal({
          title:'Error',
          type:'error',
-         text:peroSiTenemosErro['mensaje']
+         text:peroSiTenemosErro['statusText']
        });
     }
   );
 }
-  //internacion con el boton del formulario apra que cambie de color aprobado/no aprobado
-  // estadoAprobado(estado:Number){
-  //   if(estado==0){
-  //     this.instanciaEmpleador.estado=0;
-  //     return false;
-  //   }
-  //   if(estado==1){
-  //     this.instanciaEmpleador.estado=1;
-  //     return true;
-  //   }
 
-  // }
 
   estadoOferta(){
     if(this.instanciaEmpleador.estado==0){

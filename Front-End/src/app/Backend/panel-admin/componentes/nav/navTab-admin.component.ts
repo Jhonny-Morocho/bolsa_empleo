@@ -21,6 +21,8 @@ export class PanelAdminComponent implements OnInit {
 
   ngOnInit() {
     this.verificarDireccionarTipoUsuario();
+    //responsibo
+    $("body").removeClass("sidebar-open");
   }
 
   verificarDireccionarTipoUsuario(){

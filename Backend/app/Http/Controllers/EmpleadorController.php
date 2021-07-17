@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use App\Models\Docente;
 use App\Models\Empleador;
+use App\Models\Estudiante;
 //template para correo
 use App\Traits\TemplateCorreo;
 //permite traer la data del apirest
@@ -34,15 +35,25 @@ class EmpleadorController extends Controller{
             return response()->json(["mensaje"=>"La data no tiene formato deseado","Siglas"=>"DNF",400]);
          }
      }
-     //aqui aprobamos o no al empleador//aprobamos al empleador
+     //VALIDAR DATOS DEL EMPLEADOR // APROBADO O NO APROBADO
      public function actulizarAprobacionEmpleador(Request $request,$external_id){
 
          if($request->json()){
-            $texto="";
-            //$handle = fopen("logRegistroEmpleador.txt", "a");
             $enviarCorreoBolean=null;
              try {
-                 // ACTUALIZAR EL ESTADO DE VALIDACION DEL EMPLEADO
+                 // Verificamos si ese usaurio de tipo empleador existe
+                 $existeEmpleador=Empleador::where("external_em","=",$external_id)->first();
+                 if(!$existeEmpleador){
+                    return response()->json(["mensaje"=>"El usuario empleador con el identificador ".$external_id." no ha sido encontrado","Siglas"=>"UNE",200]);
+                 }
+                 //solo el encargado que este activo puede validar al empleador
+                 $existeEncargado=Usuario::where("external_us","=",$request['external_us'])
+                                    ->where("tipoUsuario",5)->where("estado",1)
+                                    ->first();
+                 if(!$existeEncargado){
+                    return response()->json(["mensaje"=>"El usuario encargado con el identificador ".$external_id." no tiene permisos para realizar esta acción ","Siglas"=>"NTP",200]);
+                 }
+                 //validar al empleador si esta o no aprobado
                  $ObjEmleador = Empleador::where("external_em","=",$external_id)
                 ->update(array( 'estado'=>$request['estado'],
                 'observaciones'=>$request['observaciones']));
@@ -63,14 +74,6 @@ class EmpleadorController extends Controller{
                         $this
                     ->enviarCorreo($plantillaCorreo,$usuarioEmpleador['correo'],getenv("TITULO_CORREO_EMPLEADOR"));
 
-                    // $texto="[".date("Y-m-d H:i:s")."]"
-                    // ." Validacion de formulario de empleador no aprobado :: Estado de correo enviado al empleador : "
-                    // .$enviarCorreoBolean.
-                    // " Correo del empleador ".$usuarioEmpleador['correo'].
-                    // " ]";
-                    // fwrite($handle, $texto);
-                    // fwrite($handle, "\r\n\n\n\n");
-                    // fclose($handle);
                 }
                 // NOTIFICAR EL EMPLEADOR LA VALIDACION DEL FORMULARIO
                 if($request['estado']==1){//
@@ -82,15 +85,6 @@ class EmpleadorController extends Controller{
                                         );
                     $enviarCorreoBolean=$this
                     ->enviarCorreo($plantillaHtmlCorreo,$usuarioEmpleador['correo'],getenv("TITULO_CORREO_EMPLEADOR"));
-
-                    // $texto="[".date("Y-m-d H:i:s")."]"
-                    // ." Validacion de formulario de empleador aprobado :: Estado de correo enviado al empleador : "
-                    // .$enviarCorreoBolean.
-                    // " Correo del empleador ".$usuarioEmpleador['correo'].
-                    // " ]";
-                    // fwrite($handle, $texto);
-                    // fwrite($handle, "\r\n\n\n\n");
-                    // fclose($handle);
                 }
                 return response()->json(["mensaje"=>"Registro Actualizado",
                                         "estadoCorreoEnviado"=>$enviarCorreoBolean,
