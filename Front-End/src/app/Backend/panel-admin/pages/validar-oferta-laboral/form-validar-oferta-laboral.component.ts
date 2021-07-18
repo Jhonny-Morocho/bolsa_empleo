@@ -50,7 +50,7 @@ export class FormValidarOfertaLaboralComponent implements OnInit {
               this.encontrado=false;
             }
         },peroSiTenemosErro=>{
-          Swal('Error', peroSiTenemosErro['mensaje'], 'error');
+          Swal('Error', peroSiTenemosErro['statusText'], 'error');
         }
       )
     });
@@ -82,11 +82,11 @@ export class FormValidarOfertaLaboralComponent implements OnInit {
           })
           this.router.navigateByUrl('/panel-admin/validar-oferta-laboral');
         }else{
-          Swal('Ups', siHacesBien['mensaje'], 'info')
+          Swal('Información', siHacesBien['mensaje'], 'info')
         }
 
       },error=>{
-        Swal('Error', error['mensaje'], 'error')
+        Swal('Error', error['statusText'], 'error')
       }
 
     );

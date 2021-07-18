@@ -113,7 +113,8 @@ export class OfertasLaboralesService {
     //actulizar estado de validacion del postulante//aprobado y no aprobado
   actulizarDatosOfertaLaboral(modeloOfertasLaborales:OfertaLaboralModel){
       const autenficacionDatos={
-        ...modeloOfertasLaborales
+        ...modeloOfertasLaborales,
+        external_us:localStorage.getItem('external_us')
       }
       //retorna la respuesata
       return this._httCliente.post(
@@ -140,21 +141,21 @@ export class OfertasLaboralesService {
         })
     );
   }
-    //actulizar estado de oferta laboral a finalizado estado ==4
-    actulizarEstadoOfertaLaboralFinalizado(modeloOfertasLaborales:OfertaLaboralModel,external_ofert:string){
-      const autenficacionDatos={
-        ...modeloOfertasLaborales
-      }
-      //retorna la respuesata
-      return this._httCliente.post(
-        `${this.urlDominio_}${this.urlFinalizarOfertaLaboral}${external_ofert}`,autenficacionDatos
-      ).pipe(
-        map(
-          respuestaBackend=>{
-            return respuestaBackend;
-          })
-      );
+  //actulizar estado de oferta laboral a finalizado estado ==4
+  actulizarEstadoOfertaLaboralFinalizado(modeloOfertasLaborales:OfertaLaboralModel,external_ofert:string){
+    const autenficacionDatos={
+      ...modeloOfertasLaborales
     }
+    //retorna la respuesata
+    return this._httCliente.post(
+      `${this.urlDominio_}${this.urlFinalizarOfertaLaboral}${external_ofert}`,autenficacionDatos
+    ).pipe(
+      map(
+        respuestaBackend=>{
+          return respuestaBackend;
+        })
+    );
+  }
   //actulizar estado de validacion del postulante//aprobado y no aprobado
   eliminarOfertaLaboral(modeloOfertasLaborales:OfertaLaboralModel){
     const autenficacionDatos={

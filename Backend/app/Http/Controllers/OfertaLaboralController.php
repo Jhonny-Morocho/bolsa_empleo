@@ -31,9 +31,15 @@ class OfertaLaboralController extends Controller
             //obtengo todos los datos y lo guardo en la variable datos
             $datos=$request->json()->all();
             //buscar si existe el usuario que realiza la peticion
-            $ObjUsuario=Usuario::where("external_us",$external_id)->first();
+            $ObjUsuario=Usuario::where("external_us",$external_id)->where("tipoUsuario",6)->first();
+            if(!$ObjUsuario){
+                return response()->json(["mensaje"=>"El usuario con el identificador ".$external_id." no existe","Siglas"=>"UNE"]);
+            }
             //pregunto si el extern_us es del usuario que realiza la peticion el empleador
-            $ObjEmpleador=Empleador::where("fk_usuario","=",$ObjUsuario->id)->first();
+            $ObjEmpleador=Empleador::where("fk_usuario","=",$ObjUsuario->id)->where("estado",1)->first();
+            if(!$ObjEmpleador){
+                return response()->json(["mensaje"=>"El empleador con el identificador ".$external_id." , no puede realizar esta acción por que aún no tiene su cuenta validada","Siglas"=>"UNV"]);
+            }
             //creamos un objeto de tipo ofertaLaborales para enviar los datos
             $ObjOfertasLaborales=null;
             try {
@@ -52,12 +58,11 @@ class OfertaLaboralController extends Controller
                     "nombreEmpresa"=>$ObjEmpleador->razon_empresa,
                     "correoUsuarioEmpleador"=>$ObjUsuario->correo
                 );
-
                 $arrayEncargado=$this->enviarCorreoEncargadoOfertaRegistrado($datosPlantillaCorreo,$ObjUsuario);
                 return response()->json(["mensaje"=>"Registro guardado",
                                             "Siglas"=>"OE",
                                             "estadoCorreoEnviado"=>$arrayEncargado,
-                                            "Objeto"=>$ObjOfertasLaborales,200,]);
+                                            "Objeto"=>$ObjOfertasLaborales,200]);
             } catch (\Throwable $th) {
                 return response()->json(["mensaje"=>$th->getMessage(),
                                             "Siglas"=>"ONE",
@@ -192,23 +197,63 @@ class OfertaLaboralController extends Controller
             return response()->json(["mensaje"=>"Los datos no tienene el formato deseado","Siglas"=>"DNF",400]);
         }
     }
+    //actualiza la oferta laboral el encargado o el empleador
     public function actulizarOfertaLaboral(Request $request,$external_id){
         if($request->json()){
             $ObjOfertaLaboral=null;
+            $ofertaEditada=false;
             $estadoCorreoEnviado=null;
+            $datos=$request->json()->all();
             try {
-                $ObjOfertaLaboral=OfertasLaborales::where("external_of","=", $external_id)
-                ->update(
-                        array(
-                                'puesto'=>$request['puesto'],
-                                'descripcion'=>$request['descripcion'],
-                                'estado'=>$request['estado'],
-                                'lugar'=>$request['lugar'],
-                                'obervaciones'=>$request['obervaciones'],
-                                'requisitos'=>$request['requisitos']
-                            ));
-                //buscamos al empleador que se relaciones con la oferta laboral
+                //buscamos la oferta laboral
+                $existeOferta=OfertasLaborales::where('external_of',$external_id)->first();
+                if(!$existeOferta){
+                    return response()->json(["mensaje"=>"La oferta laboral con el identificador ".$external_id." no existe","Siglas"=>"OFNE"]);
+                }
+
+                //la oferta laboral puede ser actualizada por el encargado o por el empleador
+                $usuarioEncontrado=Usuario::where('external_us',$request['external_us'])->first();
+                if(!$usuarioEncontrado){
+                    return response()->json(["mensaje"=>"El usuario con el identificador ".$request['external_us']." no existe","Siglas"=>"UNE"]);
+                }
+
+                //pregunto si el dueño de esa oferta laboral tiene su cuenta validada
                 $usuarioEmpleador=$this->buscarUsuarioEmpleador($external_id);
+                if(!$usuarioEmpleador){
+                    return response()->json(["mensaje"=>"El dueño de esta  oferta laboral aún no tiene validada su cuenta de empleador, por lo cual no puede realizar esta acción","Siglas"=>"OFUNVE"]);
+                }
+
+                // VALIDA OFERTA POR PARTE DEL ENCARGAFO : si el encargado tiene permisos y esta activo entonces puede realizar esta accion
+                if($usuarioEncontrado->tipoUsuario==5 && $usuarioEncontrado->estado==1 && $usuarioEmpleador->estado==1 ){
+                    $ObjOfertaLaboral=OfertasLaborales::where("external_of","=", $external_id)
+                                      ->update(array('estado'=>$request['estado'],
+                                                    'obervaciones'=>$request['obervaciones'])
+                                                );
+                    $ofertaEditada=true;
+                }
+
+                //ACTUALIZAR OFERTA LABORAL POR PARTE DEL EMPLEADOR:  si el usuario es empleador entonces puede actulizar todo
+                $esEmpleador=Empleador::where("fk_usuario",$usuarioEncontrado->id)->where('estado',1)->first();
+                if($esEmpleador){
+                    $ObjOfertaLaboral=OfertasLaborales::where("external_of","=", $external_id)
+                    ->update(
+                            array(
+                                    'puesto'=>$request['puesto'],
+                                    'descripcion'=>$request['descripcion'],
+                                    'lugar'=>$request['lugar'],
+                                    'obervaciones'=>$request['obervaciones'],
+                                    'requisitos'=>$request['requisitos']
+                                ));
+                    $ofertaEditada=true;
+                }
+
+                // SI EL ENCARGADO O POSTULANTE REALIZAO LA ACCION: si elestado de la oferta laboral es falso entonces significa que no se encontro el usuario para q realice la accion
+                if(!$ofertaEditada){
+                    return response()->json(["mensaje"=>"La oferta laboral no ha podido editarse por que el usuario ".$request['external_us']." no tiene permisos","Siglas"=>"NTP"]);
+                }
+                //buscamos al empleador que se relaciones con la oferta laboral
+                // el dueño de oferta para ver si esta valido la cuenta del empleador
+
                 $datos=array(
                     "nombreOfertaLaboral"=>$request['puesto'],
                     "external_of"=>$request['external_of'],
@@ -234,17 +279,15 @@ class OfertaLaboralController extends Controller
                 if($request['estado']==3){
                     $estadoCorreoEnviado=$this->notificarPublicacionOfertaLaboral($datos);
                 }
+
                 return response()->json(["mensaje"=>"Operación Exitosa",
                                         "ObjetoOfertaLaboral"=>$ObjOfertaLaboral,
-                                        "resquest"=>$request->json()->all(),
                                         "estadoCorreoEnviado"=>$estadoCorreoEnviado,
                                         "respuesta"=>$ObjOfertaLaboral,
                                         "Siglas"=>"OE",200]);
             } catch (\Throwable $th) {
                 return response()->json(["mensaje"=>$th->getMessage(),
-                                            "external_of"=>$external_id,
-                                            "resques"=>$request->json()->all(),
-                                            "Siglas"=>"ONE","error"=>$th->getMessage()]);
+                                            "Siglas"=>"ONE"]);
             }
         }else{
             return response()->json(["mensaje"=>"Los datos no tienene el formato deseado","Siglas"=>"DNF",400]);
@@ -375,23 +418,11 @@ class OfertaLaboralController extends Controller
                                             "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                             "correo"=>$value['correo'],
                                             );
-                // $texto="[".date("Y-m-d H:i:s")."]"
-                // ." Oferta laboral validada por el encargado pendiente de publicar por parte del gestor:: Estado del correo enviado al gestor : "
-                // .$enviarCorreoBolean
-                // ."::: El Correo del gestor  es: ".$value['correo']
-                // ."::: El Correo del empleador es :"
-                // .$ObjUsuario->correo." ]";
-                // fwrite($handle, $texto);
-                // fwrite($handle, "\r\n\n\n\n");
+
             }
-            // fclose($handle);
             return $arrayGestor;
         } catch (\Throwable $th) {
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            // ." Oferta laboral validada por el encargado pendiente de publicar por parte del gestor ERROR ".$th." ]";
-            // fwrite($handle, $texto);
-            // fwrite($handle, "\r\n\n\n\n");
-            // fclose($handle);
+
             return $arrayGestor=array("error"=>$th->getMessage());
         }
 
