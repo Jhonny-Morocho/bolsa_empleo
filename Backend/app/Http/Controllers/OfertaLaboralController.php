@@ -224,7 +224,7 @@ class OfertaLaboralController extends Controller
                 }
 
                 // VALIDA OFERTA POR PARTE DEL ENCARGAFO : si el encargado tiene permisos y esta activo entonces puede realizar esta accion
-                if($usuarioEncontrado->tipoUsuario==5 && $usuarioEncontrado->estado==1 && $usuarioEmpleador->estado==1 ){
+                if($usuarioEncontrado->tipoUsuario==5 && $usuarioEncontrado->estado==1  ){
                     $ObjOfertaLaboral=OfertasLaborales::where("external_of","=", $external_id)
                                       ->update(array('estado'=>$request['estado'],
                                                     'obervaciones'=>$request['obervaciones'])
@@ -358,20 +358,40 @@ class OfertaLaboralController extends Controller
         if($ObjTitulo!=null){
             return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"OE","respuesta"=>"Operación Exitosa"]);
         }else{
-            return response()->json(["mensaje"=>$ObjTitulo,"Siglas"=>"ONE","respuesta"=>"No se encontro el título"]);
+            return response()->json(["mensaje"=>'Oferta laboral no encontrada',"Siglas"=>"ONE","respuesta"=>"No se encontro el título"]);
         }
     }
      //terminar de hacer
      public function eliminarOfertaLaboral(Request $request){
         try {
-            //actualizo el texto plano
-            $ObjTituloAcademico=OfertasLaborales::where("external_of","=", $request['external_of'])->update(array('estado'=>$request['estado']));
+            //la oferta laboral puede ser actualizada por el encargado o por el empleador
+            $usuarioEncontrado=Usuario::where('external_us',$request['external_us'])->where("tipoUsuario",6)->first();
+            if(!$usuarioEncontrado){
+                return response()->json(["mensaje"=>"El usuario con el identificador ".$request['external_us']." no existe","Siglas"=>"UNE"]);
+            }
 
-            return response()->json(["mensaje"=>"Operación Exitosa",
-                                     "Respuesta"=>$ObjTituloAcademico,200]);
+            // el empleador debe estar valido su informacion para que pueda eliminar la oferta laboral
+            $esEmpleador=Empleador::where("fk_usuario",$usuarioEncontrado->id)->where('estado',1)->first();
+
+            if(!$esEmpleador){
+                return response()->json(["mensaje"=>"El empleador con el identificador ".$esEmpleador->external_em." no tiene validada su cuenta no puede realizar esta operación","Siglas"=>"UNE"]);
+            }
+
+            $existeOferta=OfertasLaborales::where('external_of',$request['external_of'])->first();
+            if(!$existeOferta){
+                return response()->json(["mensaje"=>"La oferta laboral con el identificador ".$request['external_of']." no existe","Siglas"=>"OFNE"]);
+            }
+
+            //actualizo el texto plano solo el empleador puede eliminar la oferta siempre y cuadno la oferta laborale ste en estado 1 o estado cero
+            if($existeOferta->estado==1 || $existeOferta->estado==0){
+                OfertasLaborales::where("external_of","=", $request['external_of'])->update(array('estado'=>$request['estado']));
+                return response()->json(["mensaje"=>"Operación Exitosa","Siglas"=>"OE",200]);
+            }else{
+                return response()->json(["mensaje"=>"No se puede eliminar la oferta laboral porque ya está publicada o validada","Siglas"=>"NSEO",200]);
+            }
 
         } catch (\Throwable $th) {
-            return response()->json(["mensaje"=>"Operación no Exitosa","Siglas"=>"ONE","error"=>$th]);
+            return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE"]);
         }
 
     }
@@ -462,16 +482,8 @@ class OfertaLaboralController extends Controller
                                         "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                         "correo"=>$value['correo'],
                                         );
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            // ." Registrar oferta laboral :: Estado del correo enviado al empleador : "
-            // .$enviarCorreoBolean
-            // ."::: El Correo del encargado  es: ".$value['correo']
-            // ."::: El Correo del empleador es :"
-            // .$ObjUsuario->correo." ]";
-            // fwrite($handle, $texto);
-            // fwrite($handle, "\r\n\n\n\n");
+
         }
-        // fclose($handle);
         return $arrayEncargado;
     }
     private function enviarCorreoEncargadoEstadoOferta($external_oferta,$estadoValidacion){
@@ -499,14 +511,7 @@ class OfertaLaboralController extends Controller
                                                     $usuarioEmpleador['correo'],
                                                     getenv("TITULO_CORREO_PUBLICACION_OFERTA")
                                                 );
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            // ." Estado de validación de oferta laboral : ".$estadoValidacion."
-            // :: Estado del correo enviado al empleador : "
-            // .$enviarCorreoBolean
-            // ."::: El Correo enviado al empleador es : ".$usuarioEmpleador['correo']."]";
-            // fwrite($handle, $texto);
-            // fwrite($handle, "\r\n\n\n\n");
-            // fclose($handle);
+
             //recorrer todos los usuario que sean encargado
             $arrayEmpleador=array("razon_empresa"=>$usuarioEmpleador['razon_empresa'],
                                 "nom_representante_legal"=>$usuarioEmpleador['nom_representante_legal'],
@@ -514,13 +519,8 @@ class OfertaLaboralController extends Controller
                                 "correoEmpleador"=>$usuarioEmpleador['correo'],
                                 );
             return $arrayEmpleador;
-            //code...
         } catch (\Throwable $th) {
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            // ." Estado de validación de oferta laboral : ".$th->getMessage()." ]";
-            // fwrite($handle, $th);
-            // fwrite($handle, "\r\n\n\n\n");
-            // fclose($handle);
+
             return  $th->getMessage();
         }
     }
@@ -530,7 +530,6 @@ class OfertaLaboralController extends Controller
     private function notificarPublicacionOfertaLaboral($datosOFertaLaboral){
         $texto="";
         $arrayCorreoEstudiantes=null;
-        // $handle = fopen("logRegistroOfertaLaboral.txt", "a");
         try {
             $empleador=OfertasLaborales::join("empleador","empleador.id","oferta_laboral.fk_empleador")
             ->where("oferta_laboral.external_of",$datosOFertaLaboral['external_of'])
@@ -567,23 +566,10 @@ class OfertaLaboralController extends Controller
                     "estadoCorreoEnviadoEmpleador"=>$enviarCorreoBoleanEmpleador
                 );
 
-                // $texto="[".date("Y-m-d H:i:s")."]"
-                //             ." NOTIFICAR PUBLICACIÓN DE OFERTA LABORAL AL EMPLEADOR Y ESTUDIANTES :
-                //             ::Estado de enviar correo a los postulantes: ".$enviarCorreoBolean
-                //             ."::: El Correo del postulante  es: ".$value['correo']."
-                //             ::: Estado de correo enviado al empleador : ".$enviarCorreoBoleanEmpleador."
-                //             El correo del empleador es : ".$datosOFertaLaboral['correoUsuarioEmpleador']." ] ";
-                // fwrite($handle, $texto);
-                // fwrite($handle, "\r\n\n\n\n");
             }
-            // fclose($handle);
             return $arrayCorreoEstudiantes;
         } catch (\Throwable $th) {
-                // $texto="[".date("Y-m-d H:i:s")."]"
-                // ." NOTIFICAR PUBLICACIÓN DE OFERTA LABORAL AL EMPLEADOR Y ESTUDIANTES ERROR: ".$th."  ]";
-                // fwrite($handle, $texto);
-                // fwrite($handle, "\r\n\n\n\n");
-                // fclose($handle);
+
             return $arrayCorreoEstudiantes=array("error"=>$th->getMessage());
         }
     }
@@ -610,24 +596,14 @@ class OfertaLaboralController extends Controller
                                                         $empleador['correo'],
                                                         getenv('TITULO_CORREO_APLICAR_OFERTA'));
 
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            //         ." LLENAR FORMULARIO DEL SISSEG EMPLEADOR :
-            //         ::Estado de enviar correo al empleador : ".$enviarCorreoBoleanEmpleador
-            //         ."::: El Correo del empleador  es: ".$empleador['correo']." ] ";
             $arrayCorreoEmpleador=array(
                 "estadoEnviarCorreoEmpleadorSISEG"=>$enviarCorreoBoleanEmpleador,
                 "correoEmpleador"=>$empleador['correo']
             );
-            // fwrite($handle, $texto);
-            // fwrite($handle, "\r\n\n\n\n");
-            // fclose($handle);
+
             return $arrayCorreoEmpleador;
         } catch (\Throwable $th) {
-                // $texto="[".date("Y-m-d H:i:s")."]"
-                // ." LLENAR FORMULARIO DEL SISSEG EMPLEADOR ERROR: ".$th->getMessage()."  ]";
-                // fwrite($handle, $texto);
-                // fwrite($handle, "\r\n\n\n\n");
-                // fclose($handle);
+
             return $arrayCorreoEmpleador=array("error"=>$th->getMessage());
         }
 

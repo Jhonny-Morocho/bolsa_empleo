@@ -86,7 +86,7 @@ export class EditOfertaComponent implements OnInit {
                 this.formOfertaLaboral.disable();
               }
             }else{
-              Swal('Ups', siHacesBien['mensaje'], 'info')
+              Swal('Información', siHacesBien['mensaje'], 'info');
             }
         },peroSiTenemosErro=>{
           Swal('Error', peroSiTenemosErro['mensaje'], 'error')

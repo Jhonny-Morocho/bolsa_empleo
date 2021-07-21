@@ -1,34 +1,41 @@
 <div class="card-body">
-    <div class="row">
-        <div class="col-12 col-md-12 col-lg-5 order-2 order-md-1">
-            <div class="row">
-                <div class="col-12">
-                    <div class="post">
-                        <div class="user-block">
-                            <!-- <img class="img-circle img-bordered-sm" src="{{dominio.dominio}}/Archivos/images/empresa.png" alt="user image"> -->
-                            <span class="username">
-                               <a>{{ instanciaOfertaVer.razon_empresa }}</a>
-                            </span>
-                        </div>
-                        <br>
-                        <h6 class="fw-bold">Descripción de la oferta laboral </h6>{{instanciaOfertaVer.descripcion}}
-                        <hr>
-                        <br>
-                        <h6 class="fw-bold">Observaciones </h6> {{instanciaOfertaVer.obervaciones}}
-                        <hr>
-                        <br>
-                        <h6 class="fw-bold">Correo empleador</h6>{{instanciaOfertaVer.correo}}
-                    </div>
-                </div>
-            </div>
+
+  <div class="row">
+    <div class="col-md-6">
+        <div class="col-12">
+          <span class="text-uppercase  text-primary h4"><i class="fas fa-building"></i> EMPRESA: </span>
+          <span class="h4 font-weight-light text-uppercase ">{{ instanciaOfertaVer.razon_empresa }}</span>
+          <hr class="text-primary " style="width: 200px;">
         </div>
-        <div class="col-12 col-md-12 col-lg-7 order-1 order-md-2">
-            <h5 class="text-primary"> Oferta Laboral </h5>
-            <h6 class="fw-bold">{{ instanciaOfertaVer.puesto }}</h6>
-            <hr>
-            <br>
-            <h5 class="mt-1 text-muted">Requisitos</h5>
-            <div [innerHTML]="instanciaOfertaVer.requisitos" id="itemRequisitos"></div>
+        <div class="col-12">
+          <span class="text-uppercase font-weight-light h6"><i class="fa fa-comment" aria-hidden="true"></i> Descripción de la oferta laboral </span>
+          <p  class="mt-2">{{ instanciaOfertaVer.descripcion }}</p>
         </div>
+        <div class="col-12">
+          <span class="text-uppercase font-weight-light h6"><i class="far fa-id-badge"></i> OBSERVACIONES </span>
+          <p  class="mt-2" *ngIf="instanciaOfertaVer.obervaciones">{{ instanciaOfertaVer.obervaciones }}</p>
+          <p  class="mt-2" *ngIf="!instanciaOfertaVer.obervaciones">Ninguna</p>
+        </div>
+        <div class="col-12">
+          <span class="text-uppercase font-weight-light h6"><i class="far fa-envelope"></i> Correo del Empleador </span>
+          <p  class="mt-2">{{ instanciaOfertaVer.correo }}</p>
+        </div>
+        <div class="col-12">
+          <span class="text-uppercase font-weight-light h6"><i aria-hidden="true" class="fa fa-map-marker"></i> LUGAR </span>
+          <p  class="mt-2">{{ instanciaOfertaVer.lugar }}</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="col-12">
+          <span class="text-uppercase  text-primary h4"><i class="fas fa-briefcase"></i> PUESTO: </span>
+          <span class="h4 font-weight-light text-uppercase ">{{ instanciaOfertaVer.puesto }}</span>
+          <hr class="text-primary " style="width: 200px;">
+        </div>
+        <div class="col-12">
+          <span class="text-uppercase font-weight-light h6"><i class="fas fa-clipboard-check"></i> REQUISITOS </span>
+          <div [innerHTML]="instanciaOfertaVer.requisitos"></div>
+        </div>
+
+      </div>
     </div>
 </div>

@@ -77,9 +77,8 @@ export class OfertaLaboralComponent implements OnInit {
     this.instanciaOfertaVer.descripcion=this.ofertasLaborales[index]['descripcion'];
     this.instanciaOfertaVer.obervaciones=this.ofertasLaborales[index]['obervaciones'];
     this.instanciaOfertaVer.razon_empresa=this.ofertasLaborales[index]['razon_empresa'];
+    this.instanciaOfertaVer.lugar=this.ofertasLaborales[index]['lugar'];
     this.instanciaOfertaVer.correo=localStorage.getItem("correo");
-
-    $("#itemRequisitos").html(  this.instanciaOfertaVer.requisitos);
     $('#exampleModal').modal('show');
 
   }
@@ -104,12 +103,26 @@ export class OfertaLaboralComponent implements OnInit {
          this.servicioOferta.eliminarOfertaLaboral(this.instanciaOfertaLaboralActualizar).subscribe(
            siHaceBien=>{
              //elimino visualmente
-             this.ofertasLaborales.splice(index,1); //desde la posición 2, eliminamos 1 elemento
-             Swal('Eliminado', 'El registro ha sido eliminada con Exito', 'success');
+             if(siHaceBien["Siglas"]=="OE"){
+
+               this.ofertasLaborales.splice(index,1); //desde la posición 2, eliminamos 1 elemento
+               const toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 5000
+                });
+                toast({
+                  type: 'success',
+                  title: 'Registro '+nombreTitulo+' eliminado'
+                })
+                return;
+             }
+             Swal('Información',siHaceBien['mensaje'], 'info')
 
            },(peroSiTenemosErro)=>{
 
-             Swal('Ups',peroSiTenemosErro['mensaje'], 'info')
+             Swal('Error',peroSiTenemosErro['mensaje'], 'error')
            }
          );
        }

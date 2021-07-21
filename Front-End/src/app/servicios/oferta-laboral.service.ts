@@ -159,8 +159,10 @@ export class OfertasLaboralesService {
   //actulizar estado de validacion del postulante//aprobado y no aprobado
   eliminarOfertaLaboral(modeloOfertasLaborales:OfertaLaboralModel){
     const autenficacionDatos={
-      ...modeloOfertasLaborales
+      ...modeloOfertasLaborales,
+      external_us:localStorage.getItem('external_us')
     }
+
       return this._httCliente.post(
         `${this.urlDominio_}${this.urlELiminarOfertaLaboral}`,autenficacionDatos
       ).pipe(
