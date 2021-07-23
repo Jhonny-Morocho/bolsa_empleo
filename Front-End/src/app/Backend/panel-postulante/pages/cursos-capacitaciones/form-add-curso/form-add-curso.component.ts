@@ -214,7 +214,7 @@ export class FormAddCursoComponent implements OnInit {
         this.paises =siHacesBien;
       },
       (peroSiTenemosErro)=>{
-        Swal('Error',peroSiTenemosErro['mensaje'], 'error')
+        Swal('Error',peroSiTenemosErro['statusText'], 'error')
       }
     );
   }

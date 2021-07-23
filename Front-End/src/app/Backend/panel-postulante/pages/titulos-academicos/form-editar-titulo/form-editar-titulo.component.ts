@@ -190,7 +190,7 @@ export class FormEditarTituloComponent implements OnInit {
           })
           this.router.navigateByUrl('/panel-postulante/titulos-academicos');
         }else{
-          Swal('Ups',siHacesBienJson['mensaje'], 'info')
+          Swal('Información',siHacesBienJson['mensaje'], 'info')
         }
       },(erroSubirJson)=>{
           Swal({

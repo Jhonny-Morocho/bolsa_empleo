@@ -43,10 +43,10 @@ export class FormPublicarOfertaGestorComponent implements OnInit {
               })
 
             }else{
-              Swal('Info', siHacesBien['mensaje'], 'info');
+              Swal('Información', siHacesBien['mensaje'], 'info');
             }
         },peroSiTenemosErro=>{
-          Swal('Error', peroSiTenemosErro['mensaje'], 'error');
+          Swal('Error', peroSiTenemosErro['statusText'], 'error');
         }
       )
     });
@@ -78,11 +78,11 @@ export class FormPublicarOfertaGestorComponent implements OnInit {
           })
           this.router.navigateByUrl('/panel-admin/publicar-oferta-gestor');
         }else{
-          Swal('Ups'+siHacesBien['mensaje'], 'info')
+          Swal('Información',siHacesBien['mensaje'], 'info')
         }
 
       },error=>{
-        Swal('Error',error['mensaje'], 'error')
+        Swal('Error',error['statusText'], 'error')
       }
 
     );
@@ -90,21 +90,21 @@ export class FormPublicarOfertaGestorComponent implements OnInit {
 
   }
     //internacion con el boton del formulario apra que cambie de color aprobado/no aprobado
-    estadoOferta(){
-      if(this.instanciaOfertaLaboral.estado==2){
-        return false;
-      }
-      if(this.instanciaOfertaLaboral.estado==3){
-        return true;
-      }
+  estadoOferta(){
+    if(this.instanciaOfertaLaboral.estado==2){
+      return false;
     }
-    onChangeOferta(event){
-      if(event==true){
-        this.instanciaOfertaLaboral.estado=3;
-      }
-      if(event==false){
-        this.instanciaOfertaLaboral.estado=2;
-      }
+    if(this.instanciaOfertaLaboral.estado==3){
+      return true;
     }
+  }
+  onChangeOferta(event){
+    if(event==true){
+      this.instanciaOfertaLaboral.estado=3;
+    }
+    if(event==false){
+      this.instanciaOfertaLaboral.estado=2;
+    }
+  }
 
 }

@@ -72,9 +72,7 @@ export class PostularOfertaLaboralComponent implements OnInit,OnDestroy {
     this.instanciaOfertLaboralEstudiante=new OfertaLaboralEstudianteModel();
     this.instanciaOfertaLaboralActualizar=new OfertaLaboralModel();
     this.configurarParametrosDataTable();
-
     this.cargarTabla();
-    $(".x").append('<ul><li>Intelignete</li><li>COnocimien&nbsp;</li><li>fsfds</li></ul>');
   }
 
 
@@ -86,7 +84,7 @@ export class PostularOfertaLaboralComponent implements OnInit,OnDestroy {
         this.dtTrigger.next();
       },
       (peroSiTenemosErro)=>{
-        Swal('Ups',peroSiTenemosErro['mensaje'], 'info');
+        Swal('Error',peroSiTenemosErro['statusText'], 'error');
       }
     );
 
@@ -94,71 +92,42 @@ export class PostularOfertaLaboralComponent implements OnInit,OnDestroy {
 
   postular(externalOferta:string,nomOferta:string){
     let estadoAutentificado=this.servicioUsuario.estaAutenticado();
-    //verificar si ha iniciado session
-    if(estadoAutentificado==true){
-        //consultar si el usuario ya ha llenado el formulario de registro
-        this.servicioPostulante.listarFormPostulante().subscribe(
-          siHaceBien=>{
-            // veridicar si el usuario tiene formulario regitrado
-            if(siHaceBien['Siglas']=="OE"){
-              //debe comprobar si esta aprabado el postulantes o valdiado su informacion
-              if(parseInt(siHaceBien['mensaje']['estado'])==1){
-                console.log("SI PUEDE POSTULAR");
-                Swal({
-                  title: '¿Está seguro?',
-                  text: "Usted ha seleccionado la oferta "+nomOferta,
-                  type: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Si'
-                }).then((result) => {
-                  if (result.value) {
-                Swal({
-                  allowOutsideClick:false,
-                  type:'info',
-                  text:'Espere por favor'
-                  });
-                  Swal.showLoading();
-                  this.instanciaOfertLaboralEstudiante.estado=1;
-                  this.instanciaOfertLaboralEstudiante.observaciones="";
-                  this.servicioOfertaEstudiante.postularOfertEstudiante(this.instanciaOfertLaboralEstudiante,externalOferta
-                  ).subscribe(
-                    siHacesBien=>{
-                      console.log(siHacesBien);
-                      let mensaje=(siHacesBien['mensaje']);
-                      console.log(mensaje);
-                      if(siHacesBien['Siglas']=='OE'){
-                        Swal('Guardado','Registro guardado','success');
-                      }else{
-                        Swal('Información',mensaje,'info');
-                      }
-                    },error=>{
-                      let mensaje=error['mensaje'];
-                      console.log(error);
-                      Swal('Error',mensaje,'error');
-                    }
-                  );
+    if(estadoAutentificado){
+        Swal({
+          title: '¿Está seguro?',
+          text: "Usted ha seleccionado la oferta "+nomOferta,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Si'
+        }).then((result) => {
+          if (result.value) {
+            Swal({
+              allowOutsideClick:false,
+              type:'info',
+              text:'Espere por favor'
+              });
+              Swal.showLoading();
+              this.instanciaOfertLaboralEstudiante.estado=1;
+              this.instanciaOfertLaboralEstudiante.observaciones="";
+              this.servicioOfertaEstudiante.postularOfertEstudiante(this.instanciaOfertLaboralEstudiante,externalOferta).subscribe(
+                siHacesBien=>{
+                  if(siHacesBien['Siglas']=='OE'){
+                    return Swal('Guardado','Registro guardado','success');
                   }
-                })
-
-              }else{
-                Swal('Información',
-                    'No puede postular a está oferta por el momento, debe estar aprobado su formulario de registro',
-                    'info');
-              }
-            }else{
-                Swal('Información','Debe completar el formulario de registro para  postular a las  ofertas laborales','info');
-
-            }
-          },siHaceMal=>{
-            Swal('Error',siHaceMal['mensaje'], 'error');
+                  return Swal('Información',siHacesBien['mensaje'],'info');
+                },error=>{
+                  Swal('Error',error['error']['message'],'error');
+                }
+              );
           }
-        );
-    }else{
-      Swal('Información','Debe iniciar su sesión ','info');
+        })
+      return;
     }
+    return Swal('Información','Debe iniciar su sesión ','info');
   }
+
   configurarParametrosDataTable(){
     this.dtOptions = dataTable;
   }

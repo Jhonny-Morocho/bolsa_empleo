@@ -211,7 +211,7 @@ class OfertaLaboralController extends Controller
                     return response()->json(["mensaje"=>"La oferta laboral con el identificador ".$external_id." no existe","Siglas"=>"OFNE"]);
                 }
 
-                //la oferta laboral puede ser actualizada por el encargado o por el empleador
+                //la oferta laboral puede ser actualizada por el encargado o por el empleador o por el gestor
                 $usuarioEncontrado=Usuario::where('external_us',$request['external_us'])->first();
                 if(!$usuarioEncontrado){
                     return response()->json(["mensaje"=>"El usuario con el identificador ".$request['external_us']." no existe","Siglas"=>"UNE"]);
@@ -223,8 +223,8 @@ class OfertaLaboralController extends Controller
                     return response()->json(["mensaje"=>"El dueño de esta  oferta laboral aún no tiene validada su cuenta de empleador, por lo cual no puede realizar esta acción","Siglas"=>"OFUNVE"]);
                 }
 
-                // VALIDA OFERTA POR PARTE DEL ENCARGAFO : si el encargado tiene permisos y esta activo entonces puede realizar esta accion
-                if($usuarioEncontrado->tipoUsuario==5 && $usuarioEncontrado->estado==1  ){
+                // VALIDA OFERTA POR PARTE DEL ENCARGAFO : si el encargado tiene permisos y esta activo entonces puede realizar esta accion o tambien el gestor puede publicar la oferta
+                if($usuarioEncontrado->tipoUsuario==5 && $usuarioEncontrado->estado==1 || $usuarioEncontrado->tipoUsuario==4 && $usuarioEncontrado->estado==1  ){
                     $ObjOfertaLaboral=OfertasLaborales::where("external_of","=", $external_id)
                                       ->update(array('estado'=>$request['estado'],
                                                     'obervaciones'=>$request['obervaciones'])
@@ -528,7 +528,6 @@ class OfertaLaboralController extends Controller
     //se notifica la aprobacion de la oferta laboral por parte del getor a los estudiante y empleadores
     //corresponde al proceso 4
     private function notificarPublicacionOfertaLaboral($datosOFertaLaboral){
-        $texto="";
         $arrayCorreoEstudiantes=null;
         try {
             $empleador=OfertasLaborales::join("empleador","empleador.id","oferta_laboral.fk_empleador")

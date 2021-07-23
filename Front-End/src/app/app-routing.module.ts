@@ -81,7 +81,6 @@ const routes: Routes = [
   { path: 'panel-postulante/cursos-capacitaciones' , component: CursosCapacitacionesComponent,canActivate:[AutentificacionGuard] },
   { path: 'panel-postulante/add-curso-capacitacion' , component: FormAddCursoComponent,canActivate:[AutentificacionGuard] },
   { path: 'panel-postulante/edit-curso-capacitacion/:external_cu' , component: FormEditarCursoComponent,canActivate:[AutentificacionGuard] },
-  //{ path: 'panel-postulante/cursos-capacitaciones' , component: CursosCapacitacionesComponent,canActivate:[AutentificacionGuard] },
   { path: '**', redirectTo: 'home' }
 
 ];

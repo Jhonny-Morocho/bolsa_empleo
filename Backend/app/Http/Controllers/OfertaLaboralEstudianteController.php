@@ -42,46 +42,61 @@ class OfertaLaboralEstudianteController extends Controller
     public function PostularOfertaLaboral(Request $request,$external_id){
         if($request->json()){
             $datos=$request->json()->all();
+
             //comprobar el usuario es un estudiante
             try {
-                $ObjEstudiante=$this->buscarEstudiante($external_id);
-                //buscamos la oferta laboral
-                $OfertaLaboral=$this->buscarOfertaLaboral($datos['external_of']);
-                //comprobar si el etudainte no postule dos veces a la misma oferta
-                $ValidarPostularUnaOfertaNVeces=$this->validarEstNoPostuleNVecesMismaOfert($ObjEstudiante['id'],$OfertaLaboral['id']);
-                if($ValidarPostularUnaOfertaNVeces==false){
-                    //si no repite la misma postulacion entonces si puede inscribirse
-                    $ObjOfertaLaboralEstudiante=new OfertaLaboralEstudiante();
-                    $ObjOfertaLaboralEstudiante->fk_estudiante=$ObjEstudiante['id'];
-                    $ObjOfertaLaboralEstudiante->fk_oferta_laboral=$OfertaLaboral['id'];
-                    $ObjOfertaLaboralEstudiante->estado=$request['estado'];
-                    $ObjOfertaLaboralEstudiante->observaciones=$request['observaciones'];
-                    $ObjOfertaLaboralEstudiante->external_of_est="OfEst".Utilidades\UUID::v4();
-                    $ObjOfertaLaboralEstudiante->save();
-                    //notificar al empleador sobre la actividad de la oferta laboral
-                    $datosOfertaEstudiante=array(
-                        "nom_representante_legal"=>$OfertaLaboral['nom_representante_legal'],
-                        "razon_empresa"=>$OfertaLaboral['razon_empresa'],
-                        "puesto"=>$OfertaLaboral['puesto'],
-                        "correo"=>$OfertaLaboral['correo']
-                    );
 
-                    $notificarEmpeladorListaInteresados=$this->notificarAplicarOferta($datosOfertaEstudiante);
-                    return response()->json(["mensaje"=>"Operación Exitosa",
-                                                "Siglas"=>"OE",
-                                                "notificarEmpleadorListaInteresados"=>$notificarEmpeladorListaInteresados,
-                                                "OferEstudiante"=>$ObjOfertaLaboralEstudiante,
-                                            200]);
-                }else{
-                    return response()->json(["mensaje"=>"Usted ya esta postulando a esta oferta","Siglas"=>"ONE",200]);
+                $existeUsuarioPostulante=Usuario::where('external_us',$external_id)->where('tipoUsuario',2)->first();
+                if(!$existeUsuarioPostulante){
+                    return response()->json(["mensaje"=>"El usuario postulante con el identificador ".$external_id." no existe ","Siglas"=>"UNE"]);
                 }
+
+                $estudianteValidado=Estudiante::where('fk_usuario',$existeUsuarioPostulante->id)->where('estado',1)->first();
+                if(!$estudianteValidado){
+                    return response()->json(["mensaje"=>"No puede postular a está oferta por el momento, no ha sido  aprobado su formulario de registro","Siglas"=>"UNE"]);
+                }
+                //validar si el postulante ha postulan a una oferta laboral comparando el id del estudiante con el de la oferta
+                $existeOferta=OfertasLaborales::where('external_of',$datos['external_of'])->first();
+                if(!$existeOferta){
+                    return response()->json(["mensaje"=>"La oferta laboral con el identificador ".$datos['external_of']." no existe","Siglas"=>"OFNE"]);
+                }
+
+                //verificamos si el estudiante no posutle dos veces a la misma oferta
+                $estudianteOferta=OfertaLaboralEstudiante::where('fk_estudiante',$estudianteValidado->id)->where('fk_oferta_laboral', $existeOferta->id)->first();
+                if($estudianteOferta){
+                    return response()->json(["mensaje"=>"Usted ya está postulando a esta oferta","Siglas"=>"UPOF"]);
+                }
+
+                // si pasa todo bien todas las validaciones entonces puede el estudiante postular
+                $ObjOfertaLaboralEstudiante=new OfertaLaboralEstudiante();
+                $ObjOfertaLaboralEstudiante->fk_estudiante=$estudianteValidado->id;
+                $ObjOfertaLaboralEstudiante->fk_oferta_laboral=$existeOferta->id;
+                $ObjOfertaLaboralEstudiante->estado=$request['estado'];
+                $ObjOfertaLaboralEstudiante->observaciones=$request['observaciones'];
+                $ObjOfertaLaboralEstudiante->external_of_est="OfEst".Utilidades\UUID::v4();
+                $ObjOfertaLaboralEstudiante->save();
+
+                //se notificar al empleador el nuevo postulante en la oferta laboral
+                $empleador=Empleador::join('usuario','usuario.id','empleador.fk_usuario')->where('empleador.id',$existeOferta->fk_empleador)->first();
+                // se envia esta data para poder realizar la impresion del correo
+                $datosOfertaEstudiante=array(
+                    "nom_representante_legal"=>$empleador->nom_representante_legal,
+                    "razon_empresa"=>$empleador->razon_empresa,
+                    "puesto"=>$existeOferta->puesto,
+                    "correo"=>$empleador->correo
+                );
+                //enviamos el correo
+                $notificarEmpeladorListaInteresados=$this->notificarAplicarOferta($datosOfertaEstudiante);
+
+                return response()->json(["mensaje"=>"Operación Exitosa",
+                                            "Siglas"=>"OE",
+                                            "notificarEmpleadorListaInteresados"=>$notificarEmpeladorListaInteresados,
+                                            "OferEstudiante"=>$ObjOfertaLaboralEstudiante,
+                                        200]);
             } catch (\Throwable $th) {
                 return response()->json(["mensaje"=>$th->getMessage(),
                                         "Siglas"=>"ONE",
-                                        "estudiante"=>$ObjEstudiante,
-                                        "ofertaLaboral"=>$OfertaLaboral,
-                                        "request"=>$request->json()->all(),
-                                        "error"=>$th->getMessage()]);
+                                        "request"=>$request->json()->all()]);
             }
         }else{
             return response()->json(["mensaje"=>"Los datos no tienene el formato deseado",
@@ -412,7 +427,7 @@ class OfertaLaboralEstudianteController extends Controller
                 return "ONE";
             }
         } catch (\Throwable $th) {
-            return $th;
+            return $th->getMessage();
         }
     }
     //bucamos la oferta laboral
@@ -455,8 +470,6 @@ class OfertaLaboralEstudianteController extends Controller
 
     // ======================= FUNCIONES PRIVADAS ================
     private function notificarAplicarOferta($arrayData){
-       $texto="";
-    //    $handle = fopen("logAplicarOfertaLaboral.txt", "a");
 
        try {
            $parrafo="Se ha generado nuevos cambios en tu lista de postulantes de la oferta denominada <b>".
@@ -477,20 +490,9 @@ class OfertaLaboralEstudianteController extends Controller
                     "estadoCorreoBooleanEmpleador"=>$enviarCorreoBooleanEmpleador,
                     "correoEmpleador"=>$arrayData['correo'],
                     );
-        //    $texto="[".date("Y-m-d H:i:s")."]"
-        //    ." APLICAR OFERTA LABORAL:
-        //    ::Estado del enviao de correo al empleador: ".$enviarCorreoBooleanEmpleador
-        //    ."::: El Correo del empleador  es: ".$arrayData['correo']." ] ";
-        //    fwrite($handle, $texto);
-        //    fwrite($handle, "\r\n\n\n\n");
-           //retorno respuesat
+
            return $arrayAplicarOferta;
        } catch (\Throwable $th) {
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            // ." APLICAR OFERTA LABORAL ERROR: ".$th->getMessage()
-            // ."::: El Correo del empleador  es: ".$arrayData['correo']." ] ";
-            // fwrite($handle, $texto);
-            // fwrite($handle, "\r\n\n\n\n");
             return $arrayAplicarOferta=array("error"=>$th->getMessage());
        }
 
@@ -558,14 +560,6 @@ class OfertaLaboralEstudianteController extends Controller
                                     $this->enviarCorreo($templateCorreoHmtlPostulante,
                                                         $postulante->correo,
                                                         getenv('TITULO_CORREO_APLICAR_OFERTA'));
-
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            // ." APLICAR OFERTA LABORAL -> NOTIFICAR AL POSTULANTE QUE EL EMPLEADOR LE CONTRATO  :
-            // ::Postulante contrado  : ".$postulante->nombre." ".$postulante->apellido."
-            // ::: El Correo del postulante  es: ".$postulante->correo."
-            // ::: NOMBRE DE LA OFERTA LABORAL: ".$puesto."
-            // ::: ESTADO DE ENVIAR FORMULARIO DEL SISSEG POSTULANTE: ".($enviarFormSISSEGPostulante? 'true' : 'false')."
-            // ::Estado del correo enviado al postulante ".($estadEnviarCorreoPostualante? 'true' : 'false')." ]";
             $texto++;
 
            }else{
@@ -591,24 +585,16 @@ class OfertaLaboralEstudianteController extends Controller
                             $this->enviarCorreo($templateCorreoHmtlPostulante,
                                                 $postulante->correo,
                                                 getenv('TITULO_CORREO_APLICAR_OFERTA'));
-                // $texto="[".date("Y-m-d H:i:s")."]"
-                // ." APLICAR OFERTA LABORAL -> NOTIFICAR AL POSTULANTE QUE EL EMPLEADOR NO LO CONTRATO  :
-                // ::Postulante no contrado  : ".$postulante->nombre." ".$postulante->apellido."
-                // ::: El Correo del postulante  es: ".$postulante->correo." ] "."
-                // ::: NOMBRE DE LA OFERTA LABORAL: ".$puesto." ] "."
-                // ::: ESTADO DE ENVIAR FORMULARIO DEL SISSEG POSTULANTE: ".($enviarFormSISSEGPostulante? 'true' : 'false')." ] "."
-                // ::Estado del correo enviado al postulante : ".($estadEnviarCorreoPostualante?'true' : 'false');
+
                 $texto++;
            }
            //tabulo por cada interaccion que exista
         }
-        //die(json_encode($listaPostulantes));
         return $texto;
     }
     private function nofiticarFinalizacionOfertaEncargadoLaboralPostulante($arrayData){
 
-        // $texto="";
-        // $handle = fopen("logAplicarOfertaLaboral.txt", "a");
+
         $arrayRespuesta=array();
         try {
             // SI SE CONTRATA , NOTIFICAMMOS AL ENCARGADO Y ESTUDIANTE
@@ -619,13 +605,7 @@ class OfertaLaboralEstudianteController extends Controller
                         $arrayData["puesto"]. "</b>,  existen postulantes contratados";
                 $notificarEncargado=$this->notificarEncargado($parrafoNotificarEncargado,$arrayData['existeContrados'],"SI SE CONTRARARON POSTULANTES");
                 //1.notificar al encargado de la contracion de postulanes
-                // fwrite($handle,$notificarEncargado );
-                // fwrite($handle, "\r\n\n\n\n");
-                //2.Notifcamos a los postulantes si han sido o no contratados
-                // $notificarPostulantes=$this->notificarPostulante($arrayData['listaEstudiantes'],$arrayData['puesto']);
-                // $arrayRespuesta=array("existeContratado"=>$arrayData['existeContrados']);
-                // fwrite($handle, $notificarPostulantes);
-                // fwrite($handle, "\r\n\n\n\n");
+
             }
             // SI NO SE CONTRATA SOLO SE NOTIFICA AL ENCARGADO
             // SI NO SE CONTRATA SOLO SE NOTIFICA AL ENCARGADO
@@ -638,16 +618,10 @@ class OfertaLaboralEstudianteController extends Controller
                 $notificarPostulantes=$this->notificarPostulante($arrayData['listaEstudiantes'],$arrayData['puesto']);
                 $arrayRespuesta=array("existeContratado"=>$arrayData['existeContrados']);
                 $arrayRespuesta=array("existeContratado"=>$arrayData['existeContrados']);
-                // fwrite($handle,$notificarEncargado );
-                // fwrite($handle, "\r\n\n\n\n");
             }
             return $arrayRespuesta;
         } catch (\Throwable $th) {
-            // $texto="[".date("Y-m-d H:i:s")."]"
-            // ." APLICAR OFERTA LABORAL ERROR: NOTICAR AL ENCARGADO LA CONTRACION O NO CONTRACION DE POSTULANTES ".$th->getMessage()
-            // ."::: El Correo del empleador  es: ".$arrayData['correo']." ] ";
-            // fwrite($handle, $texto);
-            // fwrite($handle, "\r\n\n\n\n");
+
             echo $th->getMessage();
             return $arrayRespuesta=array("error"=>$th->getMessage());
         }

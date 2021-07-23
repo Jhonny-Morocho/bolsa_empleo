@@ -66,7 +66,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
       siHaceBien=>{
           this.arrayCiudad=siHaceBien;
       },siHaceMal=>{
-        Swal('Error', siHaceMal['mensaje'], 'error');
+        Swal('Error', siHaceMal['statusText'], 'error');
       }
     );
   }
@@ -75,7 +75,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
       siHaceBien=>{
           this.arrayProvincias=siHaceBien;
       },siHaceMal=>{
-        Swal('Error', siHaceMal['mensaje'], 'error');
+        Swal('Error', siHaceMal['statusText'], 'error');
       }
     );
   }
@@ -135,7 +135,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
             this.nuevoRegistro=true;
           }
       },(peroSiTenemosErro)=>{
-        Swal('Información', peroSiTenemosErro['mensaje'], 'info')
+        Swal('Error', peroSiTenemosErro['statusText'], 'error')
     });
 
   }
@@ -223,7 +223,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
          Swal({
           title:'Error',
           type:'error',
-          text:peroSiTenemosErro['mensaje']
+          text:peroSiTenemosErro['statusText']
          });
     });
   }
@@ -256,7 +256,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
         Swal({
           title:'Error',
           type:'error',
-          text:peroSiTenemosErro['mensaje']
+          text:peroSiTenemosErro['statusText']
         });
     });
   }

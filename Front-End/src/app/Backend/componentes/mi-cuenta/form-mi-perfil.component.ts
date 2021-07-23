@@ -85,7 +85,7 @@ export class FormMiPerfilComponent implements OnInit {
           })
         }else{
           Swal({
-            title:'info',
+            title:'Información',
             type:'info',
             text:siHacesBien['mensaje']
           });
@@ -94,7 +94,7 @@ export class FormMiPerfilComponent implements OnInit {
         Swal({
           title:'Error',
           type:'error',
-          text:siHacesMal['mensaje']
+          text:siHacesMal['statusText']
         });
       }
     );
