@@ -55,7 +55,7 @@ class OfertaLaboralEstudianteController extends Controller
                 if(!$estudianteValidado){
                     return response()->json(["mensaje"=>"No puede postular a está oferta por el momento, no ha sido  aprobado su formulario de registro","Siglas"=>"UNE"]);
                 }
-                //validar si el postulante ha postulan a una oferta laboral comparando el id del estudiante con el de la oferta
+                //validar si existe la oferta laboral
                 $existeOferta=OfertasLaborales::where('external_of',$datos['external_of'])->first();
                 if(!$existeOferta){
                     return response()->json(["mensaje"=>"La oferta laboral con el identificador ".$datos['external_of']." no existe","Siglas"=>"OFNE"]);
@@ -64,7 +64,7 @@ class OfertaLaboralEstudianteController extends Controller
                 //verificamos si el estudiante no posutle dos veces a la misma oferta
                 $estudianteOferta=OfertaLaboralEstudiante::where('fk_estudiante',$estudianteValidado->id)->where('fk_oferta_laboral', $existeOferta->id)->first();
                 if($estudianteOferta){
-                    return response()->json(["mensaje"=>"Usted ya está postulando a esta oferta","Siglas"=>"UPOF"]);
+                    return response()->json(["mensaje"=>"Usted ya está postulando a esta oferta","Siglas"=>"OR"]);
                 }
 
                 // si pasa todo bien todas las validaciones entonces puede el estudiante postular
@@ -76,7 +76,7 @@ class OfertaLaboralEstudianteController extends Controller
                 $ObjOfertaLaboralEstudiante->external_of_est="OfEst".Utilidades\UUID::v4();
                 $ObjOfertaLaboralEstudiante->save();
 
-                //se notificar al empleador el nuevo postulante en la oferta laboral
+                //buscamos el dueño de esa oferta para notificar al empleador el nuevo postulante en la oferta laboral
                 $empleador=Empleador::join('usuario','usuario.id','empleador.fk_usuario')->where('empleador.id',$existeOferta->fk_empleador)->first();
                 // se envia esta data para poder realizar la impresion del correo
                 $datosOfertaEstudiante=array(
