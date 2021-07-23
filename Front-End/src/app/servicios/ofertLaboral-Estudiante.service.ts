@@ -19,7 +19,7 @@ export class OfertaLaboralEstudianteService {
   private urlBackendListTodasEstudiantePostulanOfertaExternal_of_encargado="/Backend/public/index.php/ofertasLaboralesEstudiantes/listTodasEstudiantePostulanOfertaExternal_of_encargado/";
   private urlBackendListTodasEstudiantePostulanOfertaExternal_of_empleador="/Backend/public/index.php/ofertasLaboralesEstudiantes/listTodasEstudiantePostulanOfertaExternal_of_empleador/";
   private urlListarTodasOfertaEstudianteExternal_us="/Backend/public/index.php/ofertasLaboralesEstudiantes/listarTodasOfertaEstudianteExternal_us/";
-  private urlELiminarPostulanteOfertaLaboral="/Backend/public/index.php/ofertasLaboralesEstudiantes/eliminarPostulanteOfertaLaboral";
+  private urlELiminarPostulanteOfertaLaboral="/Backend/public/index.php/ofertasLaboralesEstudiantes/eliminarPostulanteOfertaLaboral/";
   private urlFinalizarOfertaLaboralEstudiante="/Backend/public/index.php/ofertasLaboralesEstudiantes/finalizarOfertaLaboralEstudiante";
   constructor(private _httCliente:HttpClient) { }
 
@@ -125,7 +125,8 @@ export class OfertaLaboralEstudianteService {
 
   //actulizar estado de validacion del postulante//aprobado y no aprobado
   eliminarPostulanteOfertaLaboral(array:any){
-      return this._httCliente.post(`${this.urlDominio_}${this.urlELiminarPostulanteOfertaLaboral}`,array).pipe(
+    let external_us=localStorage.getItem('external_is');
+      return this._httCliente.post(`${this.urlDominio_}${this.urlELiminarPostulanteOfertaLaboral}${external_us}`,array).pipe(
         map(
           respuestaBackend=>{
             return respuestaBackend;

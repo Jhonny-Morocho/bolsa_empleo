@@ -68,16 +68,24 @@ export class PostulanteOfertas implements OnInit {
         confirmButtonText: 'Si'
       }).then((result) => {
         if (result.value) {
-
           this.servicioOfertaEstudiante.eliminarPostulanteOfertaLaboral(this.arrayAux).subscribe(
             siHaceBien =>{
                 if(siHaceBien['Siglas']=='OE'){
-                  Swal('Registrado', 'Información Registrada con éxito', 'success');
+                  const toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 5000
+                  });
+                  toast({
+                    type: 'success',
+                    title: 'Registrado'
+                  })
                 }else{
-                  Swal('Error', siHaceBien['error'], 'error');
+                  Swal('Información', siHaceBien['mensaje'], 'info');
                 }
             },siHceMal=>{
-              Swal('Error', siHceMal['error'], 'error');
+              Swal('Error', siHceMal['error']['message'], 'error');
             }
           );
         }
@@ -116,7 +124,7 @@ export class PostulanteOfertas implements OnInit {
       siHaceBien=>{
         this.arrayTitulosAcademicos=siHaceBien;
       },error=>{
-        Swal('Error', error['mensaje'], 'error');
+        Swal('Error', error['error']['message'], 'error');
       }
     );
   }

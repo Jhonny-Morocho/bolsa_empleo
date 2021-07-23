@@ -11,7 +11,6 @@
           </a>
         </div>
         <article class="card-body">
-          {{     instanciaVerPostulante.correo }}
           <app-ver-oferta-laboral [instanciaOfertaVer]="instanciaOfertaLaboral"></app-ver-oferta-laboral>
 
           <div class="alert simple-warning text-center" role="alert" *ngIf="!existeRegistros && ofertaLaboralActiva==true">
@@ -22,40 +21,43 @@
               La oferta laboral a finalizado
           </div>
           <div *ngIf=" existeRegistros ">
-              <table class="table ">
-                  <thead>
-                      <tr>
-                          <th scope="col ">#</th>
-                          <th scope="col ">Fecha postulación</th>
-                          <th scope="col ">Postulante</th>
-                          <th scope="col ">Hoja de vida</th>
-                          <th scope="col ">Correo</th>
-                          <th scope="col ">Postulando</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr *ngFor="let postulantes of arrayPostulante; index as i ">
-                          <th scope="row ">{{ i+1 }}</th>
-                          <td>{{ postulantes.created_at| date: 'yyy/MM/dd' }}</td>
-                          <td>{{ postulantes.nombre }} {{ postulantes.apellido }}</td>
-                          <td>
-                            <a class="btn btn-light"
-                              (click)="verHojaVidaModal(i)">
-                              <i class="fas fa-eye "></i>
-                            </a>
-                          </td>
-                          <td>{{ postulantes.correo }}</td>
-                          <td>
-                              <input class="form-check-input me-1"
-                               type="checkbox"
-                               (change)="check($event,postulantes.fk_estudiante,postulantes.fk_oferta_laboral,postulantes.external_of_est,postulantes.external_es)"
-                               [checked]="postulantes.estado=='1'"
-                               [value]="postulantes.estado"
-                               [disabled]="ofertaLaboralActiva==false">
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
+              <div class="table-responsive">
+                <table class="table ">
+                    <thead>
+                        <tr>
+                            <th >#</th>
+                            <th >Fecha postulación</th>
+                            <th >Postulante</th>
+                            <th >Hoja de vida</th>
+                            <th >Correo</th>
+                            <th >Postulando</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let postulantes of arrayPostulante; index as i ">
+                            <th scope="row ">{{ i+1 }}</th>
+                            <td>{{ postulantes.created_at| date: 'yyy/MM/dd' }}</td>
+                            <td>{{ postulantes.nombre }} {{ postulantes.apellido }}</td>
+                            <td>
+                              <a class="btn btn-light"
+                                (click)="verHojaVidaModal(i)">
+                                <i class="fas fa-eye "></i>
+                              </a>
+                            </td>
+                            <td>{{ postulantes.correo }}</td>
+                            <td>
+                                <input class="form-check-input me-1"
+                                 type="checkbox"
+                                 (change)="check($event,postulantes.fk_estudiante,postulantes.fk_oferta_laboral,postulantes.external_of_est,postulantes.external_es)"
+                                 [checked]="postulantes.estado=='1'"
+                                 [value]="postulantes.estado"
+                                 [disabled]="ofertaLaboralActiva==false">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+              </div>
               <div class="modal-footer ">
                 <button type="button " class="btn btn-primary"
                   (click)="filtrarPostulante()"
@@ -97,19 +99,19 @@
                   </ul>
                   <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-infoPostulante-tab">
-                      <app-info-detalles-postulante
-                        [instanciaVerPostulante]="instanciaVerPostulante">
-                      </app-info-detalles-postulante>
+                        <app-info-detalles-postulante
+                          [instanciaVerPostulante]="instanciaVerPostulante">
+                        </app-info-detalles-postulante>
                     </div>
                     <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-cursosCapacitaciones-tab">
-                      <app-tabla-cursos-capacitaciones
-                        [instanciaCursosCapacitaciones]="arrayCursosCapacitaciones">
-                      </app-tabla-cursos-capacitaciones>
+                        <app-tabla-cursos-capacitaciones
+                          [instanciaCursosCapacitaciones]="arrayCursosCapacitaciones">
+                        </app-tabla-cursos-capacitaciones>
                     </div>
                     <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-titulosAcademicos-tab">
-                      <app-tabla-titulos-academicos
-                                          [tituloAcademico]="arrayTitulosAcademicos">
-                      </app-tabla-titulos-academicos>
+                        <app-tabla-titulos-academicos
+                                            [tituloAcademico]="arrayTitulosAcademicos">
+                        </app-tabla-titulos-academicos>
                     </div>
                   </div>
                 </div>

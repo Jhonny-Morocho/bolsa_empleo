@@ -50,7 +50,7 @@ export class TablaPublicarOfertGestorComponent implements OnInit {
         this.dtTrigger.next();
       },
       (peroSiTenemosErro)=>{
-        Swal('Info',peroSiTenemosErro['mensaje'], 'info');
+        Swal('Información',peroSiTenemosErro['error']['message'], 'error');
       }
     );
    }
@@ -76,7 +76,6 @@ export class TablaPublicarOfertGestorComponent implements OnInit {
       //obtengo todos los usuarios
       this.servicioEmpleador.listarEmpleadores().subscribe(
         siHaceBien=>{
-
             siHaceBien.forEach(element => {
               //comparo el fk_empleador con el id de usuario
               if(element['id']== this.instanciaOfertaVer.fk_empleador){
@@ -88,11 +87,9 @@ export class TablaPublicarOfertGestorComponent implements OnInit {
                 this.instanciaEmpleadorModelVer.tipo_empresa=element['tiposEmpresa'];
                 this.instanciaEmpleadorModelVer.razon_empresa=element['razon_empresa'];
               }
-
             });
-
         },error=>{
-          Swal('Info',error['mensaje'], 'info');
+          Swal('Error',error['error']['message'], 'error');
         });
 
       $("#itemRequisitos").html(  this.instanciaOfertaVer.requisitos);

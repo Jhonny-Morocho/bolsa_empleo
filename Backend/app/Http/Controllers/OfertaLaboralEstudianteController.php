@@ -336,11 +336,22 @@ class OfertaLaboralEstudianteController extends Controller
            return response()->json(["mensaje"=>"Los datos no tienene el formato deseado","Siglas"=>"DNF",400]);
        }
     }
-    public function eliminarPostulanteOfertaLaboral(Request $request){
+    public function eliminarPostulanteOfertaLaboral(Request $request,$external_us){
          $OfertaLaboralPostulanteBorrar=null;
          $arrayRespuesta=array();
          if($request->json()){
             try {
+                $existeUsuario=Usuario::where('external_us',$external_us)->first();
+                if(!$existeUsuario){
+                    return response()->json(["mensaje"=>"EL usuario con el identificador ".$external_us." no existe","Siglas"=>"UNE",400]);
+                }
+                $esEmpleador=Empleador::where('fk_usuario',$existeUsuario->id)->first();
+                if(!$existeUsuario){
+                    return response()->json(["mensaje"=>"EL usuario con el identificador ".$external_us." no existe","Siglas"=>"UNE",400]);
+                }
+                //si el usuario a filtrar los postulantes es el encargado y debe estar activo
+
+                die('PROBANDO');
                 $fk_oferta_labora=null;
                 $estadoEmpleadorOferta=0;
                 foreach ($request->json() as $key => $value) {
@@ -373,8 +384,7 @@ class OfertaLaboralEstudianteController extends Controller
                 return response()->json(["mensaje"=>$th->getMessage(),
                                         "resquest"=>$request->json()->all(),
                                         "respuesta"=>$OfertaLaboralPostulanteBorrar,
-                                        "Siglas"=>"ONE",
-                                        "error"=>$th->getMessage()]);
+                                        "Siglas"=>"ONE"]);
             }
 
         }else{
