@@ -146,9 +146,10 @@ export class OfertasLaboralesService {
     const autenficacionDatos={
       ...modeloOfertasLaborales
     }
+    let external_us=localStorage.getItem('external_us');
     //retorna la respuesata
     return this._httCliente.post(
-      `${this.urlDominio_}${this.urlFinalizarOfertaLaboral}${external_ofert}`,autenficacionDatos
+      `${this.urlDominio_}${this.urlFinalizarOfertaLaboral}${external_ofert}${external_us}`,autenficacionDatos
     ).pipe(
       map(
         respuestaBackend=>{

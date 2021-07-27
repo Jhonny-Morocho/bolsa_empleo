@@ -281,11 +281,19 @@ class OfertaLaboralEstudianteController extends Controller
     }
     // el empleador le da finaalizar la publicacion de la oferta laboral y los postulantes son actualizados
     //para revisar si existe contratados o no
-    public function finalizarOfertaLaboralEstudiante(Request $request){
+    public function finalizarOfertaLaboralEstudiante(Request $request,$external_us){
         $OfertaLaboralPostulanteBorrar=null;
         $arrayRespuesta=array();
         if($request->json()){
            try {
+                $existeUsuario=Usuario::where('tipoUsuario',6)->where('external_us',$external_us)->first();
+                if(!$existeUsuario){
+                    return response()->json(["mensaje"=>"El usuario  con el identificador ".$external_us." no existe ","Siglas"=>"UNE"]);
+                }
+                $tienPermisos=Empleador::where('fk_usuario',$existeUsuario->id)->where('estado',1)->first();
+                if(!$tienPermisos){
+                    return response()->json(["mensaje"=>"El empleador con el identificador ".$external_us." no tiene permisos para realizar esta acción ","Siglas"=>"NTP"]);
+                }
                $fk_oferta_labora=null;
                $existeContratado=false;
                foreach ($request->json() as $key => $value) {

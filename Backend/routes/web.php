@@ -62,7 +62,7 @@ try {
         //ofertasLaboraolesEstuidante
         $router->get('/ofertasLaboralesEstudiantes/reporteOfertaEstudiante','OfertaLaboralEstudianteController@reporteOfertaEstudiante');
         $router->post('/ofertasLaboralesEstudiantes/eliminarPostulanteOfertaLaboral/{external_us}','OfertaLaboralEstudianteController@eliminarPostulanteOfertaLaboral');
-        $router->post('/ofertasLaboralesEstudiantes/finalizarOfertaLaboralEstudiante','OfertaLaboralEstudianteController@finalizarOfertaLaboralEstudiante');
+        $router->post('/ofertasLaboralesEstudiantes/finalizarOfertaLaboralEstudiante/{external_us}','OfertaLaboralEstudianteController@finalizarOfertaLaboralEstudiante');
         $router->get('/ofertasLaboralesEstudiantes/listarTodasOfertaEstudianteExternal_us/{external_id}','OfertaLaboralEstudianteController@listarTodasOfertaEstudianteExternal_us');
         $router->get('/ofertasLaboralesEstudiantes/listTodasEstudiantePostulanOfertaExternal_of_encargado/{external_id}','OfertaLaboralEstudianteController@listTodasEstudiantePostulanOfertaExternal_of_encargado');
         $router->get('/ofertasLaboralesEstudiantes/resumenOfertaEstudiantesFinalizada_external_of/{external_id}','OfertaLaboralEstudianteController@resumenOfertaEstudiantesFinalizada_external_of');

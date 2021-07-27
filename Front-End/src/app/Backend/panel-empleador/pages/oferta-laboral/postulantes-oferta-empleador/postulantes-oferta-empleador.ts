@@ -106,7 +106,7 @@ export class PostulantesOfertaComponent implements OnInit {
       siHaceBien=>{
         this.arrayCursosCapacitaciones=siHaceBien;
       },error=>{
-        Swal('Info',error['mensaje'], 'info');
+        Swal('Información',error['mensaje'], 'error');
       }
     );
   }
@@ -125,7 +125,13 @@ export class PostulantesOfertaComponent implements OnInit {
           }).then((result) => {
             if (result.value) {
               let estadoActualizarDato=true;
-              Swal({allowOutsideClick: false,type: 'info',text: 'Espere por favor...'});
+              //mensaje de alerta usuario
+              Swal({
+                allowOutsideClick:false,
+                type:'info',
+                text:'Espere por favor'
+              });
+              Swal.showLoading();
               //primero la finalizado a la oferta laboral
               this.servicioOfertaLabotal.actulizarEstadoOfertaLaboralFinalizado(this.instanciaOfertaLaboral,this.externalOferta).subscribe(
                 siHaceBien=>{
@@ -202,7 +208,7 @@ export class PostulantesOfertaComponent implements OnInit {
                   //desactivo el boton de guardar y finalizar
                   this.estadoOfertaLaboralFinalizada=true;
               },siHaceMal=>{
-                Swal('Ups', siHaceMal['mensaje'], 'info')
+                Swal('Información', siHaceMal['mensaje'], 'info')
               }
             );
           }
