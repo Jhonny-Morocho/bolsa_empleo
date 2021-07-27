@@ -341,19 +341,14 @@ class OfertaLaboralEstudianteController extends Controller
          $arrayRespuesta=array();
          if($request->json()){
             try {
-                $existeUsuario=Usuario::where('external_us',$external_us)->first();
-                if(!$existeUsuario){
-                    return response()->json(["mensaje"=>"EL usuario con el identificador ".$external_us." no existe","Siglas"=>"UNE",400]);
-                }
-                $esEmpleador=Empleador::where('fk_usuario',$existeUsuario->id)->first();
-                if(!$existeUsuario){
-                    return response()->json(["mensaje"=>"EL usuario con el identificador ".$external_us." no existe","Siglas"=>"UNE",400]);
-                }
-                //si el usuario a filtrar los postulantes es el encargado y debe estar activo
+                $existeUsuario=Usuario::where('external_us',$external_us)->where('estado',1)->where('tipoUsuario',5)->first();
 
-                die('PROBANDO');
+                //verificamos si el usuarioe existe//verificar si el encargado
+                if(!$existeUsuario){
+                    return response()->json(["mensaje"=>"EL empleador con el identificador ".$external_us." no tiene permisos para realizar esta acción","Siglas"=>"NTP",400]);
+                }
+                //si pasa todas las validaciones entonces se ejecuta este comando
                 $fk_oferta_labora=null;
-                $estadoEmpleadorOferta=0;
                 foreach ($request->json() as $key => $value) {
                     $OfertaLaboralPostulanteBorrar=
                     OfertaLaboralEstudiante::join("estudiante","estudiante.id","ofertalaboral_estudiante.fk_estudiante")
@@ -376,10 +371,13 @@ class OfertaLaboralEstudianteController extends Controller
                     "puesto"=>$buscarOferta['puesto'],
                     "correo"=>$buscarOferta['correo']
                 );
+
                 $notificarEmpeladorListaInteresados=$this->notificarAplicarOferta($datosOfertaEstudiante);
-                return  response()->json(["mensaje"=>$arrayRespuesta,"Siglas"=>"OE",
+                return  response()->json(["mensaje"=>$arrayRespuesta,
+                                        "Siglas"=>"OE",
                                         "notificarEmpeladorListaInteresados"=>$notificarEmpeladorListaInteresados,
                                         "respuesta"=>$OfertaLaboralPostulanteBorrar,200]);
+
             } catch (\Throwable $th) {
                 return response()->json(["mensaje"=>$th->getMessage(),
                                         "resquest"=>$request->json()->all(),

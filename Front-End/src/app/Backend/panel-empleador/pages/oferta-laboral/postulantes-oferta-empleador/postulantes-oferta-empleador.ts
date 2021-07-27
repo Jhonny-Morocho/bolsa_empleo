@@ -136,10 +136,10 @@ export class PostulantesOfertaComponent implements OnInit {
                       //desactivo el boton de guardar y finalizar
                       this.estadoOfertaLaboralFinalizada=true;
                     }else{
-                      Swal('Info', siHaceBien['error'], 'info');
+                      Swal('Información', siHaceBien['mensaje'], 'info');
                     }
                 },siHaceMal=>{
-                  Swal('Error',siHaceMal['mensaje'], 'error');
+                  Swal('Error',siHaceMal['message'], 'error');
                 }
               );
               //actualizo el estado de los postulantes
@@ -149,10 +149,10 @@ export class PostulantesOfertaComponent implements OnInit {
                      //si se subio
                      estadoActualizarDato=true;
                     }else{
-                      Swal('Info', siHaceBien['error'], 'info');
+                      Swal('Información', siHaceBien['mensaje'], 'info');
                     }
                 },siHceMal=>{
-                  Swal('Error', siHceMal['error'], 'error');
+                  Swal('Error', siHceMal['message'], 'error');
                 }
               );
               //finalizado la animacion
