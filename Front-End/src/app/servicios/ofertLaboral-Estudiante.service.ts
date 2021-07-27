@@ -125,7 +125,7 @@ export class OfertaLaboralEstudianteService {
 
   //actulizar estado de validacion del postulante//aprobado y no aprobado
   eliminarPostulanteOfertaLaboral(array:any){
-    let external_us=localStorage.getItem('external_is');
+    let external_us=localStorage.getItem('external_us');
       return this._httCliente.post(`${this.urlDominio_}${this.urlELiminarPostulanteOfertaLaboral}${external_us}`,array).pipe(
         map(
           respuestaBackend=>{

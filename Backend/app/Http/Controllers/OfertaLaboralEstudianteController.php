@@ -345,7 +345,7 @@ class OfertaLaboralEstudianteController extends Controller
 
                 //verificamos si el usuarioe existe//verificar si el encargado
                 if(!$existeUsuario){
-                    return response()->json(["mensaje"=>"EL empleador con el identificador ".$external_us." no tiene permisos para realizar esta acción","Siglas"=>"NTP",400]);
+                    return response()->json(["mensaje"=>"El empleador con el identificador ".$external_us." no tiene permisos para realizar esta acción","Siglas"=>"NTP",400]);
                 }
                 //si pasa todas las validaciones entonces se ejecuta este comando
                 $fk_oferta_labora=null;

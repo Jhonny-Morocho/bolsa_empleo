@@ -68,8 +68,15 @@ export class PostulanteOfertas implements OnInit {
         confirmButtonText: 'Si'
       }).then((result) => {
         if (result.value) {
+          Swal({
+            allowOutsideClick:false,
+            type:'info',
+            text:'Espere por favor'
+          });
+          Swal.showLoading();
           this.servicioOfertaEstudiante.eliminarPostulanteOfertaLaboral(this.arrayAux).subscribe(
             siHaceBien =>{
+                
                 if(siHaceBien['Siglas']=='OE'){
                   const toast = Swal.mixin({
                     toast: true,
