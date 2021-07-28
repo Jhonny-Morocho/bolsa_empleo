@@ -19,42 +19,40 @@ class DocenteController extends Controller
             $datos=$request->json()->all();
             //creamos un objeto de tipo usuario para enviar los datos
             try {
-                //verificar si el usuario es un administrador
-                $usuarioAdmin=Usuario::where("external_us",$external_id)->first();
-                if($usuarioAdmin->tipoUsuario==4){
-                    $existeUsuario=Usuario::where("correo",$datos['correo'])->first();
-                    if(is_null($existeUsuario)){
-                        $ObjUsuario=new Usuario();
-                        $ObjUsuario->correo=$datos["correo"];
-                        $opciones=array('cost'=>12);
-                        $passwordCliente=$datos["password"];
-                        $password_hashed=password_hash($passwordCliente,PASSWORD_BCRYPT,$opciones);
-                        $ObjUsuario->password=$password_hashed;
-                        $ObjUsuario->tipoUsuario=$datos["tipoUsuario"];
-                        $ObjUsuario->estado=$datos["estado"];
-                        $ObjUsuario->external_us="UuA".Utilidades\UUID::v4();
-                        $ObjUsuario->save();
-
-                        //agregar docente
-                        $objDocente=new Docente();
-                        $objDocente->nombre=$datos["nombre"];
-                        $objDocente->apellido=$datos["apellido"];
-                        $objDocente->estado=$datos["estado"];
-                        $objDocente->fk_usuario=$ObjUsuario->id;
-                        $objDocente->external_do="UuA".Utilidades\UUID::v4();
-                        $objDocente->save();
-
-                        $arrayUsuarioDocente=array("estadoUsuario"=>$ObjUsuario,"estadoDocente"=>$objDocente);
-                        return response()->json(["mensaje"=>$arrayUsuarioDocente,"Siglas"=>"OE",200,]);
-
-                    }else{
-                        return response()->json(["mensaje"=>"El usuario ".$datos["correo"]." ya existe","Siglas"=>"ONE",400,]);
-                    }
-                }else{
-                    return response()->json(["mensaje"=>"Solo el administrador puede realizar esta operación","Siglas"=>"ONE",200]);
+                //verificar si el usuario es un administrador para poder realizar esta accion
+                $usuarioAdmin=Usuario::where("external_us",$external_id)->where('tipoUsuario',4)->where('estado',1)->first();
+                if(!$usuarioAdmin){
+                    return response()->json(["mensaje"=>"No tiene permisos para realizar esta acción","Siglas"=>"NTP",200]);
                 }
+                //comprobamos si existe el usuario a registrar
+                $existeUsuario=Usuario::where("correo",$datos['correo'])->first();
+                if($existeUsuario){
+                    return response()->json(["mensaje"=>"El usuario ".$datos["correo"]." ya existe","Siglas"=>"UE",200]);
+                }
+                //realizamos la operacion de ingresar el nuevo usuario
+                $ObjUsuario=new Usuario();
+                $ObjUsuario->correo=$datos["correo"];
+                $opciones=array('cost'=>12);
+                $passwordCliente=$datos["password"];
+                $password_hashed=password_hash($passwordCliente,PASSWORD_BCRYPT,$opciones);
+                $ObjUsuario->password=$password_hashed;
+                $ObjUsuario->tipoUsuario=$datos["tipoUsuario"];
+                $ObjUsuario->estado=$datos["estado"];
+                $ObjUsuario->external_us="UuA".Utilidades\UUID::v4();
+                $ObjUsuario->save();
+
+                //agregar docente
+                $objDocente=new Docente();
+                $objDocente->nombre=$datos["nombre"];
+                $objDocente->apellido=$datos["apellido"];
+                $objDocente->estado=$datos["estado"];
+                $objDocente->fk_usuario=$ObjUsuario->id;
+                $objDocente->external_do="UuA".Utilidades\UUID::v4();
+                $objDocente->save();
+                $arrayUsuarioDocente=array("estadoUsuario"=>$ObjUsuario,"estadoDocente"=>$objDocente);
+                return response()->json(["mensaje"=>$arrayUsuarioDocente,"Siglas"=>"OE",200,]);
             } catch (\Throwable $th) {
-                return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","error"=>$th->getMessage()]);
+                return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE"]);
             }
         }else{
             return response()->json(["mensaje"=>"Los datos no tienene el formato deseado","Siglas"=>"DNF",400]);
@@ -83,12 +81,33 @@ class DocenteController extends Controller
             $data=$request->json()->all();
             $objUsuario=null;
             try {
+                $usuarioAdmin=Usuario::where("external_us",$data['external_us_admin'])->where('tipoUsuario',4)->where('estado',1)->first();
+                if(!$usuarioAdmin){
+                    return response()->json(["mensaje"=>"No tiene permisos para realizar esta acción","Siglas"=>"NTP",200]);
+                }
+                //vamos a controlar que el usuario adminstrador no se de de baja o que existar por lo menos un adminsistrador
+                // debe tener un usuario adminstrador activo
+                $esAdmin=Usuario::where("usuario.external_us",$external_id)->where('tipoUsuario',4)->first();
+                //obtengo todos los usuario admins
+                $usuarioAdmin=Usuario::where('tipoUsuario',4)->get();
+                $numAdminActivos=0;
+                foreach ($usuarioAdmin as $key => $value) {
+                    if($value['estado']==1){
+                        $numAdminActivos++;
+                    }
+                }
+
+                if(($data["estado"]==0 && $esAdmin && $numAdminActivos<=1)){
+                    return response()->json(["mensaje"=>"No se puede realizar esta acción, debe existir por lo menos un administrador activo","Siglas"=>"ONE","numAdmin"=>$numAdminActivos]);
+                }
+
                 //actualizar los datos del usuario
                 //verificar si quiere actulaizar el password
                 $booleanActualizoPassword=false;
                 if($data["password"]){//comprobamos si esta variable existe
                     $opciones=array('cost'=>12);
                     $password_hashed=password_hash($data["password"],PASSWORD_BCRYPT,$opciones);
+
                     $objUsuario=Usuario::where("usuario.external_us",$external_id)
                     ->update(array(
                         "password"=>$password_hashed,
@@ -98,6 +117,7 @@ class DocenteController extends Controller
                     $booleanActualizoPassword=true;
                 }else{
                     $objUsuario=Usuario::where("usuario.external_us",$external_id)
+
                     ->update(array(
                         "password"=>$data["password"],
                         "estado"=>$data["estado"],
@@ -114,11 +134,12 @@ class DocenteController extends Controller
                 $arrayUsuarioDocente=array("estadoRegistro"=>$objUsuario,
                                             "actualizoPassword"=>$booleanActualizoPassword,
                                             "estadoDocente"=>$objDocente);
-                return response()->json(["mensaje"=>$arrayUsuarioDocente,"Siglas"=>"OE",200,]);
+                return response()->json(["mensaje"=>$arrayUsuarioDocente,"Siglas"=>"OE",200]);
+
+
             } catch (\Throwable $th) {
                 return response()->json(["mensaje"=>$th->getMessage(),
                                             "Siglas"=>"ONE",
-                                            "error"=>$th->getMessage(),
                                         400]);
             }
             //die($data);

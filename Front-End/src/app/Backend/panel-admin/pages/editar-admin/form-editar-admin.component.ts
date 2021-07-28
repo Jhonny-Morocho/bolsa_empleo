@@ -57,10 +57,10 @@ export class FormEditarAdminComponent implements OnInit {
           });
 
         }else{
-          Swal('Info',siHacesBien['mensaje'], 'info');
+          Swal('Información',siHacesBien['mensaje'], 'info');
         }
       },siHaceMal=>{
-        Swal('Error',siHaceMal['mensaje'], 'error');
+        Swal('Error',siHaceMal['statusText'], 'error');
       }
     );
   }
@@ -85,6 +85,7 @@ export class FormEditarAdminComponent implements OnInit {
     //this.instanciaDocente.estado=1;
     this.servicioDocente.actulizarDatosDocente(this.instanciaDocente,this.external_usuario).subscribe(
       siHacesBien=>{
+        console.log(siHacesBien);
         if(siHacesBien['Siglas']=="OE"){
           const toast = Swal.mixin({
             toast: true,
@@ -98,10 +99,11 @@ export class FormEditarAdminComponent implements OnInit {
           })
           this.servicioRouter.navigateByUrl('/panel-admin/gestionar-usuarios-admin');
         }else{
-          Swal({title:'Error',type:'error',text:siHacesBien['mensaje']});
+
+          Swal({title:'Información',type:'info',text:siHacesBien['mensaje']});
         }
       },siHacesMal=>{
-        Swal('Error',siHacesMal['mensaje'], 'error');
+        Swal('Error',siHacesMal['statusText'], 'error');
       }
     );
   }

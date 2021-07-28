@@ -157,9 +157,11 @@ export class LoginAdminComponent implements OnInit {
             case 2:
               this.router.navigateByUrl('/panel-postulante/mi-perfil');
               break;
+            //encargado
             case 5:
               this.router.navigateByUrl('/panel-admin/mi-perfil');
               break;
+            //gestor
             case 4:
               this.router.navigateByUrl('/panel-admin/mi-perfil');
               //this.router.navigateByUrl('/panel-admin/mi-perfil');

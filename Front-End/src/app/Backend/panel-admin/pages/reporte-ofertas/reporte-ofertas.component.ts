@@ -387,7 +387,7 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
 
       },
       (peroSiTenemosErro)=>{
-        Swal('Ups',peroSiTenemosErro['mensaje'], 'info');
+        Swal('Error',peroSiTenemosErro['mensaje'], 'error');
       }
     );
   }

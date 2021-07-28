@@ -72,7 +72,8 @@ export class SerivicioDocente {
   //actulizar docente
   actulizarDatosDocente(modeloDocente:DocenteModel,external_us){
       const autenficacionDatos={
-            ...modeloDocente
+            ...modeloDocente,
+          external_us_admin:localStorage.getItem('external_us')
       }
     //retorna la respuesata
       return this._httCliente.post(
