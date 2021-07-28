@@ -50,7 +50,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
     this.formEmpleador=this.formBuilder.group({
       razonSocial:['',[Validators.required,Validators.maxLength(30)]],
       tipoEmpresa:['',[Validators.required,Validators.maxLength(30),this.validacionPersonalizada.soloTextoPuntoRazonEmpresa]],
-      actividadEconomica:['',[Validators.required,Validators.maxLength(100)]],
+      actividadEconomica:['',[Validators.required,Validators.maxLength(300)]],
       numeroRuc:['',[Validators.required,Validators.maxLength(13),this.validacionPersonalizada.rucNoValido]],
       cedula:['',[Validators.required,Validators.maxLength(20)]],
       nomRepresentanteLegal:['',[Validators.required,Validators.maxLength(30),this.validacionPersonalizada.soloTextoPuntoRazonEmpresa]],

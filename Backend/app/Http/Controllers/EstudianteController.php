@@ -158,8 +158,6 @@ class EstudianteController extends Controller
     public function actulizarFormEstudiante(Request $request,$external_id){
 
         if($request->json()){
-            $texto="";
-            // $handle = fopen("logRegistroPostulante.txt", "a");
             $arraycorreoRespuesta=array();
             try {
                 $ObjUsuario = usuario::where("external_us",$external_id)->first();
@@ -204,11 +202,8 @@ class EstudianteController extends Controller
                                                         "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                                         "correo"=>$value['correo'],
                                                         );
-                            // $texto="[".date("Y-m-d H:i:s")."]" ." Reenviando Formulario a la secretaria con los datos corregidos Correo  : ".$enviarCorreoBolean." ]";
-                            // fwrite($handle, $texto);
+
                         }
-                        // fwrite($handle, "\r\n\n\n\n");
-                        // fclose($handle);
 
                     return response()->json(["mensaje"=> $ObjEstudiante,
                                                 "etadoCorreo"=> $arraycorreoRespuesta,

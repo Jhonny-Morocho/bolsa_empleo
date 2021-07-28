@@ -251,7 +251,6 @@ class EmpleadorController extends Controller{
 
     private function enviarCorreoEncargadoFormEditadoRegistrado($datos,$ObjUsuario,$parrafo){
             //enviar correo del registro el encargado
-            $texto="";
             // $handle = fopen("logRegistroEmpleador.txt", "a");
             //enviamos registro de postulante a la secretaria a la secretaria
             $usuarioEncargado=Docente::join("usuario","usuario.id","=","docente.fk_usuario")
@@ -279,16 +278,7 @@ class EmpleadorController extends Controller{
                                             "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                             "correo"=>$value['correo'],
                                             );
-                // $texto="[".date("Y-m-d H:i:s")."]"
-                // ." Registro Formulario Empleador:: Estado de correo enviado al empleador : "
-                // .$enviarCorreoBolean
-                // ."::: Correo del encargado  es: ".$value['correo']
-                // ." Correo del empleador es :"
-                // .$ObjUsuario->correo." ]";
-                // fwrite($handle, $texto);
-                // fwrite($handle, "\r\n\n\n\n");
             }
-            // fclose($handle);
 
             return $arrayEncargado;
     }

@@ -450,7 +450,6 @@ class OfertaLaboralController extends Controller
     //funcion para enviar correo de todo tipó de notifiacion en la oferta laboral
     private function enviarCorreoEncargadoOfertaRegistrado($datos,$ObjUsuario){
         //enviar correo del registro el encargado
-        $texto="";
         // $handle = fopen("logRegistroOfertaLaboral.txt", "a");
         //enviamos registro de postulante al encargado a la secretaria
         $usuarioEncargado=Docente::join("usuario","usuario.id","=","docente.fk_usuario")
@@ -494,8 +493,6 @@ class OfertaLaboralController extends Controller
         if($estadoValidacion==0){// si el estado es 0, siginifica que el postulante no esta validado
             $mensaje="tiene algunas inconsistencias, por favor revise su información y vuelva a intentar";
         }
-        $texto="";
-        $handle = fopen("logRegistroOfertaLaboral.txt", "a");
         $arrayEmpleador=null;
         try {
             //enviamos el estado de la oferta al empleador

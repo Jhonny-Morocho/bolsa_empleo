@@ -8,7 +8,7 @@
       <div class="card">
           <article class="card-body">
               <div class="alert simple-primary" *ngIf="nuevoRegistro">
-                <i class="fas fa-info-circle"></i> Por favor complete el formulario para tener acceso a publicar sus ofertas laborales en la plataforma
+                <i class="fas fa-info-circle"></i> Por favor complete el formulario para tener acceso a la plataforma y poder publicar sus ofertas laborales
               </div>
 
               <div class="alert simple-warning" *ngIf="formNoRevisado">
@@ -73,7 +73,7 @@
                               [class.is-invalid]="actividadEconomicaNoValido"
                               [class.is-valid]="formEmpleador.get('actividadEconomica').valid"
                               placeholder="Ingrese la actividad económica inscrita en el RUC"
-                              maxlength="100">
+                              maxlength="300">
                       </textarea>
                       <!-- mensajes de validacion -->
                       <div class="invalid-feedback"  *ngIf="actividadEconomicaNoValido">
@@ -128,7 +128,7 @@
                                 maxlength="30">
                       <!-- mensajes de validacion -->
                       <div class="invalid-feedback"  *ngIf="nombreRepresentanteNoValido">
-                        <p *ngIf="telefonoVacio==''"> <i class="fas fa-info-circle"></i> El campo es requerido</p>
+                        <p *ngIf="nombreRepresentanteVacio==''"> <i class="fas fa-info-circle"></i> El campo es requerido</p>
                         <p *ngIf="nombreRepresentanteSoloTexto && nomRepresentanteVacia!==''"> <i class="fas fa-info-circle"></i> Ingrese solo texto</p>
                       </div>
                       <!-- end mensajes de validacion -->

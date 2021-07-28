@@ -181,8 +181,8 @@ export class PostulantesOfertaComponent implements OnInit {
       //dio check pero despues desmarco
     if(this.existeAlgunPostulanteChechado==false){
         Swal({
-          title: '¿Está seguro en realizar la acción? No se podra revertir ',
-          text: "Desmarco algunos postulantes por lo cual no ha contratado ningún postulante, si desea continuar  haga clic en Aceptar",
+          title: '¿Está seguro en realizar la acción? No se podrá revertir ',
+          text: "Desmarco algunos postulantes por lo cual no ha contratado ningún postulante, si desea continuar  haga clic en eceptar",
           type: 'info',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
