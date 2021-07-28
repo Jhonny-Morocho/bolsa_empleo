@@ -15,12 +15,17 @@ use function PHPUnit\Framework\isEmpty;
 class CalificarEmpleadorController extends Controller
 {
     //formulario de estudiante comparando el external_us y externarl_es//creamos un estudiante
-     public function calificarEmpleador(Request $request){
+     public function calificarEmpleador(Request $request,$external_us){
          if($request->json()){
              //validar si el usuario existe
              $ObjCalificar=null;
              try {
-                 //code...
+                 //si el usuario tiene permisos para realizar esta accion
+                 //el usuario encargado tiene permisos de realizar esta accion
+                 $existeEncargado=Usuario::where('external_us',$external_us)->where('tipoUsuario',5)->where('estado',1)->first();
+                 if(!$existeEncargado){
+                    return response()->json(["mensaje"=>'El encargado con el identificador '.$external_us.' no tiene permisos para realizar esta acción',"Siglas"=>"NTP"]);
+                 }
                  $ObjCalificar=new CalificarEmpleador();
                  $ObjCalificar->fk_empleador=$request['fk_empleador'];
                  $ObjCalificar->estrellas=$request['estrellas'];
@@ -28,7 +33,7 @@ class CalificarEmpleadorController extends Controller
                  $ObjCalificar->save();
                  return response()->json(["mensaje"=>"Registro guardado","Siglas"=>"OE","respuest"=>$ObjCalificar,200]);
              } catch (\Throwable $th) {
-                return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","error"=>$th->getMessage(),"respuesta"=>$ObjCalificar,400]);
+                return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","respuesta"=>$ObjCalificar,400]);
              }
 
          }else{
@@ -71,13 +76,13 @@ class CalificarEmpleadorController extends Controller
                     "empleadorId"=>$value['id'],
                     "empleadorCalificacionSuma"=>$suma,
                     "empleadorCantidad"=>$numItem,
-                    "empleadorPromedio"=>($suma/$numItem)
+                    "empleadorPromedio"=>sprintf("%.2f",$suma/$numItem)
                  );
                 // ->get();
             }
             return response()->json(["mensaje"=>$ObjCalificacion,"Siglas"=>"OE",200]);
         } catch (\Throwable $th) {
-           return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE","error"=>$th->getMessage(),400]);
+           return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE",400]);
         }
     }
 

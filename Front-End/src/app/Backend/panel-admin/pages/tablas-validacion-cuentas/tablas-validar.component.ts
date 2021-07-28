@@ -1,5 +1,5 @@
 import { element } from 'protractor';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import {PostulanteModel} from 'src/app/models/postulante.models';
@@ -11,6 +11,8 @@ import {CalificarEmpleadorService} from 'src/app/servicios/calificar-empleador.s
 import { dataTable } from 'src/app/templateDataTable/configDataTable';
 import { StarRatingComponent } from 'ng-starrating';
 import { Router } from '@angular/router';
+import { DataTableDirective } from 'angular-datatables';
+import { ViewChild } from '@angular/core';
 declare var JQuery:any;
 // ========= valoracion =========
 declare var $:any;
@@ -19,8 +21,10 @@ declare var $:any;
   selector: 'app-validar-cuentas',
   templateUrl: './tablas-validar-cuentas.component.html'
 })
-export class TareaValiar implements OnInit {
+export class TareaValiar implements OnInit,OnDestroy {
   //data table
+  @ViewChild(DataTableDirective)
+  dtElement: DataTableDirective;
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject<any>();
 
@@ -80,7 +84,7 @@ export class TareaValiar implements OnInit {
 
       //$('#CalificarEmpleador').modal('show');
       Swal({
-        title: '¿Está seguro en realizar esta acción?',
+        title: '¿Está seguro?',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -89,6 +93,13 @@ export class TareaValiar implements OnInit {
       }).then((result) => {
         if (result.value) {
           this.intanciaCalifarEmpleador.estrellas=$event.newValue;
+          //mensaje de alerta usuario
+          Swal({
+            allowOutsideClick:false,
+            type:'info',
+            text:'Espere por favor'
+          });
+          Swal.showLoading();
           this.calificarEmpleador();
           //borro la tabla anetrior y vuelvo a cargar
           this.dtTrigger.unsubscribe();
@@ -101,7 +112,7 @@ export class TareaValiar implements OnInit {
       siHacesBien=>{
         this.arrayCalificacionesEmpleadores=siHacesBien;
       },siHacesMal=>{
-        Swal('Info',siHacesMal['mensaje'], 'info');
+        Swal('Información',siHacesMal['mensaje'], 'info');
       }
     );
   }
@@ -113,6 +124,7 @@ export class TareaValiar implements OnInit {
     this.arrayCalificacionesEmpleadores.forEach(element => {
       if(element['empleadorExternal_em']===external_em){
         calificacion= element['empleadorPromedio'];
+
       }
     });
     return calificacion;
@@ -175,10 +187,10 @@ export class TareaValiar implements OnInit {
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate(['/panel-admin/tareas']);
         }else{
-          Swal('Infor', siHaceBien['mensaje'], 'info');
+          Swal('Información', siHaceBien['mensaje'], 'info');
         }
       },error=>{
-        Swal('Error', error['mensaje'], 'error');
+        Swal('Error', error['statusText'], 'error');
       });
   }
 

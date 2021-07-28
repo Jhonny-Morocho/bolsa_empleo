@@ -11,7 +11,7 @@ export class CalificarEmpleadorService {
   private urlDominio_=environment.dominio;
   private urlObtenerCalifiacionEmpleador="/Backend/public/index.php/calificar-empleador/promedioCalificacionEmpleador/";
   private urlObtenerCalifiacionEmpleadorTodosEmpleadores="/Backend/public/index.php/calificar-empleador/promedioCalificacionEmpleadorTodos";
-  private  urlCalificarEmpleador="/Backend/public/index.php/calificar-empleador/calificarEmpleador";
+  private  urlCalificarEmpleador="/Backend/public/index.php/calificar-empleador/calificarEmpleador/";
   constructor(private _httCliente:HttpClient) { }
 
   //calificacion del empleador
@@ -42,7 +42,8 @@ export class CalificarEmpleadorService {
     const autenficacionDatos={
         ...modeloCalificarEmpleador
      }
-     return this._httCliente.post(`${this.urlDominio_}${this.urlCalificarEmpleador}`,autenficacionDatos
+     let external_us=localStorage.getItem('external_us');
+     return this._httCliente.post(`${this.urlDominio_}${this.urlCalificarEmpleador}${external_us}`,autenficacionDatos
      ).pipe(
        map(
          respuestaBackend=>{

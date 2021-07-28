@@ -497,7 +497,7 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
         this.contruirDatosPdfReporteOfertas(this.intanciaReporte);
         this.dtTrigger.next();
       },siHacesMal=>{
-        Swal('Ups',siHacesMal['mensaje'], 'info');
+        Swal('Información',siHacesMal['mensaje'], 'info');
       }
     );
 
@@ -514,7 +514,7 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
           this.existeRegistros=true;
         }
       },error=>{
-        Swal('Ups',error['mensaje'], 'info');
+        Swal('Error',error['mensaje'], 'error');
       }
     );
   }
