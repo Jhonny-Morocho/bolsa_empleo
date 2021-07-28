@@ -4,8 +4,8 @@
 
 export const environment = {
   production: true,
-  versionModulo:'1.0.0',
-  dominio:"http://localhost:81/bolsa_empleo"
+  versionModulo:'1.5.0',
+  dominio:"http://ciscunl.info:8080/bolsa_empleo"
 };
 //domio sanbox http://localhost/Tesis
 //domio sanbox http://localhost:81/Tesis
