@@ -101,50 +101,40 @@ class UsuarioController extends Controller
                 //consultar si existe ese usuario
                 $datos=$request->json()->all();
                 //verificar si existe el usuario
-                if (filter_var($datos['correo'], FILTER_VALIDATE_EMAIL)) {
-                    $correo=Usuario::where("correo",$datos['correo'])->first();
+                if (!(filter_var($datos['correo'], FILTER_VALIDATE_EMAIL))) {
+                    return response()->json(["mensaje"=>"El formato del correo : ".$datos['correo']." no es válido","Siglas"=>"CNV",400]);
                 }
-                if($correo){
-                    //generamos el nuevo password
-                   $nuevoPassword="";
-                   $patron="1234567890abcdefghijklmnopqrstuvwxyz";
-                   $max=strlen($patron)-1;
-                   for ($i=0; $i < 10; $i++) {
-                       # code...
-                       $nuevoPassword.=$patron[mt_rand(0,$max)];
-                   }
-                   //actualizar el nuevo password
-                   $opciones=array('cost'=>12);
-                   $password_hashed=password_hash($nuevoPassword,PASSWORD_BCRYPT,$opciones);
-                   $updatePasword=Usuario::where("correo",$datos['correo'])
-                   ->update(array(
-                       "password"=>$password_hashed
-                   ));
-                   //enviamos al correo el password
-                   $parrafo="Su nueva contraseña es: <b>".$nuevoPassword."</b>";
-                   $templateHtmlCorreo= $this->templateHtmlCorreo($datos['correo'],$parrafo);
-                   $enviarCorreoBolean=
+                $correo=Usuario::where("correo",$datos['correo'])->first();
+                if(!$correo){
+                    return response()->json(["mensaje"=>"Usuario no encontrado","Siglas"=>"UNE",400]);
+                }
+                //generamos el nuevo password
+                $nuevoPassword="";
+                $patron="1234567890abcdefghijklmnopqrstuvwxyz";
+                $max=strlen($patron)-1;
+                for ($i=0; $i < 10; $i++) {
+                    $nuevoPassword.=$patron[mt_rand(0,$max)];
+                }
+                //actualizar el nuevo password
+                $opciones=array('cost'=>12);
+                $password_hashed=password_hash($nuevoPassword,PASSWORD_BCRYPT,$opciones);
+                $updatePasword=Usuario::where("correo",$datos['correo'])
+                ->update(array(
+                    "password"=>$password_hashed
+                ));
+                //enviamos al correo el password
+                $parrafo="Su nueva contraseña es: <b>".$nuevoPassword."</b>";
+                $templateHtmlCorreo= $this->templateHtmlCorreo($datos['correo'],$parrafo);
+                $enviarCorreoBolean=
                         $this->enviarCorreo($templateHtmlCorreo,$datos['correo'],
                                             getenv("TITULO_RECUPERAR_PASSWORD")
                                             );
-                    $texto="";
-                    $handle = fopen("logRegistroPostulante.txt", "a");
-                    $texto="[".date("Y-m-d H:i:s")."]" ." Recuperar contraseña al usuario :
-                            ".$datos['correo'].":: estado de enviar correo: ".$enviarCorreoBolean." ]";
-                    fwrite($handle, $texto);
-                    fwrite($handle, "\r\n\n\n\n");
-                    fclose($handle);
-                    return response()->json(["mensaje"=>"Contraseña actualizada con éxito",
+                return response()->json(["mensaje"=>"Contraseña actualizada con éxito",
                                                 "correoUsuario"=>$datos['correo'],
                                                 "Siglas"=>"OE",200]);
-                }else{
-                    return response()->json(["mensaje"=>"Usuario no encontrado",
-                                            "Siglas"=>"ONE",400]);
-                }
 
             } catch (\Throwable $th) {
-                return response()->json(["mensaje"=>$ObjUsuario,
-                                            "error"=>$th->getMessage(),
+                return response()->json(["mensaje"=>$th->getMessage(),
                                             "Siglas"=>"DNF",400]);
             }
 
@@ -216,19 +206,13 @@ class UsuarioController extends Controller
                                                 "estadoEnvioCorreo"=>$enviarCorreoBolean,
                                                 "correo"=>$value['correo'],
                                                 );
-                    // $texto="[".date("Y-m-d H:i:s")."]" ." Registro Postulante Correo : ".$enviarCorreoBolean." ]";
-                    // fwrite($handle, $texto);
-                    // fwrite($handle, "\r\n\n\n\n");
+
                 }
-                // fclose($handle);
                 return response()->json(["mensaje"=>$ObjEstudiante,
                                         "estadoCorreoEnviado"=>$arrayEncargado,
                                         "Siglas"=>"OE"]);
             } catch (\Throwable $th) {
-                // $texto="[".date("Y-m-d H:i:s")."]" ."Crear usuario Estudiante Error : ".$th." ]";
-                // fwrite($handle, $texto);
-                // fwrite($handle, "\r\n\n\n\n");
-                // fclose($handle);
+
                 return response()->json(["mensaje"=>$th->getMessage(),
                                         "request"=>$request->json()->all(),
                                         "Siglas"=>"ONE","error"=>$th->getMessage()]);
