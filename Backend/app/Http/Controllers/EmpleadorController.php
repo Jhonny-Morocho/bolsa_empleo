@@ -66,7 +66,7 @@ class EmpleadorController extends Controller{
                  ->first();
                  // NOTIFICAR EL EMPLEADOR LA NO VALIDACION DEL FORMUARIO
                  if($request['estado']==0 ){
-                    $parrafo="Su información de registro tiene algunas inconsistencias, por favor revise su información y vuelva a intentar";
+                    $parrafo="Su información de registro tiene algunas inconsistencias, por favor vuelva a intentar";
                     $plantillaCorreo=
                         $this
                     ->templateHtmlCorreo($usuarioEmpleador['nom_representante_legal'],$parrafo);

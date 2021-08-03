@@ -170,9 +170,22 @@ class OfertaLaboralController extends Controller
             $estadoOfertaLaboral=null;
 
             try {
+                 //la oferta laboral puede ser actualizada por el encargado o por el empleador o por el gestor
+                 $usuarioEncontrado=Usuario::where('external_us',$request['external_us'])->first();
+                 if(!$usuarioEncontrado){
+                     return response()->json(["mensaje"=>"El usuario con el identificador ".$request['external_us']." no existe","Siglas"=>"UNE"]);
+                 }
+
+                 $esEmpleador=Empleador::where('fk_usuario',$usuarioEncontrado->id)->first();
+                 if(!$esEmpleador){
+                     return response()->json(["mensaje"=>"El empleador con el identificador ".$request['external_us']." no tiene permisos para realizar esta acción","Siglas"=>"NTP"]);
+                 }
                 //actualizar el estado de la oferta laboral
-                $estadoOfertaLaboral=OfertasLaborales::where("external_of","=", $external_id)
+                $ofertaActualizada=OfertasLaborales::where("external_of", $external_id)
                 ->update(array('estado'=>$request['estado']));
+                if(!$ofertaActualizada){
+                    return response()->json(["mensaje"=>"No se ha podido realizar la finalización de la oferta laboral","Siglas"=>"ONF"]);
+                }
                 //una ves finalizada la oferta laboral, se le hace llenar el
                 $llenarFormularioSISSEG=$this->notificarFinalizacionOfertaFormularioSISEG($external_id);
                 //actualizar el estado de los postulantes
