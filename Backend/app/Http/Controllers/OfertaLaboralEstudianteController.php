@@ -279,7 +279,7 @@ class OfertaLaboralEstudianteController extends Controller
             return  response()->json(["mensaje"=>$th,"Siglas"=>"ONE","error"=>$th,400]);
         }
     }
-    // el empleador le da finaalizar la publicacion de la oferta laboral y los postulantes son actualizados
+    // el empleador le da finalizar la publicacion de la oferta laboral y los postulantes son actualizados
     //para revisar si existe contratados o no
     public function finalizarOfertaLaboralEstudiante(Request $request,$external_us){
         $OfertaLaboralPostulanteBorrar=null;
@@ -297,6 +297,7 @@ class OfertaLaboralEstudianteController extends Controller
                $fk_oferta_labora=null;
                $existeContratado=false;
                foreach ($request->json() as $key => $value) {
+                   //buscar que usuario fueron seleccionado
                    $OfertaLaboralPostulanteBorrar=
                    OfertaLaboralEstudiante::join("estudiante","estudiante.id","ofertalaboral_estudiante.fk_estudiante")
                    ->join("oferta_laboral","oferta_laboral.id","ofertalaboral_estudiante.fk_oferta_laboral")
@@ -318,6 +319,7 @@ class OfertaLaboralEstudianteController extends Controller
                $ofertaLaboralTemporal=OfertasLaborales::where("id",$fk_oferta_labora)->first();
                //hacemos una consulta mas avanzada
                $buscarOferta=$this->buscarOfertaLaboral($ofertaLaboralTemporal->external_of);
+               //para enviar el correo a los postulantes
 
                $datosOfertaEstudiante=array(
                    "nom_representante_legal"=>$buscarOferta['nom_representante_legal'],
@@ -334,10 +336,8 @@ class OfertaLaboralEstudianteController extends Controller
                                        "respuesta"=>$OfertaLaboralPostulanteBorrar,200]);
            } catch (\Throwable $th) {
                return response()->json(["mensaje"=>$th->getMessage(),
-                                        "resquest"=>$request->json()->all(),
                                         "respuesta"=>$OfertaLaboralPostulanteBorrar,
-                                        "Siglas"=>"ONE",
-                                        "error"=>$th->getMessage()]);
+                                        "Siglas"=>"ONE"]);
            }
 
        }else{
