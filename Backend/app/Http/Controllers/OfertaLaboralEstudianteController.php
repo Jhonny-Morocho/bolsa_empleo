@@ -48,7 +48,7 @@ class OfertaLaboralEstudianteController extends Controller
 
                 $existeUsuarioPostulante=Usuario::where('external_us',$external_id)->where('tipoUsuario',2)->first();
                 if(!$existeUsuarioPostulante){
-                    return response()->json(["mensaje"=>"El usuario postulante con el identificador ".$external_id." no existe ","Siglas"=>"UNE"]);
+                    return response()->json(["mensaje"=>"El usuario postulante con el identificador ".$external_id." no es un postulante ","Siglas"=>"UNE"]);
                 }
 
                 $estudianteValidado=Estudiante::where('fk_usuario',$existeUsuarioPostulante->id)->where('estado',1)->first();
