@@ -110,9 +110,46 @@ export class PostulantesOfertaComponent implements OnInit {
       }
     );
   }
+  finalizarContrarPostulantes(){
+     this.servicioOfertaLabotal.actulizarEstadoOfertaLaboralFinalizado(this.instanciaOfertaLaboral,this.externalOferta).subscribe(
+      siHaceBien=>{
+          if((siHaceBien['Siglas']=='OE')){
+            this.servicioOfertaEstudiante.finalizarOfertaLaboralEstudiante(this.arrayAux).subscribe(
+              siHaceBien =>{
+                  if(siHaceBien['Siglas']=='OE'){
+                    const toast = Swal.mixin({
+                      toast: true,
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      timer: 3000
+                    });
+                    toast({
+                      type: 'success',
+                      title: 'Registrado'
+                    })
+                    this.estadoOfertaLaboralFinalizada=true;
+                  }else{
+                    Swal('Información', siHaceBien['mensaje'], 'info');
+
+                  }
+              },siHceMal=>{
+                Swal('Error', siHceMal['message'], 'error');
+              }
+            );
+          }else{
+            Swal('Información', siHaceBien['mensaje'], 'info');
+          }
+      },siHaceMal=>{
+        Swal('Error',siHaceMal['message'], 'error');
+      }
+    );
+
+  }
+
   //envia los datos del array del ckeck a guardar
   contrarFinalizarOfertaLaboral(){
     this.instanciaOfertaLaboral.estado=4;
+    //seleciono varios postulante
     if(this.existeAlgunPostulanteChechado==true){
           Swal({
             title: '¿Está seguro en realizar la acción? No se podra revertir',
@@ -124,54 +161,14 @@ export class PostulantesOfertaComponent implements OnInit {
             confirmButtonText: 'Aceptar'
           }).then((result) => {
             if (result.value) {
-              let estadoActualizarDato=true;
               Swal({allowOutsideClick: false,type: 'info',text: 'Espere por favor...'});
               //primero la finalizado a la oferta laboral
-              this.servicioOfertaLabotal.actulizarEstadoOfertaLaboralFinalizado(this.instanciaOfertaLaboral,this.externalOferta).subscribe(
-                siHaceBien=>{
-                    Swal.close();
-                    if(siHaceBien['Siglas']=='OE'){
-                      //si se subio
-                      estadoActualizarDato=true;
-                      //desactivo el boton de guardar y finalizar
-                      this.estadoOfertaLaboralFinalizada=true;
-                    }else{
-                      Swal('Información', siHaceBien['error'], 'info');
-                    }
-                },siHaceMal=>{
-                  Swal('Error',siHaceMal['message'], 'error');
-                }
-              );
-              //actualizo el estado de los postulantes
-              this.servicioOfertaEstudiante.finalizarOfertaLaboralEstudiante(this.arrayAux).subscribe(
-                siHaceBien =>{
-                    if(siHaceBien['Siglas']=='OE'){
-                     //si se subio
-                     estadoActualizarDato=true;
-                    }else{
-                      Swal('Información', siHaceBien['mensaje'], 'info');
-                    }
-                },siHceMal=>{
-                  Swal('Error', siHceMal['message'], 'error');
-                }
-              );
-              //finalizado la animacion
               Swal.showLoading();
-              if(estadoActualizarDato==true){
-                const toast = Swal.mixin({
-                  toast: true,
-                  position: 'top-end',
-                  showConfirmButton: false,
-                  timer: 3000
-                });
-                toast({
-                  type: 'success',
-                  title: 'Registrado'
-                })
-              }
+              this.finalizarContrarPostulantes();
             }
           })
     }
+
       //dio check pero despues desmarco
     if(this.existeAlgunPostulanteChechado==false){
         Swal({
@@ -186,25 +183,19 @@ export class PostulantesOfertaComponent implements OnInit {
           if (result.value) {
             Swal({allowOutsideClick: false,type: 'info',text: 'Espere por favor...'});
             Swal.showLoading();
-            this.servicioOfertaLabotal.actulizarEstadoOfertaLaboralFinalizado(this.instanciaOfertaLaboral,this.externalOferta).subscribe(
-              siHaceBien=>{
-                  Swal.close();
-                  const toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000
-                  });
-                  toast({
-                    type: 'success',
-                    title: 'Registrado'
-                  })
-                  //desactivo el boton de guardar y finalizar
-                  this.estadoOfertaLaboralFinalizada=true;
-              },siHaceMal=>{
-                Swal('Error', siHaceMal['message'], 'error')
+            this.arrayAux=[];
+            //los pongo estaticamen los postulante q no fueron contratados
+            for (let ofertaEstudiante of this.arrayPostulante){
+              const aux={
+                fk_estudiante:ofertaEstudiante['fk_estudiante'],
+                fk_oferta_laboral:ofertaEstudiante['fk_oferta_laboral'],
+                estado:1,
+                external_of_est:ofertaEstudiante['external_of_est'],
+                external_es:ofertaEstudiante['external_es']
               }
-            );
+              this.arrayAux.push(aux);
+            }
+            this.finalizarContrarPostulantes();
           }
         })
     }
@@ -221,34 +212,24 @@ export class PostulantesOfertaComponent implements OnInit {
         confirmButtonText: 'Si'
       }).then((result) => {
         if (result.value) {
-          Swal({allowOutsideClick: false,type: 'info',text: 'Espere por favor...'});
-          Swal.showLoading();
-          this.servicioOfertaLabotal.actulizarEstadoOfertaLaboralFinalizado(this.instanciaOfertaLaboral,this.externalOferta).subscribe(
-            siHaceBien=>{
-                Swal.close();
-                if(siHaceBien['Siglas']=='OE'){
-                  const toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000
-                  });
-                  toast({
-                    type: 'success',
-                    title: 'Registrado'
-                  })
-                }else{
-                  Swal('Información', siHaceBien['mensaje'], 'info');
-                }
-                this.estadoOfertaLaboralFinalizada=true;
-            },siHaceMal=>{
-              Swal('Error', siHaceMal['message'], 'info')
+          this.arrayAux=[];
+          //los pongo estaticamen los postulante q no fueron contratados
+          for (let ofertaEstudiante of this.arrayPostulante){
+            const aux={
+              fk_estudiante:ofertaEstudiante['fk_estudiante'],
+              fk_oferta_laboral:ofertaEstudiante['fk_oferta_laboral'],
+              estado:1,
+              external_of_est:ofertaEstudiante['external_of_est'],
+              external_es:ofertaEstudiante['external_es']
             }
-          );
+            this.arrayAux.push(aux);
+          }
+          this.finalizarContrarPostulantes();
         }
       })
     }
   }
+
 
   check(i:Event,fk_postulante,fk_ofertaLaboral,exteral_of,external_es) {
     let estadoActual=(i.target as HTMLInputElement).value;

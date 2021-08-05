@@ -139,6 +139,7 @@ export class OfertaLaboralEstudianteService {
     return this._httCliente.post(`${this.urlDominio_}${this.urlFinalizarOfertaLaboralEstudiante}${external_us}`,array).pipe(
       map(
         respuestaBackend=>{
+
           return respuestaBackend;
         })
     );

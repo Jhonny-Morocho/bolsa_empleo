@@ -167,7 +167,6 @@ class OfertaLaboralController extends Controller
     //estado 4 finalizara la oferta laboral y se la borra de la plataforma
     public function finalizarOfertaLaboral(Request $request,$external_id){
         if($request->json()){
-            $estadoOfertaLaboral=null;
 
             try {
                  //la oferta laboral puede ser actualizada por el encargado o por el empleador o por el gestor
@@ -190,7 +189,7 @@ class OfertaLaboralController extends Controller
                 $llenarFormularioSISSEG=$this->notificarFinalizacionOfertaFormularioSISEG($external_id);
                 //actualizar el estado de los postulantes
                 return response()->json(["mensaje"=>"Operación Exitosa",
-                        "ObjetaOfertaLaboral"=>$estadoOfertaLaboral,
+                        "ObjetaOfertaLaboral"=>$ofertaActualizada,
                         "external_of"=>$external_id,
                         "llenarFormularioSISEGempleador"=>$llenarFormularioSISSEG,
                         "resquest"=>$request->json()->all(),
