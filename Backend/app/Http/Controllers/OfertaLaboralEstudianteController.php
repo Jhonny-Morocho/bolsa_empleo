@@ -522,6 +522,7 @@ class OfertaLaboralEstudianteController extends Controller
         ->where("usuario.estado",1)
         ->where("usuario.tipoUsuario",5)
         ->get();
+        $usuarioNotificados=array();
         foreach ($encargado as $key => $value) {
             //preparo el template
             $temmplateHmtlAplicarOferta=
@@ -533,16 +534,15 @@ class OfertaLaboralEstudianteController extends Controller
                                         $value['correo'],
                                         getenv('TITULO_CORREO_APLICAR_OFERTA')
                                         );
-            return $texto="[".date("Y-m-d H:i:s")."]"
-            ." APLICAR OFERTA LABORAL -> NOTIFICAR AL ENCARGADO  ".$tipoNotificacion." :
-            ::Existen postulantes contratados boolean : ".($existeContratados? 'true' : 'false').
-            "::: El Correo del encargado  es: ".$value['correo']." ] ";
+            $usuarioNotificados[$key]['usuario']=$value['correo'];
+            $usuarioNotificados[$key]['correoEnviado']=$enviarCorreoBooleanEmpleador;
         }
+        return  $usuarioNotificados;
     }
 
 
     private function notificarPostulante($listaPostulantes,$puesto){
-
+        $notificarUsuario=array();
         $parrafoPostulanteSISSEG="Muchas gracias por participar en la oferta laboral <b>".$puesto."</b>,
                                     sírvase por favor de llenar la siguiente encuesta ".
                                     "<a href=".getenv('SISSEG_POSTULANTE').">".
@@ -555,7 +555,6 @@ class OfertaLaboralEstudianteController extends Controller
            "estudiante.*")
            ->where("estudiante.external_es",$value['external_es'])->first();
            // si su estado es 2// entonces fue contratado
-           $texto="";
            if($value['estado']==2){
             $parrafoPostulante="Felicitaciones usted ha sido aceptado en la oferta <b>".$puesto."</b>";
             $temmplateHmtlAplicarOferta=
@@ -577,7 +576,9 @@ class OfertaLaboralEstudianteController extends Controller
                                     $this->enviarCorreo($templateCorreoHmtlPostulante,
                                                         $postulante->correo,
                                                         getenv('TITULO_CORREO_APLICAR_OFERTA'));
-            $texto++;
+            $notificarUsuario[$key]['usuario']=$postulante->correo;
+            $notificarUsuario[$key]['contratado']=true;
+            $notificarUsuario[$key]['correoEnviado']=$enviarFormSISSEGPostulante;
 
            }else{
                $parrafoPostulante="La oferta laboral <b>".$puesto.
@@ -602,12 +603,13 @@ class OfertaLaboralEstudianteController extends Controller
                             $this->enviarCorreo($templateCorreoHmtlPostulante,
                                                 $postulante->correo,
                                                 getenv('TITULO_CORREO_APLICAR_OFERTA'));
-
-                $texto++;
+            $notificarUsuario[$key]['usuario']=$postulante->correo;
+            $notificarUsuario[$key]['contratado']=false;
+            $notificarUsuario[$key]['correoEnviado']=$enviarFormSISSEGPostulante;
            }
            //tabulo por cada interaccion que exista
         }
-        return $texto;
+        return $notificarUsuario;
     }
     private function nofiticarFinalizacionOfertaEncargadoLaboralPostulante($arrayData){
         $arrayRespuesta=array();
@@ -623,7 +625,9 @@ class OfertaLaboralEstudianteController extends Controller
 
                  //2.Notifcamos a los postulantes si han sido o no contratados
                  $notificarPostulantes=$this->notificarPostulante($arrayData['listaEstudiantes'],$arrayData['puesto']);
-                 $arrayRespuesta=array("existeContratado"=>$arrayData['existeContrados']);
+                 $arrayRespuesta=array("notificarEncargado"=>$notificarEncargado,
+                                        "notificarPostulante"=>$notificarPostulantes);
+
             }
 
             // SI NO SE CONTRATA SOLO SE NOTIFICA AL ENCARGADO
@@ -635,6 +639,10 @@ class OfertaLaboralEstudianteController extends Controller
                 $notificarEncargado=$this->notificarEncargado($parrafoPostulanteNoContratados,$arrayData['existeContrados'],"NO SE  CONTRARARON POSTULANTES");
                 //2.Notifcamos a los postulantes si han sido o no contratados
                 $notificarPostulantes=$this->notificarPostulante($arrayData['listaEstudiantes'],$arrayData['puesto']);
+
+                $arrayRespuesta=array("notificarEncargado"=>$notificarEncargado,
+                "notificarPostulante"=>$notificarPostulantes);
+
             }
             return $arrayRespuesta;
         } catch (\Throwable $th) {
