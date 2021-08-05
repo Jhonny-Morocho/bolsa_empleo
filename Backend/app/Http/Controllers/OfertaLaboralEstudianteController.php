@@ -333,6 +333,7 @@ class OfertaLaboralEstudianteController extends Controller
                $notificarContratado=$this->nofiticarFinalizacionOfertaEncargadoLaboralPostulante($datosOfertaEstudiante);
                return  response()->json(["mensaje"=>$arrayRespuesta,"Siglas"=>"OE",
                                        "notificarContratacionPostulante"=>$notificarContratado,
+                                       "existeContratado"=>$existeContratado,
                                        "respuesta"=>$OfertaLaboralPostulanteBorrar,200]);
            } catch (\Throwable $th) {
                return response()->json(["mensaje"=>$th->getMessage(),
@@ -609,8 +610,6 @@ class OfertaLaboralEstudianteController extends Controller
         return $texto;
     }
     private function nofiticarFinalizacionOfertaEncargadoLaboralPostulante($arrayData){
-
-
         $arrayRespuesta=array();
         try {
             // SI SE CONTRATA , NOTIFICAMMOS AL ENCARGADO Y ESTUDIANTE
@@ -618,11 +617,15 @@ class OfertaLaboralEstudianteController extends Controller
             if($arrayData['existeContrados']==true){
 
                 $parrafoNotificarEncargado="Se le comunica que ha finalizado la oferta laboral denominada <b>".
-                        $arrayData["puesto"]. "</b>,  existen postulantes contratados";
+                $arrayData["puesto"]. "</b>,  existen postulantes contratados";
                 $notificarEncargado=$this->notificarEncargado($parrafoNotificarEncargado,$arrayData['existeContrados'],"SI SE CONTRARARON POSTULANTES");
                 //1.notificar al encargado de la contracion de postulanes
 
+                //2.Notifcamos a los postulantes si han sido o no contratados
+                 $notificarPostulantes=$this->notificarPostulante($arrayData['listaEstudiantes'],$arrayData['puesto']);
+                $arrayRespuesta=array("existeContrados"=>$arrayData['existeContrados']);
             }
+
             // SI NO SE CONTRATA SOLO SE NOTIFICA AL ENCARGADO
             // SI NO SE CONTRATA SOLO SE NOTIFICA AL ENCARGADO
             if($arrayData['existeContrados']==false){
@@ -632,8 +635,7 @@ class OfertaLaboralEstudianteController extends Controller
                 $notificarEncargado=$this->notificarEncargado($parrafoPostulanteNoContratados,$arrayData['existeContrados'],"NO SE  CONTRARARON POSTULANTES");
                 //2.Notifcamos a los postulantes si han sido o no contratados
                 $notificarPostulantes=$this->notificarPostulante($arrayData['listaEstudiantes'],$arrayData['puesto']);
-                $arrayRespuesta=array("existeContratado"=>$arrayData['existeContrados']);
-                $arrayRespuesta=array("existeContratado"=>$arrayData['existeContrados']);
+                $arrayRespuesta=array("existeContrados"=>$arrayData['existeContrados']);
             }
             return $arrayRespuesta;
         } catch (\Throwable $th) {
@@ -641,7 +643,6 @@ class OfertaLaboralEstudianteController extends Controller
             echo $th->getMessage();
             return $arrayRespuesta=array("error"=>$th->getMessage());
         }
-
 
     }
 }
