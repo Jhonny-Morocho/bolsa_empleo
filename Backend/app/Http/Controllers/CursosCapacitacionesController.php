@@ -81,7 +81,6 @@ class CursosCapacitacionesController extends Controller
                 $ObjCusosCapacitaciones->evidencia_url=$datos["evidencia_url"];
                 $ObjCusosCapacitaciones->external_cu="Cu".Utilidades\UUID::v4();
                 $ObjCusosCapacitaciones->save();
-                //die(json_encode($ObjCusosCapacitaciones));
                 //respuesta exitoso o no en la inserrccion
                 return response()->json(["mensaje"=>"Operación Exitosa","Siglas"=>"OE","Objeto"=>$ObjCusosCapacitaciones,200,]);
             } catch (\Throwable $th) {
@@ -196,7 +195,7 @@ class CursosCapacitacionesController extends Controller
             return response()->json(["mensaje"=>"No se encontró el registro con el identificador asignado","Siglas"=>"ONE","respuesta"=>"No se encontro el título"]);
         }
     }
-     //terminar de hacer
+
      public function eliminarCursoCapicitacion(Request $request){
         try {
             if(!$request->json()){

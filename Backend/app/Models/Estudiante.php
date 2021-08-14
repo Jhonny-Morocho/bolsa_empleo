@@ -23,7 +23,9 @@ class Estudiante extends Model
             "direccion_domicilio",
             "genero",
             "observaciones",
-            "external_es"
+            "external_es",
+            "created_at",
+            "updated_at"
         ];
     public function usuario(){
         //esta tabla pertenece a usuario
@@ -40,6 +42,6 @@ class Estudiante extends Model
     public function ofertaLaboralEstudiante(){
         return $this->hasMany('App\Models\OfertaLaboralEstudiante','fk_estudiante');
     }
-   
-    
+
+
 }

@@ -76,7 +76,6 @@ export class PostulanteOfertas implements OnInit {
           Swal.showLoading();
           this.servicioOfertaEstudiante.eliminarPostulanteOfertaLaboral(this.arrayAux).subscribe(
             siHaceBien =>{
-                
                 if(siHaceBien['Siglas']=='OE'){
                   const toast = Swal.mixin({
                     toast: true,
@@ -91,8 +90,8 @@ export class PostulanteOfertas implements OnInit {
                 }else{
                   Swal('Información', siHaceBien['mensaje'], 'info');
                 }
-            },siHceMal=>{
-              Swal('Error', siHceMal['error']['message'], 'error');
+            },siHaceMal=>{
+              Swal('Error', siHaceMal['error']['message'], 'error');
             }
           );
         }

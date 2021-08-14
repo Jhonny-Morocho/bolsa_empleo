@@ -85,10 +85,4 @@ class CalificarEmpleadorController extends Controller
            return response()->json(["mensaje"=>$th->getMessage(),"Siglas"=>"ONE",400]);
         }
     }
-
-
-
-
-
-
 }
