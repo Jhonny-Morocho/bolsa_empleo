@@ -11,26 +11,6 @@
         <div class="sidebar ">
             <!-- Sidebar Menu -->
             <nav class="mt-2 mb-3">
-                <ul class="nav nav-pills nav-sidebar flex-column" id="acordeon" data-widget="treeview" role="menu" data-accordion="false" *ngIf="tipoUsuarioEncargado==true ">
-                    <li class=" nav-item has-treeview ">
-                        <a class="nav-link  ">
-                            <i class="nav-icon fas fa-clipboard-list "></i>
-                            <p>
-                                Reportes
-                                <i class="right fas fa-angle-left "></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-
-                            <li class="nav-item ">
-                                <a routerLinkActive="active" [routerLink]="[ '/reporte-ofertas'] " class="nav-link ">
-                                    <i class="nav-icon far fa-file-pdf "></i>
-                                    <p>Ofertas Laborales</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
                 <ul class="nav nav-pills nav-sidebar flex-column " data-widget="treeview " role="menu " data-accordion="false ">
                     <li class="nav-item ">
                         <!-- ======================= ENCARGADO ============== -->
@@ -71,12 +51,32 @@
                                 </a>
                             </li>
                             <li class="nav-item ">
-                                <a routerLinkActive="active " [routerLink]="['panel-admin/gestionar-usuarios-admin'] " class="nav-link ">
+                                <a routerLinkActive="active " [routerLink]="['gestionar-usuarios-admin'] " class="nav-link ">
                                     <i class="far fa-circle nav-icon "></i>
                                     <p>Gestionar Usuarios</p>
                                 </a>
                             </li>
                         </div>
+                    </li>
+                </ul>
+                <ul class="nav nav-pills nav-sidebar flex-column" id="acordeon" data-widget="treeview" role="menu" data-accordion="false" *ngIf="tipoUsuarioEncargado==true ">
+                    <li class=" nav-item has-treeview ">
+                        <a class="nav-link  ">
+                            <i class="nav-icon fas fa-clipboard-list "></i>
+                            <p>
+                                Reportes
+                                <i class="right fas fa-angle-left "></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+
+                            <li class="nav-item ">
+                                <a routerLinkActive="active" [routerLink]="[ 'reporte-ofertas'] " class="nav-link ">
+                                    <i class="nav-icon far fa-file-pdf "></i>
+                                    <p>Ofertas Laborales</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>

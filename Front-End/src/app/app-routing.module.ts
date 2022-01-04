@@ -63,7 +63,7 @@ const routes: Routes = [
     { path: 'form-validar-ofertaLaboral/:external_of' , component: FormValidarOfertaLaboralComponent },
     { path: 'form-publicar-ofertaLaboral/:external_of' , component: FormPublicarOfertaGestorComponent },
     { path: 'validar-oferta-laboral' , component: TablaValidarOfertasLaboralesComponent},
-    { path: 'tabla-validar-empleador' , component: TablaValidarPostulantesComponent },
+    { path: 'tabla-validar-empleador' , component: TablaValidarEmpleadoresComponent },
     { path: 'tabla-validar-postulantes' , component: TablaValidarEmpleadoresComponent },
     { path: 'tareas/postulante/:external_es' , component: FormInfoPostulanteComponent,canActivate:[AutentificacionGuard] },
     { path: 'tareas/empleador/:external_em' , component: FormValidacionEmpleadorComponent,canActivate:[AutentificacionGuard] },

@@ -57,7 +57,7 @@ export class SerivicioEmpleadorService {
     ).pipe(
       map(
         respuestaBackend=>{
-          return this.crearArregloEmpleadores(respuestaBackend['mensaje']);
+          return respuestaBackend;
         })
     );
   }
