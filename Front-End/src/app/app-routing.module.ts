@@ -41,6 +41,8 @@ import {FormEditarCursoComponent} from 'src/app/Backend/panel-postulante/pages/c
 import {FormAddCursoComponent} from 'src/app/Backend/panel-postulante/pages/cursos-capacitaciones/form-add-curso/form-add-curso.component';
 import { TablaValidarEmpleadoresComponent } from './Backend/panel-admin/pages/tabla-validar-empleadores/tabla-validar-empleadores.component';
 import { TableroAdminComponent } from './Backend/panel-admin/pages/tablero-admin/tablero-admin.component';
+import { TableroPostulanteComponent } from './Backend/panel-postulante/pages/tablero-postulante/tablero-postulante.component';
+import { TableroEmpleadorComponent } from './Backend/panel-empleador/pages/tablero-empleador/tablero-empleador.component';
 
 
 const routes: Routes = [
@@ -69,7 +71,7 @@ const routes: Routes = [
     { path: 'form-validar-empleador/:external_em' , component: FormValidacionEmpleadorComponent },
     //rutas del postulante
   ]},
-  { path: 'panel-empleador' , component: MiPerfilEmpleadorComponent ,canActivate:[AutentificacionGuard],children:[
+  { path: 'panel-empleador' , component: TableroEmpleadorComponent ,canActivate:[AutentificacionGuard],children:[
     { path: 'postulante-oferta/:external_of' , component: PostulantesOfertaComponent },
     { path: 'edit-oferta-laboral/:external_of' , component: EditOfertaComponent },
     { path: 'form-info-empleador' , component: FormularioInfoEmpleadorComponent },
@@ -77,7 +79,7 @@ const routes: Routes = [
     { path: 'add-ferta-laboral' , component: AddOfertaComponent },
     { path: 'mi-perfil' , component: MiPerfilEmpleadorComponent},
   ]},
-  { path: 'panel-postulante' , component: MiPerfilPostulanteComponent ,canActivate:[AutentificacionGuard],children:[
+  { path: 'panel-postulante' , component: TableroPostulanteComponent ,canActivate:[AutentificacionGuard],children:[
     { path: 'ofertas-postuladas' , component: OfertasPostuladasComponent },
     { path: 'form-info-postulante' , component: FormularioInfoPostulanteComponent },
     { path: 'titulos-academicos' , component: TitulosAcademicosComponent },

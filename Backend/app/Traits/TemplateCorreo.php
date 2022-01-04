@@ -59,6 +59,7 @@ trait TemplateCorreo {
         try {
             $mail=new PHPMailer();
             $mail->CharSet='UTF-8';
+            $mail->Username='cis.unl.insercionlaboral@gmail.com';
             $mail->isMail();
             $mail->setFrom(getenv("CORREO_MODULO"),'Proceso de Inserción Laboral');
             $mail->addReplyTo(getenv("CORREO_MODULO"),'Proceso de Inserción Laboral');

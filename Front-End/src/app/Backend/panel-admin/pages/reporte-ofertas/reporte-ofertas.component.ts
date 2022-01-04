@@ -64,7 +64,7 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
     this.configurarParametrosDataTable();
     this.cargarTablaReporteOfertas();
     //responsibo
-    $("body").removeClass("sidebar-open");
+    //$("body").removeClass("sidebar-open");
   }
   crearFormulario(){
     this.formfiltrarOfertas=this.formBuilder.group({
@@ -501,7 +501,7 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
         this.contruirDatosPdfReporteOfertas(this.intanciaReporte);
         this.dtTrigger.next();
       },siHacesMal=>{
-        Swal('Información',siHacesMal['mensaje'], 'info');
+        Swal('Error',siHacesMal['message'], 'error');
       }
     );
 

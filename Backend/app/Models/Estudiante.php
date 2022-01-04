@@ -10,7 +10,7 @@ class Estudiante extends Model
         //nombre de la tabla
         protected $table="estudiante";
         //para saber si en la tabla usamos created_at y update_at
-        public $timestamp=true;
+        public $timestamps=true;
         //lista blanca campos publicos
         protected $fillable=[
             "fk_usuario",

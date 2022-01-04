@@ -11,7 +11,7 @@ declare var $:any;
   selector: 'navTab-postulante',
   templateUrl: './navTab-postulante.component.html'
 })
-export class PanelPostulanteComponent implements OnInit {
+export class NavTabPostulante implements OnInit {
   instanciaUsuario:UsuarioModel=new UsuarioModel;
   domininio=environment;
   estadoValidacionForm:boolean;
@@ -35,7 +35,7 @@ export class PanelPostulanteComponent implements OnInit {
           this.estadoValidacionForm=false;
         }
       },siHacesMal=>{
-        Swal('Error',siHacesMal['mensaje'], 'error');
+        Swal('Error',siHacesMal['message'], 'error');
       }
 
     );

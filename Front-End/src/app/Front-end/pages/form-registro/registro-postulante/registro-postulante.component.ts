@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import {AutenticacionUserService} from 'src/app/servicios/autenticacion-usuario.service';
 import { Router } from '@angular/router';
 import {environment} from 'src/environments/environment.prod';
+import { ValidadoresService } from 'src/app/servicios/validadores.service';
 
 @Component({
   selector: 'app-registro-postulante',
@@ -16,6 +17,7 @@ export class RegistroPostulanteComponent implements OnInit {
   formRegistroPostulante:FormGroup;
 
   constructor(private servicioUsuario_:AutenticacionUserService,
+              private validadorPersonalizado:ValidadoresService,
               private router_:Router,private formulario:FormBuilder) { }
   usuarioModel:UsuarioModel;
 
@@ -30,10 +32,17 @@ export class RegistroPostulanteComponent implements OnInit {
   get passwordNoValido(){
     return this.formRegistroPostulante.get('password').invalid && this.formRegistroPostulante.get('password').touched;
   }
+  get passwordNoValido2(){
+    return this.formRegistroPostulante.get('password2').invalid && this.formRegistroPostulante.get('password2').touched  ;
+  }
+
   crearFormulario(){
     this.formRegistroPostulante=this.formulario.group({
       correo:['',[Validators.required,Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
-      password:['',[Validators.required,Validators.maxLength(10)]]
+      password:['',[Validators.required,Validators.maxLength(10)]],
+      password2:['',[Validators.required]]
+    },{
+      validators: this.validadorPersonalizado.validarFechasInicioFinalizacion('password','password2')
     });
   }
   registroPostulante(){

@@ -43,7 +43,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
   ngOnInit() {
     this.cargarDatosForm();
     //responsibo
-    $("body").removeClass("sidebar-open");
+    //$("body").removeClass("sidebar-open");
   }
 
   crearFormulario(){
@@ -66,7 +66,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
       siHaceBien=>{
           this.arrayCiudad=siHaceBien;
       },siHaceMal=>{
-        Swal('Error', siHaceMal['statusText'], 'error');
+        Swal('Error', siHaceMal['message'], 'error');
       }
     );
   }
@@ -75,7 +75,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
       siHaceBien=>{
           this.arrayProvincias=siHaceBien;
       },siHaceMal=>{
-        Swal('Error', siHaceMal['statusText'], 'error');
+        Swal('Error', siHaceMal['message'], 'error');
       }
     );
   }
@@ -223,7 +223,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
          Swal({
           title:'Error',
           type:'error',
-          text:peroSiTenemosErro['statusText']
+          text:peroSiTenemosErro['message']
          });
     });
   }
@@ -256,7 +256,7 @@ export class FormularioInfoEmpleadorComponent implements OnInit {
         Swal({
           title:'Error',
           type:'error',
-          text:peroSiTenemosErro['statusText']
+          text:peroSiTenemosErro['message']
         });
     });
   }

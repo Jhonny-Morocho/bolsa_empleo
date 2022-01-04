@@ -32,6 +32,17 @@ export class ValidadoresService {
       }
     }
   }
+  validarContraseñasIguales(password1:string,password2:string){
+    return (formGroup:FormGroup)=>{
+      const passwordInicio=formGroup.controls[password1];
+      const passwordFinal=formGroup.controls[password2];
+      if(passwordFinal.value==passwordInicio.value){
+        passwordFinal.setErrors(null);
+      }else{
+        passwordFinal.setErrors({PasswordNoIgual:true});
+      }
+    }
+  }
   soloTexto(control: FormControl):{[s:string]:boolean}{
       const pattern = new RegExp('^[A-ZÁÉÍÓÚÑ ]+$', 'i');
       if (!pattern.test(control.value)){

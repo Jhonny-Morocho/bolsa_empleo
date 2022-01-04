@@ -8,7 +8,7 @@ class Usuario extends Model{
     //nombre de la tabla
     protected $table="usuario";
     //para saber si en la tabla usamos created_at y update_at
-    public $timestamp=true;
+    public $timestamps=true;
     //lista blanca cmapos publicos
     protected $fillable=[
         "correo",
@@ -23,7 +23,7 @@ class Usuario extends Model{
     public function docente(){
         return $this->hasOne('App\Models\Docente','fk_usuario');
     }
-    
+
     public function estudiante(){
         return $this->hasOne('App\Models\Estudiante','fk_usuario');
     }

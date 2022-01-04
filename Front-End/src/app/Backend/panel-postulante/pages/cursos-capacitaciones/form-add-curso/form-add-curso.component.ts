@@ -203,7 +203,7 @@ export class FormAddCursoComponent implements OnInit {
            }
           Swal('Información', siHacesBienFormData['mensaje'], 'info')
       },(erroSubirFormData)=>{
-        Swal('Error',erroSubirFormData['statusText'], 'error')
+        Swal('Error',erroSubirFormData['message'], 'error')
     });
     //2.guardamos la data
   }
@@ -214,7 +214,7 @@ export class FormAddCursoComponent implements OnInit {
         this.paises =siHacesBien;
       },
       (peroSiTenemosErro)=>{
-        Swal('Error',peroSiTenemosErro['statusText'], 'error')
+        Swal('Error',peroSiTenemosErro['message'], 'error')
       }
     );
   }

@@ -20,7 +20,7 @@ export class MiPerfilEmpleadorComponent implements OnInit {
      // no existe session por lo cual debo direccionar al inicio
      this.servicioAuthenAdmin_.estaAutenticado();
    }
-   $("body").removeClass("sidebar-open");
+   //$("body").removeClass("sidebar-open");
   }
   datosUsuarioPerfil(correo){
     const datosUsuarioPerfil={

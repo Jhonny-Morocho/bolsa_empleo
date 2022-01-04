@@ -18,7 +18,7 @@ import { HeaderComponent } from 'src/app/Front-end/componentes/header-home/heade
 import {PanelAdminComponent} from 'src/app/Backend/panel-admin/componentes/nav/navTab-admin.component';
 import { MiPerfilComponent } from 'src/app/Backend/panel-admin/pages/mi-perfil-admin/mi-perfil-admin.component';
 import {TablaValidarPostulantesComponent} from 'src/app/Backend/panel-admin/pages/tablas-validacion-cuentas/tablas-validar.postulantes.component';
-import {PanelPostulanteComponent} from 'src/app/Backend/panel-postulante/componentes/nav/navTab-postulante.component';
+import {NavTabPostulante} from 'src/app/Backend/panel-postulante/componentes/nav/navTab-postulante.component';
 
 import { from } from 'rxjs';
 import {FormularioInfoPostulanteComponent} from 'src/app/Backend/panel-postulante/pages/registro-postulante/formulario-info-postulante.component';
@@ -69,6 +69,8 @@ import { FooterComponent } from './Backend/componentes/footer/footer.component';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import { TablaValidarEmpleadoresComponent } from './Backend/panel-admin/pages/tabla-validar-empleadores/tabla-validar-empleadores.component';
 import { TableroAdminComponent } from './Backend/panel-admin/pages/tablero-admin/tablero-admin.component';
+import { TableroPostulanteComponent } from './Backend/panel-postulante/pages/tablero-postulante/tablero-postulante.component';
+import { TableroEmpleadorComponent } from './Backend/panel-empleador/pages/tablero-empleador/tablero-empleador.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,7 @@ import { TableroAdminComponent } from './Backend/panel-admin/pages/tablero-admin
     MiPerfilComponent,
     RegistroPostulanteComponent,
     RegistroEmpleadorComponent,
-    PanelPostulanteComponent,
+    NavTabPostulante,
     FormularioInfoPostulanteComponent,
     FormInfoPostulanteComponent,
     TablaValidarPostulantesComponent,
@@ -122,6 +124,8 @@ import { TableroAdminComponent } from './Backend/panel-admin/pages/tablero-admin
     FooterComponent,
     TablaValidarEmpleadoresComponent,
     TableroAdminComponent,
+    TableroPostulanteComponent,
+    TableroEmpleadorComponent,
   ],
 
   imports: [

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import {environment} from 'src/environments/environment.prod';
 import {AutenticacionUserService} from 'src/app/servicios/autenticacion-usuario.service';
+import { ValidadoresService } from 'src/app/servicios/validadores.service';
 @Component({
   selector: 'app-registro-empleador',
   templateUrl: './registro-empleador.component.html'
@@ -15,6 +16,7 @@ export class RegistroEmpleadorComponent implements OnInit {
   dominio=environment.dominio
   constructor(private router_:Router,
               private formBuilder:FormBuilder,
+              private validadorPersonalizado:ValidadoresService,
               private servicioUsuario_:AutenticacionUserService) {
     this.crearFormulario();
   }
@@ -30,10 +32,16 @@ export class RegistroEmpleadorComponent implements OnInit {
   get passwordNoValido(){
     return this.formEmpleador.get('password').invalid && this.formEmpleador.get('password').touched;
   }
+  get passwordNoValido2(){
+    return this.formEmpleador.get('password2').invalid && this.formEmpleador.get('password2').touched  ;
+  }
   crearFormulario(){
     this.formEmpleador=this.formBuilder.group({
       correo:['',[Validators.required,Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
-      password:['',[Validators.required,Validators.maxLength(10)]]
+      password:['',[Validators.required,Validators.maxLength(10)]],
+      password2:['',[Validators.required]]
+    },{
+      validators: this.validadorPersonalizado.validarFechasInicioFinalizacion('password','password2')
     });
   }
   registarEmpleador(){

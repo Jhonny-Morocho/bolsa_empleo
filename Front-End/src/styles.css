@@ -192,14 +192,14 @@ thead {
     font-size: 20px;
 }
 
-#hero {
+/* #hero {
     width: 100%;
     height: 100vh;
     background: url(assets/images/maxresdefault.jpg) top left;
     background-size: cover;
     position: relative;
 }
-
+ */
 nav.navbar.navbar-expand-lg.navbar-dark.bg-primary.pl-5 {
     /* height: 70px; */
     font-size: 18px;
