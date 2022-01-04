@@ -79,7 +79,7 @@ export class OfertasLaboralesService {
     ).pipe(
       map(
         respuestaBackend=>{
-          return this.crearArregloOfertasLaborales(respuestaBackend['mensaje']);
+          return respuestaBackend;
         })
     );
   }

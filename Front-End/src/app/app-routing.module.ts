@@ -6,7 +6,7 @@ import {LoginAdminComponent} from 'src/app/Front-end/pages/form-login/login.comp
 import {AutentificacionGuard} from './guards/autentificacion.guard';
 import {MiPerfilComponent} from 'src/app/Backend/panel-admin/pages/mi-perfil-admin/mi-perfil-admin.component';
 import { MiPerfilEmpleadorComponent} from 'src/app/Backend/panel-empleador/pages/mi-perfil-empleador/mi-perfil-empleador.component';
-import {TareaValiar} from 'src/app/Backend/panel-admin/pages/tablas-validacion-cuentas/tablas-validar.component';
+import {TablaValidarPostulantesComponent} from 'src/app/Backend/panel-admin/pages/tablas-validacion-cuentas/tablas-validar.postulantes.component';
 import {RegistroEmpleadorComponent} from 'src/app/Front-end/pages/form-registro/registro-empleador/registro-empleador.component';
 //panel administrador
 import {MiPerfilPostulanteComponent} from 'src/app/Backend/panel-postulante/pages/mi-perfil-postulante/mi-perfil-postulante.component';
@@ -39,6 +39,8 @@ import {CursosCapacitacionesComponent} from 'src/app/Backend/panel-postulante/pa
 //cursos-capacitaciones
 import {FormEditarCursoComponent} from 'src/app/Backend/panel-postulante/pages/cursos-capacitaciones/form-editar-curso/form-editar-curso.component';
 import {FormAddCursoComponent} from 'src/app/Backend/panel-postulante/pages/cursos-capacitaciones/form-add-curso/form-add-curso.component';
+import { TablaValidarEmpleadoresComponent } from './Backend/panel-admin/pages/tabla-validar-empleadores/tabla-validar-empleadores.component';
+import { TableroAdminComponent } from './Backend/panel-admin/pages/tablero-admin/tablero-admin.component';
 
 
 const routes: Routes = [
@@ -47,40 +49,45 @@ const routes: Routes = [
   { path: 'registro-empleador', component: RegistroEmpleadorComponent },
   { path: 'login' , component: LoginAdminComponent },
 
-  { path: 'panel-empleador/postulante-oferta/:external_of' , component: PostulantesOfertaComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-empleador/edit-oferta-laboral/:external_of' , component: EditOfertaComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-empleador/form-info-empleador' , component: FormularioInfoEmpleadorComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-empleador/oferta-laboral' , component: OfertaLaboralComponent,canActivate:[AutentificacionGuard], data: {activeTab: 'home'}},
-  { path: 'panel-empleador/add-ferta-laboral' , component: AddOfertaComponent,canActivate:[AutentificacionGuard] },
   //rutas del admistrador
   { path: 'reactivar-oferta-laboral/:external_of' , component: ReactivarOfertaComponent},
-  { path: 'panel-admin/filtrar-postulantes/:external_of' , component: PostulanteOfertas ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/reporte-ofertas' , component: ReporteOfertasComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/registar-admin' , component: RegistarAdminComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/editar-admin/:external_us' , component: FormEditarAdminComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/gestionar-usuarios-admin' , component:  TablaUsuariosAdminComponent,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/publicar-oferta-gestor' , component: TablaPublicarOfertGestorComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/mi-perfil' , component: MiPerfilComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-empleador/mi-perfil' , component: MiPerfilEmpleadorComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-postulante/mi-perfil' , component: MiPerfilPostulanteComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/form-validar-ofertaLaboral/:external_of' , component: FormValidarOfertaLaboralComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-admin/form-publicar-ofertaLaboral/:external_of' , component: FormPublicarOfertaGestorComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-admin/validar-oferta-laboral' , component: TablaValidarOfertasLaboralesComponent ,canActivate:[AutentificacionGuard]},
-  { path: 'panel-admin/tareas' , component: TareaValiar,canActivate:[AutentificacionGuard] },
 
-  { path: 'panel-admin/tareas/postulante/:external_es' , component: FormInfoPostulanteComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-admin/tareas/empleador/:external_em' , component: FormValidacionEmpleadorComponent,canActivate:[AutentificacionGuard] },
-  //rutas del postulante
-
-  { path: 'panel-postulante/ofertas-postuladas' , component: OfertasPostuladasComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-postulante/form-info-postulante' , component: FormularioInfoPostulanteComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-postulante/titulos-academicos' , component: TitulosAcademicosComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-postulante/add-titulo' , component: FormAddTituloComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-postulante/edit-titulo/:external_ti' , component: FormEditarTituloComponent,canActivate:[AutentificacionGuard] },
-  //cursos-capacitaciones
-  { path: 'panel-postulante/cursos-capacitaciones' , component: CursosCapacitacionesComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-postulante/add-curso-capacitacion' , component: FormAddCursoComponent,canActivate:[AutentificacionGuard] },
-  { path: 'panel-postulante/edit-curso-capacitacion/:external_cu' , component: FormEditarCursoComponent,canActivate:[AutentificacionGuard] },
+  { path: 'panel-admin' , component: TableroAdminComponent ,canActivate:[AutentificacionGuard],children:[
+    { path: 'publicar-oferta-gestor' , component: TablaPublicarOfertGestorComponent},
+    { path: 'gestionar-usuarios-admin' , component:  TablaUsuariosAdminComponent},
+    { path: 'mi-perfil' , component: MiPerfilComponent},
+    { path: 'editar-admin/:external_us' , component: FormEditarAdminComponent},
+    { path: 'filtrar-postulantes/:external_of' , component: PostulanteOfertas},
+    { path: 'reporte-ofertas' , component: ReporteOfertasComponent},
+    { path: 'registar-admin' , component: RegistarAdminComponent},
+    { path: 'form-validar-ofertaLaboral/:external_of' , component: FormValidarOfertaLaboralComponent },
+    { path: 'form-publicar-ofertaLaboral/:external_of' , component: FormPublicarOfertaGestorComponent },
+    { path: 'validar-oferta-laboral' , component: TablaValidarOfertasLaboralesComponent},
+    { path: 'tabla-validar-empleador' , component: TablaValidarPostulantesComponent },
+    { path: 'tabla-validar-postulantes' , component: TablaValidarEmpleadoresComponent },
+    { path: 'tareas/postulante/:external_es' , component: FormInfoPostulanteComponent,canActivate:[AutentificacionGuard] },
+    { path: 'tareas/empleador/:external_em' , component: FormValidacionEmpleadorComponent,canActivate:[AutentificacionGuard] },
+    //rutas del postulante
+  ]},
+  { path: 'panel-empleador' , component: MiPerfilEmpleadorComponent ,canActivate:[AutentificacionGuard],children:[
+    { path: 'postulante-oferta/:external_of' , component: PostulantesOfertaComponent },
+    { path: 'edit-oferta-laboral/:external_of' , component: EditOfertaComponent },
+    { path: 'form-info-empleador' , component: FormularioInfoEmpleadorComponent },
+    { path: 'oferta-laboral' , component: OfertaLaboralComponent, data: {activeTab: 'home'}},
+    { path: 'add-ferta-laboral' , component: AddOfertaComponent },
+    { path: 'mi-perfil' , component: MiPerfilEmpleadorComponent},
+  ]},
+  { path: 'panel-postulante' , component: MiPerfilPostulanteComponent ,canActivate:[AutentificacionGuard],children:[
+    { path: 'ofertas-postuladas' , component: OfertasPostuladasComponent },
+    { path: 'form-info-postulante' , component: FormularioInfoPostulanteComponent },
+    { path: 'titulos-academicos' , component: TitulosAcademicosComponent },
+    { path: 'add-titulo' , component: FormAddTituloComponent },
+    { path: 'edit-titulo/:external_ti' , component: FormEditarTituloComponent },
+    { path: 'cursos-capacitaciones' , component: CursosCapacitacionesComponent },
+    { path: 'add-curso-capacitacion' , component: FormAddCursoComponent },
+    { path: 'edit-curso-capacitacion/:external_cu' , component: FormEditarCursoComponent },
+    { path: 'mi-perfil' , component: MiPerfilPostulanteComponent},
+  ]},
   { path: '**', redirectTo: 'home' }
 
 ];

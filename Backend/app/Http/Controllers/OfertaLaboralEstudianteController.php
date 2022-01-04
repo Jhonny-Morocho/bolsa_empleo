@@ -105,6 +105,7 @@ class OfertaLaboralEstudianteController extends Controller
         }
 
     }
+    
     // Listar todos los titulos estado cero y no cero//con sus datos de formulario
     public function listarOfertasLaboralesExternal_us( $external_id){
         //obtener todos los usuarios que sean postulante

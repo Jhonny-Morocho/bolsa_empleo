@@ -19,9 +19,6 @@ $router->get('/', function () use ($router) {
 
 
 try {
-    //code...
-
-    //$router->group(['middleware' => 'auth'], function () use ($router) {
         //envaimos a guardar datos (end pint,controladador/)
         $router->post('/usuario/registro','UsuarioController@RegistrarUsuario');
         $router->post('/usuario/recuperarPassword','UsuarioController@recuperarPassword');
@@ -96,8 +93,7 @@ try {
         $router->get('/ofertas-laborales/obtenerOfertaLaboralExternal_of/{external_id}','OfertaLaboralController@obtenerOfertaLaboralExternal_of');
         $router->post('/ofertas-laborales/registro/{external_id}','OfertaLaboralController@RegistrarOfertaLaboral');
         $router->get('/ofertas-laborales/listarOfertasLaboralesExternal_us/{external_id}','OfertaLaboralController@listarOfertasLaboralesExternal_us');
-   // });
 } catch (\Throwable $th) {
-    echo "PROBLEMAS CON LAS RUTAS PROTEGIDAS";
-    throw $th;
+
+    echo $th->getMessage();
 }

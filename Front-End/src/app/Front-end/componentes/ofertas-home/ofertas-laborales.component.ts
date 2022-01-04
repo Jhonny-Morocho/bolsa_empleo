@@ -78,13 +78,16 @@ export class PostularOfertaLaboralComponent implements OnInit,OnDestroy {
 
   cargarTabla(){
     this.servicioOferta.listarOfertasValidadasGestor().subscribe(
-      siHacesBien=>{
-        this.ofertasLaborales =siHacesBien;
-        //this.pintarRequisitos(0);
-        this.dtTrigger.next();
+      res=>{
+        if(res['Siglas']=='OE'){
+          this.ofertasLaborales =res['mensaje'];
+          this.dtTrigger.next();
+          return;
+        }
+        Swal('Información',res['mensaje'], 'info');
       },
-      (peroSiTenemosErro)=>{
-        Swal('Error',peroSiTenemosErro['message'], 'error');
+      (error)=>{
+        Swal('Error',error['message'], 'error');
       }
     );
 

@@ -17,7 +17,7 @@ import { HeaderComponent } from 'src/app/Front-end/componentes/header-home/heade
 
 import {PanelAdminComponent} from 'src/app/Backend/panel-admin/componentes/nav/navTab-admin.component';
 import { MiPerfilComponent } from 'src/app/Backend/panel-admin/pages/mi-perfil-admin/mi-perfil-admin.component';
-import {TareaValiar} from 'src/app/Backend/panel-admin/pages/tablas-validacion-cuentas/tablas-validar.component';
+import {TablaValidarPostulantesComponent} from 'src/app/Backend/panel-admin/pages/tablas-validacion-cuentas/tablas-validar.postulantes.component';
 import {PanelPostulanteComponent} from 'src/app/Backend/panel-postulante/componentes/nav/navTab-postulante.component';
 
 import { from } from 'rxjs';
@@ -67,6 +67,8 @@ import { MiPerfilEmpleadorComponent } from 'src/app/Backend/panel-empleador/page
 import { RatingModule } from 'ng-starrating';
 import { FooterComponent } from './Backend/componentes/footer/footer.component';
 import { UiSwitchModule } from 'ngx-ui-switch';
+import { TablaValidarEmpleadoresComponent } from './Backend/panel-admin/pages/tabla-validar-empleadores/tabla-validar-empleadores.component';
+import { TableroAdminComponent } from './Backend/panel-admin/pages/tablero-admin/tablero-admin.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,7 @@ import { UiSwitchModule } from 'ngx-ui-switch';
     PanelPostulanteComponent,
     FormularioInfoPostulanteComponent,
     FormInfoPostulanteComponent,
-    TareaValiar,
+    TablaValidarPostulantesComponent,
     NabPanelEmpleador,
     FormularioInfoEmpleadorComponent,
     FormValidacionEmpleadorComponent,
@@ -118,6 +120,8 @@ import { UiSwitchModule } from 'ngx-ui-switch';
     MiPerfilPostulanteComponent,
     MiPerfilEmpleadorComponent,
     FooterComponent,
+    TablaValidarEmpleadoresComponent,
+    TableroAdminComponent,
   ],
 
   imports: [

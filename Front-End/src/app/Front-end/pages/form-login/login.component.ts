@@ -147,7 +147,7 @@ export class LoginAdminComponent implements OnInit {
           switch (parseInt(siHacesBien['mensaje']['tipoUsuario'])) {
             //secretaria
             case 3:
-              this.router.navigateByUrl('/panel-admin/mi-perfil');
+              this.router.navigateByUrl('/panel-admin');
               break;
             //empleador
             case 6:
@@ -164,7 +164,6 @@ export class LoginAdminComponent implements OnInit {
             //gestor
             case 4:
               this.router.navigateByUrl('/panel-admin/mi-perfil');
-              //this.router.navigateByUrl('/panel-admin/mi-perfil');
               break;
             default:
               break;

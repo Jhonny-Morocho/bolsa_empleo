@@ -23,9 +23,11 @@ class Usuario extends Model{
     public function docente(){
         return $this->hasOne('App\Models\Docente','fk_usuario');
     }
+    
     public function estudiante(){
         return $this->hasOne('App\Models\Estudiante','fk_usuario');
     }
+
     public function empleador(){
         return $this->hasOne('App\Models\Empleador','fk_usuario');
     }

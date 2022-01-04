@@ -18,10 +18,10 @@ declare var JQuery:any;
 declare var $:any;
 
 @Component({
-  selector: 'app-validar-cuentas',
+  selector: 'app-tabla-validar-postulantes',
   templateUrl: './tablas-validar-cuentas.component.html'
 })
-export class TareaValiar implements OnInit,OnDestroy {
+export class TablaValidarPostulantesComponent implements OnInit,OnDestroy {
   //data table
   @ViewChild(DataTableDirective)
   dtElement: DataTableDirective;
