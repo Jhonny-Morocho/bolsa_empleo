@@ -52,7 +52,7 @@ export class PostulanteOfertas implements OnInit {
     this.obtenerOfertaLaboral();
     this.estudiantesOfertaLaboral();
     //responsibo
-    $("body").removeClass("sidebar-open");
+    //$("body").removeClass("sidebar-open");
   }
   filtrarPostulante(){
     //verifico si el usuario ha hecho check,si no hace check entonces no puede actualizar
@@ -207,18 +207,21 @@ export class PostulanteOfertas implements OnInit {
 
             //obtener todos los empleadores para poder obtener los datos de los empleadores
             this.servicioEmpleador.listarEmpleadores().subscribe(
-              siHaceBien=>{
-                  this.arrayEmpleadores
-                  siHaceBien.forEach(element => {
+              res=>{
+                console.log(res);
+                if(res['Siglas']=='OE'){
+                  res['mensaje'].forEach(element => {
                     //comparo el fk_empleador con el id de usuario
                     if(element['id']== this.instanciaOfertaLaboral.fk_empleador){
-
                       this.instanciaOfertaLaboral.razon_empresa=element['razon_empresa'];
                     }
                   });
+                  return;
+                }
+                Swal('Información', res['mensaje'], 'info')
               },error=>{
 
-                Swal('Info', error['mensaje'], 'info')
+                Swal('Error', error['message'], 'error')
               });
 
           },siHaceMal=>{

@@ -75,8 +75,9 @@ export class TablaPublicarOfertGestorComponent implements OnInit {
       this.instanciaOfertaVer.correo=this.ofertasLaborales[index]['correo'];
       //obtengo todos los usuarios
       this.servicioEmpleador.listarEmpleadores().subscribe(
-        siHaceBien=>{
-            siHaceBien.forEach(element => {
+        res=>{
+          if(res['Siglas']=='OE'){
+            res['mensaje'].forEach(element => {
               //comparo el fk_empleador con el id de usuario
               if(element['id']== this.instanciaOfertaVer.fk_empleador){
                 this.instanciaEmpleadorModelVer.nom_representante_legal=element['nom_representante_legal'];
@@ -88,8 +89,11 @@ export class TablaPublicarOfertGestorComponent implements OnInit {
                 this.instanciaEmpleadorModelVer.razon_empresa=element['razon_empresa'];
               }
             });
+            return;
+          }
+          Swal('Información',res['message'], 'info');
         },error=>{
-          Swal('Error',error['error']['message'], 'error');
+          Swal('Error',error['message'], 'error');
         });
 
       $("#itemRequisitos").html(  this.instanciaOfertaVer.requisitos);

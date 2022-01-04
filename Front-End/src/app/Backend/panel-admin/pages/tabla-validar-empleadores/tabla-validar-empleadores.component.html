@@ -34,7 +34,7 @@
                               <p *ngIf="estadoRevision(empleadores.observaciones)==true && estadoConversion(empleadores.estado)==false "><span class="badge badge-warning">Revisado</span></p>
                             </td>
                             <td>
-                                <button type="button " class="btn btn-light" [routerLink]="[ '/panel-admin/tareas/empleador',empleadores.external_em] "><i class="fas fa-chevron-right "></i></button>
+                                <a class="btn btn-light" [routerLink]="['../form-validar-empleador',empleadores.external_em] "><i class="fas fa-chevron-right "></i></a>
                             </td>
                             <td>
                               <div style="text-align:center">

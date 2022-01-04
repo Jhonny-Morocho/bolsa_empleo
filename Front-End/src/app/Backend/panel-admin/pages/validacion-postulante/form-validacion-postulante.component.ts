@@ -134,7 +134,7 @@ export class FormInfoPostulanteComponent implements OnInit {
        Swal({
            title:'Error',
            type:'error',
-           text:peroSiTenemosErro['statusText']
+           text:peroSiTenemosErro['message']
          });
       }
     );

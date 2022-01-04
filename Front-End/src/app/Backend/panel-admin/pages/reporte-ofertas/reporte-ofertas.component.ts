@@ -318,8 +318,9 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
     this.estudiantesOfertaLaboral(this.instanciaOfertaVer.external_of);
     //obtengo todos los usuarios
     this.servicioEmpelador.listarEmpleadores().subscribe(
-      siHaceBien=>{
-          siHaceBien.forEach(element => {
+      res=>{
+        if(res['Siglas']=='OE'){
+          res['mensaje'].forEach(element => {
             //comparo el fk_empleador con el id de usuario
             if(element['id']== this.instanciaOfertaVer.fk_empleador){
               this.instanciaEmpleadorModelVer.nom_representante_legal=element['nom_representante_legal'];
@@ -331,6 +332,9 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
               this.instanciaEmpleadorModelVer.razon_empresa=element['razon_empresa'];
             }
           });
+          return;
+        }
+        Swal('Información',res['mensaje'], 'info');
       },error=>{
         Swal('Error',error['mensaje'], 'error');
       });

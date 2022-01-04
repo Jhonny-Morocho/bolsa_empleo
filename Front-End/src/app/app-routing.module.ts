@@ -64,9 +64,9 @@ const routes: Routes = [
     { path: 'form-publicar-ofertaLaboral/:external_of' , component: FormPublicarOfertaGestorComponent },
     { path: 'validar-oferta-laboral' , component: TablaValidarOfertasLaboralesComponent},
     { path: 'tabla-validar-empleador' , component: TablaValidarEmpleadoresComponent },
-    { path: 'tabla-validar-postulantes' , component: TablaValidarEmpleadoresComponent },
-    { path: 'tareas/postulante/:external_es' , component: FormInfoPostulanteComponent,canActivate:[AutentificacionGuard] },
-    { path: 'tareas/empleador/:external_em' , component: FormValidacionEmpleadorComponent,canActivate:[AutentificacionGuard] },
+    { path: 'tabla-validar-postulantes' , component: TablaValidarPostulantesComponent },
+    { path: 'form-validar-postulante/:external_es' , component: FormInfoPostulanteComponent },
+    { path: 'form-validar-empleador/:external_em' , component: FormValidacionEmpleadorComponent },
     //rutas del postulante
   ]},
   { path: 'panel-empleador' , component: MiPerfilEmpleadorComponent ,canActivate:[AutentificacionGuard],children:[
