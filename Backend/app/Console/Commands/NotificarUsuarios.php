@@ -56,9 +56,7 @@ class NotificarUsuarios extends Command
      *
      * @return mixed
      */
-    public function handle()
-    {
-
+    public function handle(){
      $this->notificarEstudiante();
      $this->notificarEmpleador();
      $this->notificarOfertaLaboralExpirada();
@@ -68,7 +66,6 @@ class NotificarUsuarios extends Command
     }
 
     private function notificarOfertaLaboralExpirada(){
-
         try {
             //selecinar todas la ofertas laborales que hayan expirado su tiemppo
             $ObjOfertaLaboral=OfertasLaborales::join("empleador","empleador.id","=","oferta_laboral.fk_empleador")
@@ -135,6 +132,7 @@ class NotificarUsuarios extends Command
         } catch (\Throwable $th) {
             die($th->getMessage());
         }
+
     }
     //el tiempo de validacion del formulario re registro del empleador expiro
     private function notificarEmpleador(){
@@ -228,11 +226,11 @@ class NotificarUsuarios extends Command
             return $th->getMessage();
         }
     }
+
+    //
     private function notificarSeleccionarPostulanteEmpleador(){
         //cuando se haya inscrito el primer postulante comienza a contabilizar los 8 dias
         //1.Buscamos cuales son los usuarios que se han escrito en una determiada oferta que esten pubicas
-
-
         try {
             //lista todoas las ofertas que este publicadas
             $ofertaLaboralPublicada=OfertasLaborales::join("empleador","empleador.id","oferta_laboral.fk_empleador")
@@ -253,7 +251,7 @@ class NotificarUsuarios extends Command
                 ->whereDate('updated_at',"<=",
                 Carbon::now()->subHour($this->tiempoSeleccionarPostulante))
                 ->first();
-                if(isset($postulanteEncontrado)){
+                if(empty($postulanteEncontrado)){
                     $parrafoEmpleador="Se le informa que han trancurrido 8 dias desde que se inicio el proceso de postulación,
                               por lo cual su oferta laboral se encuentra deshabilitado,
                               para volver a reactivar su oferta laboral denominada <b>".$value['puesto']."</b>

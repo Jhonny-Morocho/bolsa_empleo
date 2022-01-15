@@ -25,8 +25,7 @@ export class FormInfoPostulanteComponent implements OnInit {
    }
   ngOnInit() {
     this.cargarDatosFormPostulante();
-    //responsibo
-    $("body").removeClass("sidebar-open");
+
   }
   get observacionesNoValida(){
     return this.formPosutalnte.get('observaciones').invalid &&  this.formPosutalnte.get('observaciones').touched;
@@ -80,8 +79,8 @@ export class FormInfoPostulanteComponent implements OnInit {
           else{
             this.encontrado=false;
           }
-        },peroSiTenemosErro=>{
-          Swal('Ups', peroSiTenemosErro['mensaje'], 'info')
+        },error=>{
+          Swal('Error', error['message'], 'error')
         }
       );
     });
@@ -112,9 +111,9 @@ export class FormInfoPostulanteComponent implements OnInit {
     this.instanciaPostulante.observaciones=this.formPosutalnte.value.observaciones;
     this.servicioPostulante_.actulizarAprobacionPostulante(Number(this.instanciaPostulante.estado),this.externalEst,this.instanciaPostulante.observaciones
     ).subscribe(
-      siHacesBien=>{
+      res=>{
         Swal.close();
-        if(siHacesBien['Siglas']=="OE"){
+        if(res['Siglas']=="OE"){
             const toast = Swal.mixin({
               toast: true,
               position: 'top-end',
@@ -125,16 +124,16 @@ export class FormInfoPostulanteComponent implements OnInit {
               type: 'success',
               title: 'Registrado'
             })
-            this.router.navigateByUrl('/panel-admin/tareas');
+            this.router.navigateByUrl('/panel-admin/tabla-validar-postulantes');
           }else{
-            Swal('Información', siHacesBien['mensaje'], 'info')
+            Swal('Información', res['mensaje'], 'info')
           }
 
-      },(peroSiTenemosErro)=>{
+      },(error)=>{
        Swal({
            title:'Error',
            type:'error',
-           text:peroSiTenemosErro['message']
+           text:error['message']
          });
       }
     );

@@ -26,9 +26,9 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('command:notificarUsuarios')->everyMinute();
+    protected function schedule(Schedule $schedule){
+        //para ejecutar mensaje por consola  php artisan command:notificarUsuarios
+       $schedule->command('command:notificarUsuarios')->everyMinute();
     }
 
 }

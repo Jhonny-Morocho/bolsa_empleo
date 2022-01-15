@@ -25,7 +25,7 @@
                       <tbody>
                           <tr *ngFor="let estudiantes of estudiante;let i=index">
                               <td>{{ i+1 }}</td>
-                              <td>{{ estudiantes.updated_at | date: 'yyyy/MM/dd'}}</td>
+                              <td>{{ estudiantes.updated_at | date: 'yyyy/MM/dd, h:mm a'}}</td>
                               <td>{{ estudiantes.nombre }}</td>
                               <td>{{ estudiantes.apellido }}</td>
                               <td>{{ estudiantes.correo }}</td>

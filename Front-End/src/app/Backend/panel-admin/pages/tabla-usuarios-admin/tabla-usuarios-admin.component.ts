@@ -4,6 +4,7 @@ import {DocenteModel} from 'src/app/models/docente.models';
 import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { dataTable } from 'src/app/templateDataTable/configDataTable';
+declare var $:any;
 @Component({
   selector: 'app-tabla-usuarios-admin',
   templateUrl: './tabla-usuarios-admin.component.html'
@@ -17,8 +18,7 @@ export class TablaUsuariosAdminComponent implements OnInit {
   ngOnInit() {
     this.configurarParametrosDataTable();
     this.cargarTabla();
-    //responsibo
-    $("body").removeClass("sidebar-open");
+
   }
   configurarParametrosDataTable(){
     this.dtOptions = dataTable;
@@ -26,12 +26,25 @@ export class TablaUsuariosAdminComponent implements OnInit {
   cargarTabla(){
     //listar todos los usuarioas admistradores
     this.SerivicioDocente.listarDocentes().subscribe(
-      siHacesBien=>{
-        this.arrayDocentes=siHacesBien;
+      res=>{
+        if(res['Siglas']=='OE'){
+          this.arrayDocentes =res['mensaje'];
+          this.dtTrigger.next();
+          return;
+        }
+        Swal('Información',res['mensaje'], 'info');
+        console.log(res);
+        //this.arrayDocentes=res;
         this.dtTrigger.next();
       },siHacesMal=>{
         Swal('Error', siHacesMal['mensaje'], 'error');
       }
     );
+  }
+  btnAgregarDocente(){
+    $('#registrar-admin').modal({backdrop: 'static', keyboard: false});
+    const docente=new DocenteModel();
+    console.log('xx');
+    this.SerivicioDocente.instanciaDocente$.emit(docente);
   }
 }

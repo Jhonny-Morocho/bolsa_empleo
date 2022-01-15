@@ -33,7 +33,7 @@ export class TablaValidarPostulantesComponent implements OnInit,OnDestroy {
   tipoUsuarioSecretaria:boolean=false;
   tipoUsuarioEncargado:boolean=false;
 
-  constructor(private servicioPostulante_:SerivicioPostulanteService,
+  constructor(private servicioPostulante:SerivicioPostulanteService,
     private router:Router
                ) { }
 
@@ -67,14 +67,18 @@ export class TablaValidarPostulantesComponent implements OnInit,OnDestroy {
   }
   cargarTablaperfilUsuario(){
     //esat usando la pagina la secretaria
-    this.servicioPostulante_.listarPostulantes().subscribe(
-      siHacesBien=>{
-        this.estudiante =siHacesBien;
-        // Calling the DT trigger to manually render the table
-        this.dtTrigger.next();
+    this.servicioPostulante.listarPostulantes().subscribe(
+      res=>{
+        if(res['Siglas']=='OE'){
+          this.estudiante =res['mensaje'];
+          this.dtTrigger.next();
+          return;
+        }
+        Swal('Información',res['mensaje'], 'info');
+
       },
-      (peroSiTenemosErro)=>{
-          Swal('Error',peroSiTenemosErro['statusText'], 'error');
+      (error)=>{
+          Swal('Error',error['message'], 'error');
         }
     );
 

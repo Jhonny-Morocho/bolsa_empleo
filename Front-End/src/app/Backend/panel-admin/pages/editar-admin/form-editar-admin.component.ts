@@ -18,13 +18,12 @@ export class FormEditarAdminComponent implements OnInit {
               private servicioRouter:Router,
               private activateRotue:ActivatedRoute) {
     this.crearFormulario();
+    this.formAdmin.get('correo').disable();
   }
 
   ngOnInit() {
     this.instanciaDocente=new DocenteModel();
     this.cargarFormularioDocente();
-    //responsibo
-    $("body").removeClass("sidebar-open");
   }
 
   crearFormulario(){

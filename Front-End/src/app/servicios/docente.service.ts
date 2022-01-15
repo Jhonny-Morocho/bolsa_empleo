@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {DocenteModel} from 'src/app/models/docente.models';
 import {  map } from 'rxjs/operators';
@@ -38,7 +38,7 @@ export class SerivicioDocente {
     ).pipe(
       map(
         respuestaBackend=>{
-          return this.crearArregloDocentes(respuestaBackend['mensaje']);
+          return respuestaBackend;
         })
     );
   }

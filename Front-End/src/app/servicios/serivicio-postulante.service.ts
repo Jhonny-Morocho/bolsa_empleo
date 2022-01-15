@@ -57,7 +57,7 @@ export class SerivicioPostulanteService {
     ).pipe(
       map(
         respuestaBackend=>{
-          return this.crearArregloEstudiantes(respuestaBackend['mensaje']);
+          return respuestaBackend;
         })
     );
   }
