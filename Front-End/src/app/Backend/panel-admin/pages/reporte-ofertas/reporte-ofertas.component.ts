@@ -626,6 +626,9 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
   configurarParametrosDataTable(){
     this.dtOptions = dataTable;
   }
+  cerrarModal(){
+    $('#verOfertaReporte').modal('hide');
+  }
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();

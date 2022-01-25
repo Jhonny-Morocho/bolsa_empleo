@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -8,14 +8,19 @@ import {OfertaLaboralModel} from 'src/app/models/oferta-laboral.models';
 import {EmpleadorModel} from 'src/app/models/empleador.models';
 import {SerivicioEmpleadorService} from 'src/app/servicios/servicio-empleador.service';
 import { dataTable } from 'src/app/templateDataTable/configDataTable';
-declare var JQuery:any;
+import { DataTableDirective } from 'angular-datatables';
 declare var $:any;
 @Component({
   selector: 'app-oferta-laboral',
   templateUrl: './oferta-laboral-empleador.component.html'
 })
-export class OfertaLaboralComponent implements OnInit {
+export class OfertaLaboralComponent implements OnInit,OnDestroy {
   //visualizar informacion de empleador
+  @ViewChild(DataTableDirective)
+  dtElement!: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject<any>();
+
   instanciaEmpleadorModelVer:EmpleadorModel;
   instanciaOfertaLaboralActualizar:OfertaLaboralModel;
   intanciaOfertaLaboral:OfertaLaboralModel;
@@ -24,9 +29,8 @@ export class OfertaLaboralComponent implements OnInit {
   ofertasLaborales:OfertaLaboralModel[]=[];
 
   instanciaOfertaVer:OfertaLaboralModel;
-    //data table
-    dtOptions: DataTables.Settings = {};
-    dtTrigger: Subject<any> = new Subject<any>();
+
+
   constructor(private servicioOferta:OfertasLaboralesService) { }
 
   ngOnInit() {
@@ -36,26 +40,22 @@ export class OfertaLaboralComponent implements OnInit {
     this.instanciaOfertaLaboralActualizar=new OfertaLaboralModel();
     this.configurarParametrosDataTable();
     this.cargarTabla();
-    //responsibo
-    $("body").removeClass("sidebar-open");
+
 
   }
   cargarTabla(){
     //listamos los titulos academicos
     this.servicioOferta.listarOfertasLaboralesExternal_us().subscribe(
-      siHacesBien=>{
-        this.ofertasLaborales =siHacesBien;
-        //data table
-        //cargamos los items o los requisitos
-
-        this.dtOptions = {
-          pagingType: 'full_numbers',
-          pageLength: 2
-        };
-        this.dtTrigger.next();
+      res=>{
+        if(res['Siglas']=='OE'){
+          this.ofertasLaborales =res['mensaje'];
+          this.dtTrigger.next();
+          return;
+        }
+        Swal('Información',res['mensaje'], 'info');
       },
-      (peroSiTenemosErro)=>{
-        Swal('Ups', peroSiTenemosErro['mensaje'], 'info')
+      (error)=>{
+        Swal('Error', error['message'], 'error')
       }
     );
    }
@@ -101,10 +101,9 @@ export class OfertaLaboralComponent implements OnInit {
          this.instanciaOfertaLaboralActualizar.estado=0;
          this.instanciaOfertaLaboralActualizar.external_of=external_of;
          this.servicioOferta.eliminarOfertaLaboral(this.instanciaOfertaLaboralActualizar).subscribe(
-           siHaceBien=>{
+           res=>{
              //elimino visualmente
-             if(siHaceBien["Siglas"]=="OE"){
-
+             if(res["Siglas"]=="OE"){
                this.ofertasLaborales.splice(index,1); //desde la posición 2, eliminamos 1 elemento
                const toast = Swal.mixin({
                   toast: true,
@@ -116,12 +115,16 @@ export class OfertaLaboralComponent implements OnInit {
                   type: 'success',
                   title: 'Registro '+nombreTitulo+' eliminado'
                 })
+                this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+                  dtInstance.destroy();
+                });
+                this.cargarTabla();
                 return;
              }
-             Swal('Información',siHaceBien['mensaje'], 'info')
+             Swal('Información',res['mensaje'], 'info')
 
-           },(peroSiTenemosErro)=>{
-             Swal('Error',peroSiTenemosErro['mensaje'], 'error')
+           },(error)=>{
+             Swal('Error',error['message'], 'error')
            }
          );
        }

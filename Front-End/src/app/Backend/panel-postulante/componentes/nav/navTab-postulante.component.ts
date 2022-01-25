@@ -7,6 +7,7 @@ import { UsuarioModel } from 'src/app/models/usuario.model';
 import {SerivicioPostulanteService} from 'src/app/servicios/serivicio-postulante.service';
 import { AutenticacionUserService } from 'src/app/servicios/autenticacion-usuario.service';
 declare var $:any;
+
 @Component({
   selector: 'navTab-postulante',
   templateUrl: './navTab-postulante.component.html'

@@ -41,10 +41,5 @@ export class TablaUsuariosAdminComponent implements OnInit {
       }
     );
   }
-  btnAgregarDocente(){
-    $('#registrar-admin').modal({backdrop: 'static', keyboard: false});
-    const docente=new DocenteModel();
-    console.log('xx');
-    this.SerivicioDocente.instanciaDocente$.emit(docente);
-  }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { StarRatingComponent } from 'ng-starrating';
@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
   templateUrl: './tabla-validar-empleadores.component.html',
   styleUrls: ['./tabla-validar-empleadores.component.css']
 })
-export class TablaValidarEmpleadoresComponent implements OnInit {
+export class TablaValidarEmpleadoresComponent implements OnInit,OnDestroy {
   //data table
   @ViewChild(DataTableDirective)
   dtElement: DataTableDirective;
@@ -22,7 +22,7 @@ export class TablaValidarEmpleadoresComponent implements OnInit {
 
   arrayCalificacionesEmpleadores=[];
   empleador:EmpleadorModel[]=[];
-  intanciaCalifarEmpleador:CalificarEmpleadorModel;
+  intanciaCalifarEmpleador:CalificarEmpleadorModel=new CalificarEmpleadorModel();
   intanciaEmpleadorCalificar:EmpleadorModel;
   constructor(private servicioCalificarEmpleador:CalificarEmpleadorService,
               private router:Router,
@@ -33,7 +33,7 @@ export class TablaValidarEmpleadoresComponent implements OnInit {
     this.cargarTablaperfilUsuario();
     this.obtenerCalificacionesTodosEmpleadores();
   }
-  onRate($event:{oldValue:number, newValue:number, starRating:StarRatingComponent},indice) {
+  onRate($event:{oldValue:Number, newValue:Number, starRating:StarRatingComponent},indice) {
     this.intanciaEmpleadorCalificar.actividad_ruc=this.empleador[0]['actividad_ruc'];
     this.intanciaEmpleadorCalificar.cedula=this.empleador[indice]['cedula'];
     this.intanciaEmpleadorCalificar.fk_ciudad=this.empleador[indice]['fk_ciudad'];
@@ -45,8 +45,6 @@ export class TablaValidarEmpleadoresComponent implements OnInit {
     this.intanciaEmpleadorCalificar.num_ruc=this.empleador[indice]['num_ruc'];
     this.intanciaEmpleadorCalificar.razon_empresa=this.empleador[indice]['razon_empresa'];
     this.intanciaEmpleadorCalificar.telefono=this.empleador[indice]['telefono'];
-
-    //$('#CalificarEmpleador').modal('show');
     Swal({
       title: '¿Está seguro?',
       type: 'warning',
@@ -65,18 +63,22 @@ export class TablaValidarEmpleadoresComponent implements OnInit {
         });
         Swal.showLoading();
         this.calificarEmpleador();
-        //borro la tabla anetrior y vuelvo a cargar
-        this.dtTrigger.unsubscribe();
+        //recargar la tabla
+        this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+        dtInstance.destroy();
+        });
         this.cargarTablaperfilUsuario();
+        this.obtenerCalificacionesTodosEmpleadores();
       }
     })
   }
   obtenerCalificacionesTodosEmpleadores(){
     this.servicioCalificarEmpleador.obtenerCalificacionTodosEmpleadores().subscribe(
-      siHacesBien=>{
-        this.arrayCalificacionesEmpleadores=siHacesBien;
-      },siHacesMal=>{
-        Swal('Información',siHacesMal['mensaje'], 'info');
+      res=>{
+        console.log(res);
+        this.arrayCalificacionesEmpleadores=res;
+      },error=>{
+        Swal('Error',error['message'], 'error');
       }
     );
   }
@@ -108,15 +110,12 @@ export class TablaValidarEmpleadoresComponent implements OnInit {
             type: 'success',
             title: 'Registrado'
           })
-            //codigo para recargar en la misma pagina
-          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-          this.router.onSameUrlNavigation = 'reload';
-          this.router.navigate(['/panel-admin/tareas']);
+
         }else{
           Swal('Información', siHaceBien['mensaje'], 'info');
         }
       },error=>{
-        Swal('Error', error['statusText'], 'error');
+        Swal('Error', error['message'], 'error');
       });
   }
   //revisar que tipo de usuario admistrador esta usando la pagina

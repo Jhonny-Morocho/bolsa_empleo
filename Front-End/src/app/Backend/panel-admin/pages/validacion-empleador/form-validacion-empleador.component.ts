@@ -35,8 +35,6 @@ export class FormValidacionEmpleadorComponent implements OnInit {
     this.instanciaEmpleador=new EmpleadorModel;
     this.provincias();
     this.cargarDataFormulario();
-     //responsibo
-     $("body").removeClass("sidebar-open");
   }
   crearFormulario(){
     this.formEmpleador=this.formBuilder.group({
@@ -100,8 +98,8 @@ export class FormValidacionEmpleadorComponent implements OnInit {
           else{
             this.encontrado=false;
           }
-        },peroSiTenemosErro=>{
-          Swal('Ups', peroSiTenemosErro['mensaje'], 'info')
+        },error=>{
+          Swal('Error', error['message'], 'error')
         }
       );
     });
@@ -110,8 +108,8 @@ export class FormValidacionEmpleadorComponent implements OnInit {
     this.servicioCiudades.listarCiudades(idProvincia).subscribe(
       siHaceBien=>{
           this.arrayCiudad=siHaceBien;
-      },siHaceMal=>{
-        Swal('Ups', siHaceMal['mensaje'], 'info')
+      },error=>{
+        Swal('Error', error['message'], 'error')
       }
     );
   }
@@ -120,7 +118,7 @@ export class FormValidacionEmpleadorComponent implements OnInit {
       siHaceBien=>{
           this.arrayProvincias=siHaceBien;
       },siHaceMal=>{
-        Swal('Ups', siHaceMal['mensaje'], 'info')
+        Swal('Error', siHaceMal['message'], 'error')
       }
     );
   }
@@ -167,16 +165,16 @@ export class FormValidacionEmpleadorComponent implements OnInit {
           type: 'success',
           title: 'Registrado'
         })
-        this.router.navigateByUrl('/panel-admin/tareas');
+        this.router.navigateByUrl('/panel-admin/tabla-validar-empleador');
         }else{
           Swal('Información', siHacesBien['mensaje'], 'info')
         }
 
-    },(peroSiTenemosErro)=>{
+    },(error)=>{
      Swal({
          title:'Error',
          type:'error',
-         text:peroSiTenemosErro['statusText']
+         text:error['message']
        });
     }
   );

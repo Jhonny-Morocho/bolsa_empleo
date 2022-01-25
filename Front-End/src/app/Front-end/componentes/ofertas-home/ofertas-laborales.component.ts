@@ -117,11 +117,12 @@ export class PostularOfertaLaboralComponent implements OnInit,OnDestroy {
               this.servicioOfertaEstudiante.postularOfertEstudiante(this.instanciaOfertLaboralEstudiante,externalOferta).subscribe(
                 siHacesBien=>{
                   if(siHacesBien['Siglas']=='OE'){
-                    return Swal('Guardado','Registro guardado','success');
+                    return Swal('Postulación registrada','Usted está postulando a la oferta laboral '+nomOferta,'success');
                   }
                   return Swal('Información',siHacesBien['mensaje'],'info');
                 },error=>{
-                  Swal('Error',error['error']['message'],'error');
+                  Swal('Error',error['message'],'error');
+                  
                 }
               );
           }

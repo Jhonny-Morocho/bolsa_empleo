@@ -46,7 +46,7 @@ export class FormPublicarOfertaGestorComponent implements OnInit {
               Swal('Información', siHacesBien['mensaje'], 'info');
             }
         },peroSiTenemosErro=>{
-          Swal('Error', peroSiTenemosErro['statusText'], 'error');
+          Swal('Error', peroSiTenemosErro['message'], 'error');
         }
       )
     });

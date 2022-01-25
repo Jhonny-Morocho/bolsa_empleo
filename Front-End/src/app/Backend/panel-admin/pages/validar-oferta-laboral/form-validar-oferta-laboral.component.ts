@@ -22,8 +22,6 @@ export class FormValidarOfertaLaboralComponent implements OnInit {
 
   ngOnInit() {
     this.cargarDatosOfertaLaboral();
-    //responsibo
-    $("body").removeClass("sidebar-open");
   }
   cargarDatosOfertaLaboral(){
     this.instanciaOfertaLaboral=new OfertaLaboralModel();

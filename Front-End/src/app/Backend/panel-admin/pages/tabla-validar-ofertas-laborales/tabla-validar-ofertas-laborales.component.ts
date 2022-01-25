@@ -62,8 +62,6 @@ export class TablaValidarOfertasLaboralesComponent implements OnDestroy,OnInit  
     this.instanciaFiltro=new OfertasFiltroModel();
     this.configurarParametrosDataTable();
     this.cargarTodasOfertas();
-    //responsibo
-    $("body").removeClass("sidebar-open");
   }
   crearFormulario(){
     this.formfiltrarOfertas=this.formBuilder.group({

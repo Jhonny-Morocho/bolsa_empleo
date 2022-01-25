@@ -4,27 +4,27 @@
     <div class="sidebar">
         <nav class="mt-2 mb-3">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item has-treeview">
+                <li class="nav-item ">
                     <a routerLinkActive="active" [routerLink]="['/panel-postulante/form-info-postulante']" class="nav-link ">
                         <i class="fas fa-address-card mr-1"></i>
                         <p>Registro de postulante</p>
                     </a>
                 </li>
-                <li class="nav-item has-treeview" *ngIf="estadoValidacionForm==true">
+                <li class="nav-item " *ngIf="estadoValidacionForm==true">
                   <a routerLinkActive="active" [routerLink]="['/home']" class="nav-link ">
                       <i class="fas fa-briefcase mr-1"></i>
                       <p>Ofertas laborales </p>
                   </a>
               </li>
-                <li class="nav-item has-treeview" *ngIf="estadoValidacionForm==true">
+                <li class="nav-item " *ngIf="estadoValidacionForm==true">
                     <a routerLinkActive="active" [routerLink]="['/panel-postulante/ofertas-postuladas']" class="nav-link ">
                         <i class="fas fa-check mr-1"></i>
-                        <p>Ofertas elegidas </p>
+                        <p>Ofertas Postuladas </p>
                     </a>
                 </li>
 
-                <li class="nav-item has-treeview"  *ngIf="estadoValidacionForm==true" >
-                  <a  class="nav-link " routerLinkActive="active"  [routerLinkActiveOptions]="{exact: true}">
+               <li class="nav-item menu-open"  *ngIf="estadoValidacionForm==true" >
+                  <a  class="nav-link">
                     <i class="fas fa-folder mr-1"></i>
                     <p>
                       Hoja de vida
@@ -50,10 +50,4 @@
         </nav>
     </div>
 </aside>
-
-
-
-
-
-
 
