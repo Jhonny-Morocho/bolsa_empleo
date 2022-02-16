@@ -312,3 +312,9 @@ position: relative;
 border-radius: 5px;
 box-shadow: 0 0 15px 5px #ccc;
 }
+
+.icon-telegran{
+  width: 1.5rem;
+  height: 1.5rem;
+ background-color: white;
+}
