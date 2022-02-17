@@ -1,7 +1,8 @@
 <?php
 namespace App\Traits;
 use PHPMailer\PHPMailer\PHPMailer;
-
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 trait TemplateCorreo {
     public function templateHtmlCorreo($nombreUsuario,$parrafoMensaje){
        return'
@@ -59,13 +60,20 @@ trait TemplateCorreo {
         try {
             $mail=new PHPMailer();
             $mail->CharSet='UTF-8';
-            $mail->Username='cis.unl.insercionlaboral@gmail.com';
-            $mail->isMail();
-            $mail->setFrom(getenv("CORREO_MODULO"),'Proceso de Inserción Laboral');
+            $mail->SMTPDebug = 0;
+            $mail->SMTPAuth   = true;               
+            $mail->Username=getenv("CORREO_MODULO");
+            $mail->Password   = 'CisUnlTesis2021'; 
+            //$mail->SMTPSecure = 'tls'; // secure transfer enabled REQUIRED for GMail
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; 
+            $mail->Host='smtp.gmail.com';
+            $mail->isSMTP();
+            $mail->SMTPAutoTLS = false;
+            $mail->setFrom(getenv("CORREO_MODULO"),'Inserción Laboral');
             $mail->addReplyTo(getenv("CORREO_MODULO"),'Proceso de Inserción Laboral');
             $mail->Subject=($tituloCorreo);
             $mail->addAddress($para);
-            // $mail->Port= 587;
+            $mail->Port= 465;
             $mail->msgHTML($templateHtml);
             $envio=$mail->Send();
             if ($envio==true) {
