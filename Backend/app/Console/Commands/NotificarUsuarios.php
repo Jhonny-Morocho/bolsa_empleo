@@ -251,7 +251,8 @@ class NotificarUsuarios extends Command
                 ->whereDate('updated_at',"<=",
                 Carbon::now()->subHour($this->tiempoSeleccionarPostulante))
                 ->first();
-                if(empty($postulanteEncontrado)){
+
+                if(isset($postulanteEncontrado)){
                     $parrafoEmpleador="Se le informa que han trancurrido 8 dias desde que se inicio el proceso de postulación,
                               por lo cual su oferta laboral se encuentra deshabilitado,
                               para volver a reactivar su oferta laboral denominada <b>".$value['puesto']."</b>
