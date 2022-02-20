@@ -358,7 +358,8 @@ class OfertaLaboralController extends Controller
             ->join("usuario","usuario.id","empleador.fk_usuario")
             ->select("oferta_laboral.*",
             "usuario.correo",
-            "empleador.nom_representante_legal")
+            "empleador.nom_representante_legal",
+            "empleador.razon_empresa")
             ->where("oferta_laboral.external_of","=",$external_id)->first();
             return $this->retornarOfertaLaboralEncontrado($ObjOfertaLaboral);
         } catch (\Throwable $th) {

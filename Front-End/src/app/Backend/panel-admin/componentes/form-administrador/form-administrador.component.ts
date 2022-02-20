@@ -32,6 +32,7 @@ export class FormAdministradorComponent implements OnInit {
       this.esRegistroNuevo=false;
       this.formAdmin.get('correo').disable();
       this.formAdmin.get('password').setValidators(null);
+      this.formAdmin.get('password2').setValidators(null);
       this.cargarFormularioDocente();
       return;
     }
@@ -51,7 +52,6 @@ export class FormAdministradorComponent implements OnInit {
             nombre:this.instanciaDocente.nombre,
             apellido:this.instanciaDocente.apellido,
             correo:this.instanciaDocente.correo,
-            password:this.instanciaDocente.password,
             tipoUsuario:this.instanciaDocente.tipoUsuario
           });
 
@@ -73,7 +73,7 @@ export class FormAdministradorComponent implements OnInit {
       password2:['',[Validators.required]],
       tipoUsuario:['',[Validators.required]]
     },{
-      validators: this.validadorPersonalizado.validarContraseñasIguales('password','password2')
+      validators: this.validadorPersonalizado.validarPasswordIguales('password','password2')
     });
   }
   agregarDocente(){
@@ -120,8 +120,9 @@ export class FormAdministradorComponent implements OnInit {
 
   editarDocente(){
     if(this.formAdmin.invalid){
-      return Object.values(this.formAdmin.controls).forEach(contol=>{
-        contol.markAsTouched();
+      return Object.values(this.formAdmin.controls).forEach(control=>{
+        console.log(control);
+        control.markAsTouched();
       });
     }
     Swal({

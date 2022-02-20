@@ -41,7 +41,7 @@ export class RegistroEmpleadorComponent implements OnInit {
       password:['',[Validators.required,Validators.maxLength(10)]],
       password2:['',[Validators.required]]
     },{
-      validators: this.validadorPersonalizado.validarContraseñasIguales('password','password2')
+      validators: this.validadorPersonalizado.validarPasswordIguales('password','password2')
     });
   }
   registarEmpleador(){

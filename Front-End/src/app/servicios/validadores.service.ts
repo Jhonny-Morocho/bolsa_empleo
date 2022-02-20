@@ -32,7 +32,7 @@ export class ValidadoresService {
       }
     }
   }
-  validarContraseñasIguales(password1:string,password2:string){
+  validarPasswordIguales(password1:string,password2:string){
     return (formGroup:FormGroup)=>{
       const passwordInicio=formGroup.controls[password1];
       const passwordFinal=formGroup.controls[password2];

@@ -16,36 +16,50 @@
                       <p>Ofertas laborales </p>
                   </a>
               </li>
-                <li class="nav-item " *ngIf="estadoValidacionForm==true">
-                    <a routerLinkActive="active" [routerLink]="['/panel-postulante/ofertas-postuladas']" class="nav-link ">
-                        <i class="fas fa-check mr-1"></i>
-                        <p>Ofertas Postuladas </p>
-                    </a>
-                </li>
-
-               <li class="nav-item menu-open"  *ngIf="estadoValidacionForm==true" >
-                  <a  class="nav-link">
-                    <i class="fas fa-folder mr-1"></i>
-                    <p>
-                      Hoja de vida
-                      <i class="right fas fa-angle-left"></i>
-                    </p>
+              <li class="nav-item " *ngIf="estadoValidacionForm==true">
+                  <a routerLinkActive="active" [routerLink]="['/panel-postulante/ofertas-postuladas']" class="nav-link ">
+                      <i class="fas fa-check mr-1"></i>
+                      <p>Ofertas Postuladas </p>
                   </a>
-                  <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                      <a [routerLink]="['/panel-postulante/titulos-academicos']"  class="nav-link" routerLinkActive="active">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Títulos academicos</p>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a routerLinkActive="active" [routerLink]="['/panel-postulante/cursos-capacitaciones']" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>Cursos y capacitaciones </p>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
+              </li>
+
+              <li class="nav-item menu-open"  *ngIf="estadoValidacionForm==true" >
+                <ul class="nav nav-treeview">
+                  <li class="nav-header"> HOJA DE VIDA</li>
+                  <li class="nav-item">
+                    <a [routerLink]="['/panel-postulante/titulos-academicos']"  class="nav-link" routerLinkActive="active">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Títulos academicos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a routerLinkActive="active" [routerLink]="['/panel-postulante/cursos-capacitaciones']" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Cursos y capacitaciones </p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item menu-open" >
+                <ul class="nav nav-treeview">
+                  <li class="nav-header">
+                    <i class="fas fa-question mr-2"></i>  AYUDA
+                  </li>
+                  <li class="nav-item">
+                    <a target="alt" class="nav-link" href="https://drive.google.com/file/d/1LIUEyuiukTbSwZ8J427Je9sdy3KUohE3/view?usp=sharing">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Video tutorial</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a  class="nav-link" target="alt" href="https://drive.google.com/file/d/1Yrz5iaO0FnH-4tB_Y1SV50s-71l1pUv9/view?usp=sharing">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Manual de usuario</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
         </nav>
     </div>

@@ -39,7 +39,7 @@ export class ReactivarOfertaComponent implements OnInit {
             Swal('Ups', siHacesBien['mensaje'], 'info')
           }
       },siHaceMal=>{
-        Swal('Error', siHaceMal['mensaje'], 'error')
+        Swal('Error', siHaceMal['message'], 'error')
       }
     );
   }
@@ -50,20 +50,22 @@ export class ReactivarOfertaComponent implements OnInit {
     this._activateRoute.params.subscribe(params=>{
       //consumir el servicio
       this.servicioOfertaLaboral.obtenerOfertaLaboralExternal_of(params['external_of']).subscribe(
-        suHacesBien=>{
+        res=>{
             //encontro estudiante estado==0
-            if(suHacesBien["Siglas"]=="OE"){
+            if(res["Siglas"]=="OE"){
               this.ofertaEncontrada=true;
-              this.instanciaOfertaLaboral.puesto=suHacesBien["mensaje"]['puesto'];
-              this.instanciaOfertaLaboral.descripcion=suHacesBien["mensaje"]['descripcion'];
-              this.instanciaOfertaLaboral.lugar=suHacesBien["mensaje"]['lugar'];
-              this.instanciaOfertaLaboral.correo=suHacesBien["mensaje"]['correo'];
-              this.instanciaOfertaLaboral.requisitos=suHacesBien["mensaje"]['requisitos'];
-              this.instanciaOfertaLaboral.external_of=suHacesBien["mensaje"]['external_of'];
-              this.instanciaOfertaLaboral.obervaciones=suHacesBien["mensaje"]['obervaciones'];
-              this.instanciaOfertaLaboral.estado=suHacesBien["mensaje"]['estado'];
+              console.log(res);
+              this.instanciaOfertaLaboral.puesto=res["mensaje"]['puesto'];
+              this.instanciaOfertaLaboral.descripcion=res["mensaje"]['descripcion'];
+              this.instanciaOfertaLaboral.lugar=res["mensaje"]['lugar'];
+              this.instanciaOfertaLaboral.correo=res["mensaje"]['correo'];
+              this.instanciaOfertaLaboral.requisitos=res["mensaje"]['requisitos'];
+              this.instanciaOfertaLaboral.external_of=res["mensaje"]['external_of'];
+              this.instanciaOfertaLaboral.obervaciones=res["mensaje"]['obervaciones'];
+              this.instanciaOfertaLaboral.estado=res["mensaje"]['estado'];
+              this.instanciaOfertaLaboral.razon_empresa=res["mensaje"]['razon_empresa'];
             }else{
-              Swal('Información',suHacesBien['mensaje'], 'info');
+              Swal('Información',res['mensaje'], 'info');
               this.ofertaEncontrada=false;
             }
         },peroSiTenemosErro=>{

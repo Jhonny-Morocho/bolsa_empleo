@@ -11,21 +11,40 @@
         <app-brand-logo-panel></app-brand-logo-panel>
         <!-- Sidebar -->
         <div class="sidebar">
-            <!-- Sidebar Menu -->
-            <nav class="mt-2 mb-3">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
-                    <li class="nav-item">
-                        <a routerLinkActive="active" [routerLink]="['/panel-empleador/form-info-empleador']" class="nav-link ">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Formulario de registro</p>
-                        </a>
-                        <a *ngIf="estadoValidacion" routerLinkActive="active" [routerLink]="['/panel-empleador/oferta-laboral']" class="nav-link ">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Publicar Oferta laboral</p>
-                        </a>
+          <!-- Sidebar Menu -->
+          <nav class="mt-2 mb-3">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+                <li class="nav-item">
+                    <a routerLinkActive="active" [routerLink]="['/panel-empleador/form-info-empleador']" class="nav-link ">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Formulario de registro</p>
+                    </a>
+                    <a *ngIf="estadoValidacion" routerLinkActive="active" [routerLink]="['/panel-empleador/oferta-laboral']" class="nav-link ">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Publicar Oferta laboral</p>
+                    </a>
+                  </li>
+                <li class="nav-item menu-open" >
+                  <ul class="nav nav-treeview">
+                    <li class="nav-header">
+                      <i class="fas fa-question mr-2"></i>  AYUDA
                     </li>
-                </ul>
-            </nav>
+                    <li class="nav-item">
+                      <a target="alt" class="nav-link" href="https://drive.google.com/file/d/1t3JQaLUTrMAGOgngTMsSgnf9iBH0Gk39/view?usp=sharing">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Video tutorial</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a  class="nav-link" target="alt" href="https://drive.google.com/file/d/1fCmTpqCw3geZe6IFAfQdLgul4Zd2xm-h/view?usp=sharing">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Manual de usuario</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+            </ul>
+          </nav>
             <!-- /.sidebar-menu -->
         </div>
         <!-- /.sidebar -->

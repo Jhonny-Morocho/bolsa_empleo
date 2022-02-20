@@ -2,8 +2,8 @@
 
 <div id="hero">
   <div class="centrarFormularioLoginRegistro  animate__animated  fadeIn ">
-    <div class="container col-sm-9 ">
-      <div class="formRegistroLogin" *ngIf="ofertaEncontrada==false">
+    <div class="container col-sm-9">
+      <div class="formRegistroLogin" *ngIf="!ofertaEncontrada">
         <div class="row g-3  pl-2 pr-2 pb-5  text-center" >
           <i class="fas fa-exclamation-triangle text-white" style="font-size: 60px;"></i>
             <p class="text-white">Oferta laboral no encontrada</p>
@@ -15,15 +15,68 @@
         </div>
       </div>
       <form class="row g-3  pl-2 pr-2 formRegistroLogin" *ngIf="ofertaEncontrada==true" (ngSubmit)="fActualizarEstadoOferta(fActualizarEstadOferta)" #fActualizarEstadOferta="ngForm" >
-          <div class="text-center">
-            <img src="{{ dominio }}/Archivos/images/sistemasUNL_blanco.png" class="rounded mx-auto d-block" alt="logo-carerara-ing-sistemas" width="400" height="100" >
-          </div>
+        <div class="text-center">
+          <img src="{{ dominio }}/Archivos/images/sistemasUNL_blanco.png" class="rounded mx-auto d-block" alt="logo-carerara-ing-sistemas" width="400" height="100" >
+        </div>
+        <div class="formRegistroLogin">
           <div class="col-sm-3">
             <a [routerLink]="['/home']" class="float-right btn btn-outline-light">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i> Regresar al Inicio
             </a>
           </div>
-          <app-ver-oferta-laboral class="ractivar-oferta" [instanciaOfertaVer]="instanciaOfertaLaboral"></app-ver-oferta-laboral>
+        </div>
+        <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                  <div class="col-12">
+                    <span class="text-uppercase  text-primary h4 text-white"><i class="fas fa-building"></i> EMPRESA: </span>
+                    <span class="h4 font-weight-light text-uppercase text-white">{{ instanciaOfertaLaboral.razon_empresa }}</span>
+                    <hr class="text-primary " style="width: 200px;">
+                  </div>
+                  <div class="col-12">
+                    <span class="text-uppercase font-weight-light h6 text-white"><i class="fa fa-comment" aria-hidden="true"></i> Descripción de la oferta laboral </span>
+                    <p  class="mt-2 text-white">{{ instanciaOfertaLaboral.descripcion }}</p>
+                  </div>
+                  <div class="col-12">
+                    <span class="text-uppercase font-weight-light h6 text-white">
+                      <i class="far fa-id-badge"></i> OBSERVACIONES
+                    </span>
+                    <p  class="mt-2 text-white" *ngIf="instanciaOfertaLaboral.obervaciones">{{ instanciaOfertaLaboral.obervaciones }}</p>
+                    <p  class="mt-2 text-white" *ngIf="!instanciaOfertaLaboral.obervaciones">Ninguna</p>
+                  </div>
+                  <div class="col-12">
+                    <span class="text-uppercase font-weight-light h6 text-white">
+                      <i class="far fa-envelope"></i> Correo del Empleador
+                    </span>
+                    <p  class="mt-2 text-white">{{ instanciaOfertaLaboral.correo }}</p>
+                  </div>
+                  <div class="col-12">
+                    <span class="text-uppercase font-weight-light h6 text-white">
+                      <i aria-hidden="true" class="fa fa-map-marker"></i> LUGAR
+                    </span>
+                    <p  class="mt-2 text-white">{{ instanciaOfertaLaboral.lugar }}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-12">
+                    <span class="text-uppercase  text-primary h4 text-white">
+                      <i class="fas fa-briefcase"></i> PUESTO:
+                    </span>
+                    <span class="h4 font-weight-light text-uppercase text-white">
+                      {{ instanciaOfertaLaboral.puesto }}
+                    </span>
+                    <hr class="text-primary " style="width: 200px;">
+                  </div>
+                  <div class="col-12">
+                    <span class="text-uppercase font-weight-light h6 text-white">
+                      <i class="fas fa-clipboard-check"></i> REQUISITOS
+                    </span>
+                    <p class="text-white" [innerHTML]="instanciaOfertaLaboral.requisitos"></p>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <!--   <app-ver-oferta-laboral class="ractivar-oferta" [instanciaOfertaLaboral]="instanciaOfertaLaboral"></app-ver-oferta-laboral> -->
           <div class="form-group">
             <div class="row">
               <div class="col-sm-3">

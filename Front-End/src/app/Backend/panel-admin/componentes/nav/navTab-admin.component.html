@@ -13,11 +13,6 @@
             <nav class="mt-2 mb-3">
                 <ul class="nav nav-pills nav-sidebar flex-column " data-widget="treeview " role="menu " data-accordion="false ">
                   <li class="nav-item ">
-                      <a routerLinkActive="active" [routerLink]="['mi-perfil'] " class="nav-link ">
-                          <p><i class="fas fa-user"></i> Usuario</p>
-                      </a>
-                  </li>
-                  <li class="nav-item ">
                       <!-- ======================= ENCARGADO ============== -->
                       <div *ngIf="tipoUsuarioEncargado==true ">
                           <li class="nav-item ">
@@ -41,6 +36,19 @@
                                   <p>Validar Postulantes</p>
                               </a>
                           </li>
+                          <li class="nav-item menu-open" >
+                            <ul class="nav nav-treeview">
+                              <li class="nav-header">
+                                <i class="fas fa-question mr-2"></i>  AYUDA
+                              </li>
+                              <li class="nav-item">
+                                <a  class="nav-link" target="alt" href="https://drive.google.com/file/d/1WpQDUENEQrwJX4xbPuT9bD8w-ETxXM5A/view?usp=sharing">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>Manual de usuario</p>
+                                </a>
+                              </li>
+                            </ul>
+                          </li>
                       </div>
                       <!-- ======================= GESTOR ============== -->
                       <div *ngIf="tipoUsuarioGestor==true ">
@@ -55,6 +63,19 @@
                                   <i class="far fa-circle nav-icon "></i>
                                   <p>Gestionar Usuarios</p>
                               </a>
+                          </li>
+                          <li class="nav-item menu-open" >
+                            <ul class="nav nav-treeview">
+                              <li class="nav-header">
+                                <i class="fas fa-question mr-2"></i>  AYUDA
+                              </li>
+                              <li class="nav-item">
+                                <a  class="nav-link" target="alt" href="https://drive.google.com/file/d/1RungozRF0HNCpfjHmpJHF9pOP13-N4Zc/view?usp=sharing">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>Manual de usuario</p>
+                                </a>
+                              </li>
+                            </ul>
                           </li>
                       </div>
                     </li>
@@ -75,6 +96,19 @@
                         <i class="nav-icon far fa-file-pdf "></i>
                         <p>Ofertas Laborales</p>
                     </a>
+                  </li>
+                  <li class="nav-item menu-open" >
+                    <ul class="nav nav-treeview">
+                      <li class="nav-header">
+                        <i class="fas fa-question mr-2"></i>  AYUDA
+                      </li>
+                      <li class="nav-item">
+                        <a  class="nav-link" target="alt" href="https://drive.google.com/file/d/1wYvt1_AJVdhNyiJ6pbuMxMwr1Q4ZF02i/view?usp=sharing">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Manual de usuario</p>
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
             </nav>
