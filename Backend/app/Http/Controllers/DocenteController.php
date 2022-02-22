@@ -119,7 +119,6 @@ class DocenteController extends Controller
                     $objUsuario=Usuario::where("usuario.external_us",$external_id)
 
                     ->update(array(
-                        "password"=>$data["password"],
                         "estado"=>$data["estado"],
                         "tipoUsuario"=>$data["tipoUsuario"]
                     ));

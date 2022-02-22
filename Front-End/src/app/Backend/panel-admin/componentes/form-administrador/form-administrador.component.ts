@@ -52,6 +52,8 @@ export class FormAdministradorComponent implements OnInit {
             nombre:this.instanciaDocente.nombre,
             apellido:this.instanciaDocente.apellido,
             correo:this.instanciaDocente.correo,
+            password:this.instanciaDocente.password,
+            password2:this.instanciaDocente.password,
             tipoUsuario:this.instanciaDocente.tipoUsuario
           });
 
@@ -134,6 +136,7 @@ export class FormAdministradorComponent implements OnInit {
     this.instanciaDocente.nombre=this.formAdmin.value.nombre;
     this.instanciaDocente.apellido=this.formAdmin.value.apellido;
     this.instanciaDocente.correo=this.formAdmin.value.correo;
+    // si viene vacio entonces no actuliza
     this.instanciaDocente.password=this.formAdmin.value.password;
     this.instanciaDocente.tipoUsuario=this.formAdmin.value.tipoUsuario;
     Swal.showLoading();
