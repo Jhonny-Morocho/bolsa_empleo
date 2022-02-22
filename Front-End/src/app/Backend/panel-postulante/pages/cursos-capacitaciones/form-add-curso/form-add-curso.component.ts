@@ -86,7 +86,8 @@ export class FormAddCursoComponent implements OnInit {
                ],
       horas:['',
                     [
-                      Validators.required
+                      Validators.required,
+                      Validators.max(5000)
 
                     ]
                   ],

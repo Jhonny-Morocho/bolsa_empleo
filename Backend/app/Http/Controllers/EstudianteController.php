@@ -72,7 +72,7 @@ class EstudianteController extends Controller
                 // la secretaria notifca al postulante que su informacion no ha sido validada
                 if($request['estado']==0 ){
                     $parrafoMensaje="Su información tiene algunas inconsistencias,
-                                     por favor revise su informacion y vuelva a intentar";
+                                     por favor revise y vuelva a intentar.";
                     $plantillaCorreo=
                         $this->templateHtmlCorreo(
                             $usuarioEstudiante['nombre']." ".$usuarioEstudiante['apellido'],
@@ -92,7 +92,7 @@ class EstudianteController extends Controller
                     $plantillaHtmlCorreo=
                         $this->templateHtmlCorreo(
                                                 $usuarioEstudiante['nombre']." ".$usuarioEstudiante['apellido'],
-                                                 "Su información ha salido validada exitosamente"
+                                                 "Su información fue validada exitosamente"
                                                 );
                     $enviarCorreoBolean=$this->enviarCorreo(
                                                             $plantillaHtmlCorreo,

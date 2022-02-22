@@ -72,7 +72,7 @@ export class FormEditarCursoComponent implements OnInit {
     this.formEditarCurso=this.formBuilder.group({
       nom_evento:['',[Validators.required,Validators.maxLength(40)]],
       auspiciante:['',[Validators.required,Validators.maxLength(40)]],
-      horas:['',[Validators.required]],
+      horas:['',[Validators.required,Validators.max(5000)]],
       fecha_inicio:['',[Validators.required,]],
       fecha_culminacion:['',[Validators.required,]],
       tipo_evento:['',[Validators.required]],
