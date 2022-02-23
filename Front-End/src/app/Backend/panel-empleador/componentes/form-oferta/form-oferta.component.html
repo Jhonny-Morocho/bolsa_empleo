@@ -1,4 +1,4 @@
-<form class="row g-3" (ngSubmit)="onSubMitEditarOfertaLaboral()" [formGroup]="formOfertaLaboral">
+<form class="row g-3" (ngSubmit)="onSubMitOfertaLaboral()" [formGroup]="formOfertaLaboral">
   <div class="col-md-12">
       <label for="inputPuesto" class="form-label">Puesto <span class="text-danger">*</span></label><br>
       <i class="fas fa-user form-control-feedback"></i>
@@ -54,29 +54,26 @@
       <label for="inputEmail4" class="form-label">Requisitos <span class="text-danger">*</span></label><br>
       <div [ngxSummernote]="configSumberNote"
             formControlName="requisitos"
-            [ngxSummernoteDisabled]="!ofertaRevisad"
+            [ngxSummernoteDisabled]="estadoSumerNote"
             [class.is-invalid]="requisitosNoValido"
             [class.is-valid]="formOfertaLaboral.get('requisitos').valid">
       </div>
   <!-- mensajes de validacion -->
    <div class="invalid-feedback" *ngIf="requisitosNoValido" >
     <p *ngIf="requisitosVacio==''"> <i class="fas fa-info-circle"></i> El campo requisitos es requerido</p>
-     <p *ngIf="requisitosLimite && requisitosVacio!=='' "> <i class="fas fa-info-circle"></i> Este campo solo acepta 500 caracteres</p>
+     <!-- <p *ngIf="requisitosLimite && requisitosVacio!=='' "> <i class="fas fa-info-circle"></i> Este campo solo acepta 500 caracteres</p> -->
   </div>
   <!-- end mensajes de validacion -->
   </div>
   <div class="col-12">
-      <button type="submit"
-              class="btn btn-success"
-              [disabled]="!ofertaRevisad && !esRegistroNuevo">
-              <i class="fas fa-save"></i>
-            Reenviar
-      </button>
-      <button type="submit"
-        class="btn btn-success"
-        [disabled]="ofertaRevisad && esRegistroNuevo">
-        <i class="fas fa-save"></i>
-        Registrar
-      </button>
+    <button type="submit" class="btn btn-success"
+            *ngIf="esRegistroNuevo">
+            <i class="fas fa-save"></i> Registrar
+    </button>
+    <button type="submit " class="btn btn-success"
+            [disabled]="!ofertaRevisad"
+            *ngIf="!esRegistroNuevo">
+            <i class="fas fa-save"></i> Actualizar
+    </button>
   </div>
 </form>

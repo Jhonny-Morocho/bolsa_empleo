@@ -13,8 +13,9 @@ import Swal from 'sweetalert2';
 export class FormOfertaComponent implements OnInit {
   formOfertaLaboral:FormGroup;
   configSumberNote:any=summernoteConfig;
-  ofertaRevisad:boolean;
+  ofertaRevisad:boolean=false;
   externalOf:string="";
+  estadoSumerNote:boolean=false;
   esRegistroNuevo:boolean=true;
   instanciaOfertaLaboral:OfertaLaboralModel;
   constructor(private activateRotue:ActivatedRoute,
@@ -30,15 +31,10 @@ export class FormOfertaComponent implements OnInit {
     this.activateRotue.params.subscribe(params=> this.externalOf=params['external_of']);
     if(this.externalOf){
       this.esRegistroNuevo=false;
-      this.formOfertaLaboral.get('puesto').disable();
-      this.formOfertaLaboral.get('descripcion').disable();
-      this.formOfertaLaboral.get('lugar').disable();
-      this.formOfertaLaboral.get('requisitos').disable();
       //this.formOfertaLaboral.get('puesto').disable();
       this.cargarDatosOfertaLaboral();
       return;
     }
-    this.ofertaRevisad=false;
   }
   crearFormulario(){
     this.formOfertaLaboral=this.formBuilder.group({
@@ -49,8 +45,6 @@ export class FormOfertaComponent implements OnInit {
     });
   }
   cargarDatosOfertaLaboral(){
-    //obtener los parametros de la ulr para tener los datos del empleador
-    //consumir el servicio
     this.servicioOfertaLaboral.obtenerOfertaLaboralExternal_of(this.externalOf).subscribe(
       res=>{
           if(res["Siglas"]=="OE"){
@@ -75,8 +69,14 @@ export class FormOfertaComponent implements OnInit {
             // si ahun no esta validada la oferta laboral entonces se pone en disable
             if(this.instanciaOfertaLaboral.obervaciones.length>0 &&  this.instanciaOfertaLaboral.estado==1){
               this.ofertaRevisad=true;
+              this.estadoSumerNote=false;
             }else{
               this.ofertaRevisad=false;
+              this.estadoSumerNote=true;
+              this.formOfertaLaboral.get('puesto').disable();
+              this.formOfertaLaboral.get('descripcion').disable();
+              this.formOfertaLaboral.get('lugar').disable();
+              this.formOfertaLaboral.get('requisitos').disable();
             }
           }else{
             Swal('Información', res['mensaje'], 'info');
@@ -223,9 +223,9 @@ export class FormOfertaComponent implements OnInit {
     return this.formOfertaLaboral.get('requisitos').invalid &&  this.formOfertaLaboral.get('requisitos').touched;
   }
 
-   get requisitosLimite(){
+/*    get requisitosLimite(){
     return ((this.formOfertaLaboral.get('requisitos').value).length)>500;
-  }
+  } */
   get requisitosVacio(){
     return this.formOfertaLaboral.get('requisitos').value;
   }
