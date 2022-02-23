@@ -1,21 +1,17 @@
 
 export const summernoteConfig={
-  placeholder: '<ul>'+
-  '<li>Primer requisito</li>'+
-  '<li>Segundo requisito</li>'+
-  '<li>Tercer requisito</li>'+
-  '<li>Cuarto Requisito</li>'+
-'</ul>',
-  tabsize: 0,
-  height: 200,
+  placeholder: '',
+  tabsize: 2,
+  height: '200px',
   toolbar: [
+      ['misc', [false, 'undo', 'redo']],
       ['style', [false]],
-      ['font', ['bold', 'underline', false]],
+      ['font', ['bold', 'italic', 'underline', 'strikethrough', false, false, false]],
       ['fontsize', [false]],
-      ['para', ['ul', false, false]],
-      ['table', [false]],
-      ['height', [false]],
-      ['insert', [false, false, false]]
-  ]
+      ['para', [false, 'ul', false, false, false]],
+      ['insert', [false, false, false, false, false]]
+  ],
+  fontNames: ['Helvetica', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Roboto', 'Times']
 }
+
 

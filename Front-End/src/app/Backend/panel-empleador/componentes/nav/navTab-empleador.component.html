@@ -13,12 +13,14 @@
         <div class="sidebar">
           <!-- Sidebar Menu -->
           <nav class="mt-2 mb-3">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                 <li class="nav-item">
                     <a routerLinkActive="active" [routerLink]="['/panel-empleador/form-info-empleador']" class="nav-link ">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Formulario de registro</p>
                     </a>
+                  </li>
+                  <li class="nav-item">
                     <a *ngIf="estadoValidacion" routerLinkActive="active" [routerLink]="['/panel-empleador/oferta-laboral']" class="nav-link ">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Publicar Oferta laboral</p>

@@ -72,7 +72,8 @@ import { TableroAdminComponent } from './Backend/panel-admin/pages/tablero-admin
 import { TableroPostulanteComponent } from './Backend/panel-postulante/pages/tablero-postulante/tablero-postulante.component';
 import { TableroEmpleadorComponent } from './Backend/panel-empleador/pages/tablero-empleador/tablero-empleador.component';
 import { FormAdministradorComponent } from './Backend/panel-admin/componentes/form-administrador/form-administrador.component';
-
+import { NgxSummernoteModule } from 'ngx-summernote';
+import { FormOfertaComponent } from './Backend/panel-empleador/componentes/form-oferta/form-oferta.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -128,12 +129,14 @@ import { FormAdministradorComponent } from './Backend/panel-admin/componentes/fo
     TableroPostulanteComponent,
     TableroEmpleadorComponent,
     FormAdministradorComponent,
+    FormOfertaComponent,
   ],
 
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    NgxSummernoteModule,
     HttpClientModule,
     // DATA TABLE
     DataTablesModule,

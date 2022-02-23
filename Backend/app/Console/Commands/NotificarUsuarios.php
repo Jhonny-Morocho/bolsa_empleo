@@ -141,7 +141,7 @@ class NotificarUsuarios extends Command
 
             $usuario=Empleador::join("usuario","usuario.id","=","empleador.fk_usuario")
             ->select("empleador.*","usuario.*")
-            ->where("usuario.estado",1)
+            ->where("empleador.estado",0)
             ->where("usuario.tipoUsuario",6)
             ->where("empleador.observaciones","")
             ->whereDate('empleador.updated_at',"<=",
@@ -163,7 +163,7 @@ class NotificarUsuarios extends Command
                                     $value['nom_representante_legal'],
                                     $parrafoMensaje
                                 );
-                $enviarCorreoBolean=$this->enviarCorreo( $plantillaHtml,$value['correo'],getenv("TITULO_CORREO_POSTULANTE"));
+                $enviarCorreoBolean=$this->enviarCorreo( $plantillaHtml,$value['correo'],getenv("TITULO_CORREO_EMPLEADOR"));
 
             }
         } catch (\Throwable $th) {
