@@ -152,7 +152,7 @@ export class PostulantesOfertaComponent implements OnInit {
     //seleciono varios postulante
     if(this.existeAlgunPostulanteChechado==true){
           Swal({
-            title: '¿Está seguro en realizar la acción? No se podra revertir',
+            title: '¿Está seguro en realizar la acción? No se podrá revertir',
             text: "Ha seleccionado con éxito los postulantes de su interes, si desea continuar haga clic en Aceptar ",
             type: 'info',
             showCancelButton: true,
@@ -172,7 +172,7 @@ export class PostulantesOfertaComponent implements OnInit {
       //dio check pero despues desmarco
     if(this.existeAlgunPostulanteChechado==false){
         Swal({
-          title: '¿Está seguro en realizar la acción? No se podra revertir ',
+          title: '¿Está seguro en realizar la acción? No se podrá revertir ',
           text: "Desmarco algunos postulantes por lo cual no ha contratado ningún postulante, si desea continuar  haga clic en Aceptar",
           type: 'info',
           showCancelButton: true,
@@ -204,7 +204,7 @@ export class PostulantesOfertaComponent implements OnInit {
     if(this.arrayAux.length==0){
       Swal({
         title: '¿Está seguro en realizar la acción? No se podra revertir ',
-        text: "No ha seleccionado ahun ningún postulante, si desea continuar haga clic en Aceptar",
+        text: "No ha seleccionado aun ningún postulante, si desea continuar haga clic en Aceptar",
         type: 'info',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

@@ -202,7 +202,7 @@ class NotificarUsuarios extends Command
                 $extnernal_of=$value['external_of'];
                 $puesto=$value['puesto'];
                 foreach ($usuarioGestor as $key => $value) {
-                    $parrafoMensaje=" tiene pendiente publicar la  oferta ".$nombreOferta;
+                    $parrafoMensaje=" Tiene pendiente publicar la  oferta ".$nombreOferta;
                     //tengo q redacatra el menaje aL ENCAGRADO
                     $plantillaHtmlCorreo=
                                     $this->templateHtmlCorreo(
@@ -254,11 +254,11 @@ class NotificarUsuarios extends Command
 
                 if(isset($postulanteEncontrado)){
                     $parrafoEmpleador="Se le informa que han trancurrido 8 dias desde que se inicio el proceso de postulación,
-                              por lo cual su oferta laboral se encuentra deshabilitado,
+                              por lo cual su oferta laboral se encuentra deshabilitada,
                               para volver a reactivar su oferta laboral denominada <b>".$value['puesto']."</b>
                               por favor realizarlo mediante el siguiente enlace
-                              <a href='".getenv("DOMINIO_WEB_REACTIVAR_OFERTA")."/reactivar-oferta-laboral/".$value["external_of"]."'>".
-                                            getenv("DOMINIO_WEB_REACTIVAR_OFERTA")."/reactivar-oferta-laboral/".$value["external_of"].
+                              <a href='".getenv("DOMINIO_WEB_REACTIVAR_OFERTA")."/#/reactivar-oferta-laboral/".$value["external_of"]."'>".
+                                            getenv("DOMINIO_WEB_REACTIVAR_OFERTA")."/#/reactivar-oferta-laboral/".$value["external_of"].
                               "</a>";
 
                     $plantillaHtmlEmpleador= $this->templateHtmlCorreo($value['nom_representante_legal'],$parrafoEmpleador);
@@ -269,12 +269,12 @@ class NotificarUsuarios extends Command
                     ->update(array(
                         'estado'=>4
                     ));
-
+   
                     // NOTIFICAR AL ENCARGADADO PARA QUE CALIFIQUE AL EMPLEADOR
                     // NOTIFICAR AL ENCARGADADO PARA QUE CALIFIQUE AL EMPLEADOR
                     $parraEncargado="Se le informa que el señor <b>".$value['nom_representante_legal']."</b>
                              representante de la empresa <b>".$value['razon_empresa']."</b>,
-                             no ha realizado ninguna contración en los 8 dias habiles
+                             no ha realizado ninguna contratación en los 8 dias habiles
                              en la oferta laboral denominada <b>".$value['puesto']."</b>";
 
                     $usuarioEncargado=Docente::join("usuario","usuario.id","=","docente.fk_usuario")

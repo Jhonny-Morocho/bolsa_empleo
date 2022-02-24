@@ -6,7 +6,6 @@
             <hr class="text-primary accent-2  mb-4 mt-0 " style="width: 250px;">
           </div>
           <article class="card-body ">
-
               <form (ngSubmit)="filtrarOfertas()" [formGroup]="formfiltrarOfertas">
                   <div class="row">
                       <div class="col-md-3">
@@ -153,40 +152,42 @@
                 </button>
               </div>
             </div>
-            <table class="table table-sm" *ngIf="existeRegistros">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Fecha</th>
-                  <th scope="col">Postulante</th>
-                  <th scope="col">Correo</th>
-                  <th scope="col">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let postulantes of arrayOfertaPostulante; index as i ">
-                  <th scope="row">
-                    {{ i+1 }}
-                  </th>
-                  <td>
-                    {{ postulantes.created_at| date: 'yyy/MM/dd' }}
+            <div class="table-responsive">
+              <table class="table table-sm" *ngIf="existeRegistros">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Postulante</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let postulantes of arrayOfertaPostulante; index as i ">
+                    <th scope="row">
+                      {{ i+1 }}
+                    </th>
+                    <td>
+                      {{ postulantes.created_at| date: 'yyy/MM/dd' }}
 
-                  </td>
-                  <td>
-                    {{ postulantes.nombre }} {{ postulantes.apellido }}
-                  </td>
-                  <td>
-                    {{ postulantes.correo }}
+                    </td>
+                    <td>
+                      {{ postulantes.nombre }} {{ postulantes.apellido }}
+                    </td>
+                    <td>
+                      {{ postulantes.correo }}
 
-                  </td>
-                  <td>
-                    <span class="badge badge-danger" *ngIf="postulantes.estado==0">Rechazado</span>
-                    <span class="badge badge-primary" *ngIf="postulantes.estado==1">Postulando</span>
-                    <span class="badge badge-success" *ngIf="postulantes.estado==2">Contratado</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    </td>
+                    <td>
+                      <span class="badge badge-danger" *ngIf="postulantes.estado==0">Rechazado</span>
+                      <span class="badge badge-primary" *ngIf="postulantes.estado==1">Postulando</span>
+                      <span class="badge badge-success" *ngIf="postulantes.estado==2">Contratado</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="cerrarModal()">Cerrar</button>

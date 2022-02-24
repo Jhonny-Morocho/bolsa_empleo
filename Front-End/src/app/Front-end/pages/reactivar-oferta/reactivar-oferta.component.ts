@@ -31,12 +31,12 @@ export class ReactivarOfertaComponent implements OnInit {
     });
     Swal.showLoading();
     this.servicioOfertaLaboral.reactivarOfertaLaboral(this.instanciaOfertaLaboral).subscribe(
-      siHacesBien=>{
+      res=>{
           Swal.close();
-          if(siHacesBien['Siglas']=="OE"){
+          if(res['Siglas']=="OE"){
           Swal('Registrado', 'Información Registrada con Exito', 'success');
           }else{
-            Swal('Ups', siHacesBien['mensaje'], 'info')
+            Swal('Información', res['mensaje'], 'info')
           }
       },siHaceMal=>{
         Swal('Error', siHaceMal['message'], 'error')
@@ -54,7 +54,6 @@ export class ReactivarOfertaComponent implements OnInit {
             //encontro estudiante estado==0
             if(res["Siglas"]=="OE"){
               this.ofertaEncontrada=true;
-              console.log(res);
               this.instanciaOfertaLaboral.puesto=res["mensaje"]['puesto'];
               this.instanciaOfertaLaboral.descripcion=res["mensaje"]['descripcion'];
               this.instanciaOfertaLaboral.lugar=res["mensaje"]['lugar'];
@@ -80,18 +79,16 @@ export class ReactivarOfertaComponent implements OnInit {
       return true;
     }
     //oferta finalizada
-    if(this.instanciaOfertaLaboral.estado==5){
+    if(this.instanciaOfertaLaboral.estado==4){
       return false;
     }
   }
   onChangeOferta(event){
-    if(event==true){
+    if(event){
       this.instanciaOfertaLaboral.estado=3;
+      return;
     }
-    if(event==false){
-      this.instanciaOfertaLaboral.estado=5;
-    }
+    this.instanciaOfertaLaboral.estado=4;
   }
-
 
 }

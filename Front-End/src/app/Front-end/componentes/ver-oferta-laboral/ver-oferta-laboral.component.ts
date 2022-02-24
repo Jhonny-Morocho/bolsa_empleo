@@ -13,6 +13,7 @@ export class VerOfertaLaboralComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 

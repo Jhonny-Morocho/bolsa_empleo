@@ -10,4 +10,5 @@ export class ReporteOfertaModel{
     desvinculados:Number;
     noContratados:Number;
     contratados:Number;
+    lugar?:String;
 }

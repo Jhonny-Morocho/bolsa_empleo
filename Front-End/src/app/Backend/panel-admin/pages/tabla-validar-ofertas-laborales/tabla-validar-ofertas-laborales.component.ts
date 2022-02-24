@@ -128,6 +128,7 @@ export class TablaValidarOfertasLaboralesComponent implements OnDestroy,OnInit  
     this.instanciaOfertaVer.fk_empleador=this.ofertasLaborales[index]['fk_empleador'];
     this.instanciaOfertaVer.razon_empresa=this.ofertasLaborales[index]['razon_empresa'];
     this.instanciaOfertaVer.obervaciones=this.ofertasLaborales[index]['obervaciones'];
+    this.instanciaOfertaVer.lugar=this.ofertasLaborales[index]['lugar'];
     this.instanciaOfertaVer.correo=this.ofertasLaborales[index]['correo'];
 
     //obtengo todos los usuarios

@@ -105,7 +105,7 @@ class OfertaLaboralEstudianteController extends Controller
         }
 
     }
-    
+
     // Listar todos los titulos estado cero y no cero//con sus datos de formulario
     public function listarOfertasLaboralesExternal_us( $external_id){
         //obtener todos los usuarios que sean postulante
@@ -265,6 +265,7 @@ class OfertaLaboralEstudianteController extends Controller
                     "correo"=>$empleador->correo,
                     "external_of"=>$value['external_of'],
                     "requisitos"=>$value['requisitos'],
+                    "lugar"=>$value['lugar'],
                     "fk_empleador"=>$empleador->id,
                     "estadoValidacionOferta"=>$value['estado'],
                     "obervaciones"=>$value['obervaciones'],
@@ -546,7 +547,7 @@ class OfertaLaboralEstudianteController extends Controller
     private function notificarPostulante($listaPostulantes,$puesto){
         $notificarUsuario=array();
         $parrafoPostulanteSISSEG="Muchas gracias por participar en la oferta laboral <b>".$puesto."</b>,
-                                    sírvase por favor de llenar la siguiente encuesta ".
+                                    porfavor registrese en la pagina del SISEG-UNL con la finalidad de dar seguimiento a los graduados de la UNL".
                                     "<a href=".getenv('SISSEG_POSTULANTE').">".
                                     getenv('SISSEG_POSTULANTE') ."</a> de ante mano se le agradece su colaboración ";
 

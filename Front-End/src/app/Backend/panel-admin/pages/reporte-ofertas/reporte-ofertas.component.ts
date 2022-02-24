@@ -75,24 +75,7 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
       validators: this.validadorPersonalizado.validarFechasInicioFinalizacion('de','hasta')
     });
   }
-  get estadoNoValido(){
-    return this.formfiltrarOfertas.get('estado').invalid && this.formfiltrarOfertas.get('estado').touched ;
-  }
-  get fechaDeNoValido(){
-    return this.formfiltrarOfertas.get('de').invalid && this.formfiltrarOfertas.get('de').touched ;
-  }
-  get fechaHastaNoValido(){
-    return this.formfiltrarOfertas.get('hasta').invalid && this.formfiltrarOfertas.get('de').touched  ;
-  }
-  // la fecha de finalizacion debe ser mayo a la fecha de inicio
-  get fechaFinalMayorInicialNoValido(){
-    const dateInicio=this.formfiltrarOfertas.get('de');
-    const dateFinalalizacion=this.formfiltrarOfertas.get('hasta');
-    return (dateFinalalizacion>dateInicio)?true:false;
-  }
-  get fechaHastaVacia(){
-    return this.formfiltrarOfertas.get('hasta').value==''?true:false;
-  }
+
   maquetarCabezeraTablaOfertaLaboralesPdf(){
     let arrayCabezera=[
                       '#',
@@ -308,7 +291,8 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
     this.instanciaOfertaVer.puesto=(this.intanciaReporte[index]['puesto']).toString();
     this.instanciaOfertaVer.requisitos=this.intanciaReporte[index]['requisitos'];
     this.instanciaOfertaVer.descripcion=this.intanciaReporte[index]['descripcion'];
-    $("#itemRequisitos").html(  this.instanciaOfertaVer.requisitos);
+    this.instanciaOfertaVer.lugar=(this.intanciaReporte[index]['lugar']).toString();;
+   // $("#itemRequisitos").html(  this.instanciaOfertaVer.requisitos);
     this.instanciaOfertaVer.fk_empleador=this.intanciaReporte[index]['fk_empleador'];
     this.instanciaOfertaVer.razon_empresa=(this.intanciaReporte[index]['empleador']).toString();
     this.instanciaOfertaVer.obervaciones=(this.intanciaReporte[index]['obervaciones']).toString();
@@ -357,11 +341,11 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
   }
   filtrarDatosFecha(fechade:String,fechaHasta:String,estado:Number){
     this.servicioOfertaEstudiante.reportOfertaEstudiante().subscribe(
-      siHacesBien=>{
+      res=>{
         //creamos una arreglo auxiliar
         let aux=[];
         //recorreo todo el array y compara los datos
-        siHacesBien.forEach(element => {
+        res.forEach(element => {
             if(fechade<=this.datePipe.transform(element['updatedAtOferta'],"yyyy-MM-dd") &&
               fechaHasta>= this.datePipe.transform(element['updatedAtOferta'],"yyyy-MM-dd") &&
               estado==element['estadoValidacionOferta'] && estado!=9 && (element['obervaciones']).length>0){
@@ -390,8 +374,8 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
         this.contruirDatosPdfReporteOfertas(this.intanciaReporte);
 
       },
-      (peroSiTenemosErro)=>{
-        Swal('Error',peroSiTenemosErro['mensaje'], 'error');
+      (error)=>{
+        Swal('Error',error['message'], 'error');
       }
     );
   }
@@ -496,12 +480,12 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
   }
   cargarTablaReporteOfertas(){
     this.servicioOfertaEstudiante.reportOfertaEstudiante().subscribe(
-      siHacesBien=>{
-        this.intanciaReporte=siHacesBien;
+      res=>{
+        this.intanciaReporte=res;
         this.contruirDatosPdfReporteOfertas(this.intanciaReporte);
         this.dtTrigger.next();
-      },siHacesMal=>{
-        Swal('Error',siHacesMal['message'], 'error');
+      },error=>{
+        Swal('Error',error['message'], 'error');
       }
     );
 
@@ -632,5 +616,23 @@ export class ReporteOfertasComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+  }
+  get estadoNoValido(){
+    return this.formfiltrarOfertas.get('estado').invalid && this.formfiltrarOfertas.get('estado').touched ;
+  }
+  get fechaDeNoValido(){
+    return this.formfiltrarOfertas.get('de').invalid && this.formfiltrarOfertas.get('de').touched ;
+  }
+  get fechaHastaNoValido(){
+    return this.formfiltrarOfertas.get('hasta').invalid && this.formfiltrarOfertas.get('de').touched  ;
+  }
+  // la fecha de finalizacion debe ser mayo a la fecha de inicio
+  get fechaFinalMayorInicialNoValido(){
+    const dateInicio=this.formfiltrarOfertas.get('de');
+    const dateFinalalizacion=this.formfiltrarOfertas.get('hasta');
+    return (dateFinalalizacion>dateInicio)?true:false;
+  }
+  get fechaHastaVacia(){
+    return this.formfiltrarOfertas.get('hasta').value==''?true:false;
   }
 }
