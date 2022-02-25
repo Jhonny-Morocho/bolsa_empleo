@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CursosCapacitacionesModel } from 'src/app/models/cursos-capacitaciones.models';
 import { PostulanteModel } from 'src/app/models/postulante.models';
@@ -9,6 +9,9 @@ import { TituloService } from 'src/app/servicios/titulos.service';
 import {OfertasLaboralesService} from 'src/app/servicios/oferta-laboral.service';
 import Swal from 'sweetalert2';
 import { OfertaLaboralModel } from '../../../../../models/oferta-laboral.models';
+
+
+
 declare var $:any;
 @Component({
   selector: 'app-postulantes-oferta',
@@ -16,8 +19,8 @@ declare var $:any;
 })
 export class PostulantesOfertaComponent implements OnInit {
   instanciaVerPostulante:PostulanteModel;
+  @ViewChildren('check_postulantes') public check_postulantes: ElementRef<HTMLInputElement>[];
   arrayPostulante:PostulanteModel[]=[];
-  arrayAux=[];
   estadoOfertaLaboralFinalizada:Boolean=false;
   externalOferta:string="";
   nombreOfertaLabroal:string="";
@@ -25,48 +28,49 @@ export class PostulantesOfertaComponent implements OnInit {
   instanciaOfertaLaboral:OfertaLaboralModel;
   arrayCursosCapacitaciones:CursosCapacitacionesModel[]=[];
   existeRegistros:boolean=false;
-  existeAlgunPostulanteChechado:boolean=false
+  existeAlgunPostulanteChechado:boolean=false;
+
   constructor(private servicioOfertaEstudiante:OfertaLaboralEstudianteService,
     private servicioOfertaLabotal:OfertasLaboralesService,
     private servicioCursosCapacitaciones:CursosCapacitacionesService,
     private servicioTitulosAcademicos:TituloService,
-    private _activateRoute:ActivatedRoute) { }
+    private activateRoute:ActivatedRoute) { }
 
   ngOnInit() {
     this.instanciaOfertaLaboral=new OfertaLaboralModel();
     this.instanciaVerPostulante=new PostulanteModel();
     this.estudiantesOfertaLaboral();
-    //responsibo
-    $("body").removeClass("sidebar-open");
 
   }
+
   ofertaLaboralFinalizar(external_of:string){
     this.servicioOfertaLabotal.obtenerOfertaLaboralExternal_of(external_of).subscribe(
-      siHaceBien=>{
-          if(parseInt(siHaceBien['mensaje']['estado'])==4){
+      res=>{
+          if(parseInt(res['mensaje']['estado'])==4){
             this.estadoOfertaLaboralFinalizada=true;
           }
-      },siHaceMal=>{
-        Swal('Ups', siHaceMal['mensaje'], 'info');
+      },error=>{
+        Swal('Error', error['message'], 'error');
       }
     );
   }
+
   //listamos todos los estudiantes que este postulando a esta oferta laboral
   estudiantesOfertaLaboral(){
     //obtener el external ofert desde la url
-    this._activateRoute.params.subscribe(
+    this.activateRoute.params.subscribe(
       params=>{
         this.servicioOfertaEstudiante.listTodasEstudiantePostulanOfertaExternal_of_empleador(params['external_of']).subscribe(
-          siHaceBien=>{
+          res=>{
             //guardo el external oferta para poder enviarlo para cambiar de estado a la oferta
             this.externalOferta=params['external_of'];
             this.ofertaLaboralFinalizar(this.externalOferta);
-            this.arrayPostulante=siHaceBien;
+            this.arrayPostulante=res;
             if(this.arrayPostulante.length>0){
               this.existeRegistros=true;
             }
           },error=>{
-            Swal('Info',error['mensaje'], 'info');
+            Swal('Error',error['message'], 'error');
           }
         );
     });
@@ -110,11 +114,17 @@ export class PostulantesOfertaComponent implements OnInit {
       }
     );
   }
-  finalizarContrarPostulantes(){
+  finalizarContrarPostulantes(arrayPostulante:any){
+    Swal({
+      allowOutsideClick: false,
+      type: 'info',
+      text: 'Espere por favor...'
+    });
+    Swal.showLoading();
      this.servicioOfertaLabotal.actulizarEstadoOfertaLaboralFinalizado(this.instanciaOfertaLaboral,this.externalOferta).subscribe(
-      siHaceBien=>{
-          if((siHaceBien['Siglas']=='OE')){
-            this.servicioOfertaEstudiante.finalizarOfertaLaboralEstudiante(this.arrayAux).subscribe(
+      res=>{
+          if((res['Siglas']=='OE')){
+            this.servicioOfertaEstudiante.finalizarOfertaLaboralEstudiante(arrayPostulante).subscribe(
               siHaceBien =>{
                   if(siHaceBien['Siglas']=='OE'){
                     const toast = Swal.mixin({
@@ -137,7 +147,7 @@ export class PostulantesOfertaComponent implements OnInit {
               }
             );
           }else{
-            Swal('Información', siHaceBien['mensaje'], 'info');
+            Swal('Información', res['mensaje'], 'info');
           }
       },siHaceMal=>{
         Swal('Error',siHaceMal['message'], 'error');
@@ -147,13 +157,46 @@ export class PostulantesOfertaComponent implements OnInit {
   }
 
   //envia los datos del array del ckeck a guardar
-  contrarFinalizarOfertaLaboral(){
+  submitContrarFinalizarOfertaLaboral(){
+    let arrayPosutlanteAux:any=[];
     this.instanciaOfertaLaboral.estado=4;
+    //recorrer todos los inputckec
+    this.check_postulantes.forEach(check => {
+      let fk_estudiante=check.nativeElement.name;
+      //buscar el id del estudiante en el arreglo de posutlante-oferta
+      this.arrayPostulante.forEach(element => {
+        if(element['fk_estudiante']==fk_estudiante){
+          //esta checado
+          if(check.nativeElement.checked){
+              this.existeAlgunPostulanteChechado=true;
+              const auxInstanciaPostulante={
+                fk_estudiante:element['fk_estudiante'],
+                fk_oferta_laboral:element['fk_oferta_laboral'],
+                estado:2,
+                external_of_est:element['external_of_est'],
+                external_es:element['external_es']
+              }
+              arrayPosutlanteAux.push(auxInstanciaPostulante);
+          }else{
+            this.existeAlgunPostulanteChechado=false;
+            const auxInstanciaPostulante={
+              fk_estudiante:element['fk_estudiante'],
+              fk_oferta_laboral:element['fk_oferta_laboral'],
+              estado:1,
+              external_of_est:element['external_of_est'],
+              external_es:element['external_es']
+            }
+            arrayPosutlanteAux.push(auxInstanciaPostulante);
+          }
+        }
+      });
+
+    })
     //seleciono varios postulante
-    if(this.existeAlgunPostulanteChechado==true){
+    if(this.existeAlgunPostulanteChechado){
           Swal({
             title: '¿Está seguro en realizar la acción? No se podrá revertir',
-            text: "Ha seleccionado con éxito los postulantes de su interes, si desea continuar haga clic en Aceptar ",
+            text: "Ha seleccionado con éxito los postulantes de su interés, si desea continuar haga clic en Aceptar ",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -161,19 +204,16 @@ export class PostulantesOfertaComponent implements OnInit {
             confirmButtonText: 'Aceptar'
           }).then((result) => {
             if (result.value) {
-              Swal({allowOutsideClick: false,type: 'info',text: 'Espere por favor...'});
-              //primero la finalizado a la oferta laboral
-              Swal.showLoading();
-              this.finalizarContrarPostulantes();
+              this.finalizarContrarPostulantes(arrayPosutlanteAux);
             }
           })
     }
 
       //dio check pero despues desmarco
-    if(this.existeAlgunPostulanteChechado==false){
+    if(!this.existeAlgunPostulanteChechado){
         Swal({
           title: '¿Está seguro en realizar la acción? No se podrá revertir ',
-          text: "Desmarco algunos postulantes por lo cual no ha contratado ningún postulante, si desea continuar  haga clic en Aceptar",
+          text: "No ha contratado ningún postulante, si desea continuar  haga clic en Aceptar",
           type: 'info',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -183,106 +223,9 @@ export class PostulantesOfertaComponent implements OnInit {
           if (result.value) {
             Swal({allowOutsideClick: false,type: 'info',text: 'Espere por favor...'});
             Swal.showLoading();
-            this.arrayAux=[];
-            //los pongo estaticamen los postulante q no fueron contratados
-            for (let ofertaEstudiante of this.arrayPostulante){
-              const aux={
-                fk_estudiante:ofertaEstudiante['fk_estudiante'],
-                fk_oferta_laboral:ofertaEstudiante['fk_oferta_laboral'],
-                estado:1,
-                external_of_est:ofertaEstudiante['external_of_est'],
-                external_es:ofertaEstudiante['external_es']
-              }
-              this.arrayAux.push(aux);
-            }
-            this.finalizarContrarPostulantes();
+            this.finalizarContrarPostulantes(arrayPosutlanteAux);
           }
         })
     }
-      //finaliza la oferta laboral pero no ha contratado ninugn postulante
-      //si solo aplasto direccito el boton sin hacer nunguna accion en el check//aplasto directo el boton
-    if(this.arrayAux.length==0){
-      Swal({
-        title: '¿Está seguro en realizar la acción? No se podra revertir ',
-        text: "No ha seleccionado aun ningún postulante, si desea continuar haga clic en Aceptar",
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si'
-      }).then((result) => {
-        if (result.value) {
-          this.arrayAux=[];
-          //los pongo estaticamen los postulante q no fueron contratados
-          for (let ofertaEstudiante of this.arrayPostulante){
-            const aux={
-              fk_estudiante:ofertaEstudiante['fk_estudiante'],
-              fk_oferta_laboral:ofertaEstudiante['fk_oferta_laboral'],
-              estado:1,
-              external_of_est:ofertaEstudiante['external_of_est'],
-              external_es:ofertaEstudiante['external_es']
-            }
-            this.arrayAux.push(aux);
-          }
-          this.finalizarContrarPostulantes();
-        }
-      })
-    }
   }
-
-
-  check(i:Event,fk_postulante,fk_ofertaLaboral,exteral_of,external_es) {
-    let estadoActual=(i.target as HTMLInputElement).value;
-    this.existeAlgunPostulanteChechado=(i.target as HTMLInputElement).checked;
-    let estadoActualAux=null;
-    var banderaRepetido=false;
-    //verificar que valor me trae el value del input
-    switch (parseInt(estadoActual)) {
-      case 1:
-        estadoActualAux=2;
-        break;
-      case 2:
-        estadoActualAux=1;
-        break;
-      case 0:
-          alert("estado 0 no permitido");
-          break;
-      default:
-        break;
-    }
-    //comprobar que el estado actual solo tenga dos valores 1 <-> 0
-    if(estadoActualAux!=null){
-        const aux={
-        fk_estudiante:fk_postulante,
-        fk_oferta_laboral:fk_ofertaLaboral,
-        estado:estadoActualAux,
-        external_of_est:exteral_of,
-        external_es:external_es
-      }
-      //antes de guardarlo en el array debemos comprobar si esta ya ingresado
-      if(this.arrayAux.length==0 ){
-        this.arrayAux.push(aux);
-        //cero
-      }else{
-        this.arrayAux.forEach(element => {
-          if(element['fk_estudiante']===fk_postulante){
-            //entonce debeo actualizar el estado del arreglo en donde estaba guarado
-            if(element['estado']==2){
-              element['estado']=1;
-            }else{
-              element['estado']=2;
-            }
-            banderaRepetido=true;
-          }
-        });
-        //termine de recorrer todos los datos, si no existe repetidos que se agrege uno nuevo
-        if( banderaRepetido==false){
-          this.arrayAux.push(aux);
-        }
-      }
-    }else{
-      alert("el estado es nullo");
-    }
-  }
-
 }

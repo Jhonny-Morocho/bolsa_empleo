@@ -74,6 +74,8 @@ import { TableroEmpleadorComponent } from './Backend/panel-empleador/pages/table
 import { FormAdministradorComponent } from './Backend/panel-admin/componentes/form-administrador/form-administrador.component';
 import { NgxSummernoteModule } from 'ngx-summernote';
 import { FormOfertaComponent } from './Backend/panel-empleador/componentes/form-oferta/form-oferta.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -130,6 +132,7 @@ import { FormOfertaComponent } from './Backend/panel-empleador/componentes/form-
     TableroEmpleadorComponent,
     FormAdministradorComponent,
     FormOfertaComponent,
+
   ],
 
   imports: [
@@ -140,7 +143,9 @@ import { FormOfertaComponent } from './Backend/panel-empleador/componentes/form-
     HttpClientModule,
     // DATA TABLE
     DataTablesModule,
+
     RatingModule,
+
     //FORM REACTIVOS
     ReactiveFormsModule,
     UiSwitchModule.forRoot({
