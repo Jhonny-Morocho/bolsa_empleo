@@ -18,8 +18,8 @@ declare var $:any;
   templateUrl: './postulantes-oferta-empleador.component.html'
 })
 export class PostulantesOfertaComponent implements OnInit {
-  instanciaVerPostulante:PostulanteModel;
   @ViewChildren('check_postulantes') public check_postulantes: ElementRef<HTMLInputElement>[];
+  instanciaVerPostulante:PostulanteModel;
   arrayPostulante:PostulanteModel[]=[];
   estadoOfertaLaboralFinalizada:Boolean=false;
   externalOferta:string="";

@@ -46,10 +46,10 @@
                           <td>
                               <input class="form-check-input me-1"
                                type="checkbox"
-                               (change)="check($event,postulantes.fk_estudiante,postulantes.fk_oferta_laboral,postulantes.external_of_est,postulantes.external_es)"
+                               #check_postulantes
                                [checked]="postulantes.estado=='1'"
-                               [value]="postulantes.estado"
-                               [disabled]="ofertaLaboralActiva==false">
+                               [disabled]="!ofertaLaboralActiva"
+                               [name]="postulantes.fk_estudiante"/>
                           </td>
                       </tr>
                   </tbody>
@@ -58,7 +58,7 @@
             </div>
             <div class="modal-footer ">
               <button type="button " class="btn btn-primary"
-                (click)="filtrarPostulante()"
+                (click)="submitFiltrarPostulante()"
                 [disabled]="ofertaLaboralActiva==false">
                 Guardar
               </button>

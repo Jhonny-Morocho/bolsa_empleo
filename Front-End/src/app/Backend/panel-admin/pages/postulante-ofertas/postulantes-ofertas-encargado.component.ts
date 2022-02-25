@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChildren } from '@angular/core';
 import {PostulanteModel} from 'src/app/models/postulante.models';
 import {CursosCapacitacionesModel} from 'src/app/models/cursos-capacitaciones.models';
 import {OfertaLaboralEstudianteService} from 'src/app/servicios/ofertLaboral-Estudiante.service';
@@ -22,6 +22,7 @@ declare var bootstrap:any;
   templateUrl: './postulantes-ofertas-encargado.component.html'
 })
 export class PostulanteOfertas implements OnInit {
+  @ViewChildren('check_postulantes') public check_postulantes: ElementRef<HTMLInputElement>[];
   dominio:any=environment.dominio;
   arrayPostulante:PostulanteModel[]=[];
   instanciaVerPostulante:PostulanteModel;
@@ -32,7 +33,6 @@ export class PostulanteOfertas implements OnInit {
   instanciaEmpleador:EmpleadorModel;
   arrayPostulanteOfertAux:OfertaLaboralEstudianteModel[]=[];
   instanciaOfertaPostulante:OfertaLaboralEstudianteModel;
-  arrayAux=[];
 
   estadoPostulacion= [];
   existeRegistros:boolean=false;
@@ -54,56 +54,83 @@ export class PostulanteOfertas implements OnInit {
     //responsibo
     //$("body").removeClass("sidebar-open");
   }
-  filtrarPostulante(){
-    //verifico si el usuario ha hecho check,si no hace check entonces no puede actualizar
-    if(this.arrayAux.length==0){
-      Swal({title:'Atención',type:'info',text:'Ahun no ha realizado ninguna acción en el checklist'});
-    }else{
-      Swal({
-        title: '¿Está seguro ?',
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si'
-      }).then((result) => {
-        if (result.value) {
-          Swal({
-            allowOutsideClick:false,
-            type:'info',
-            text:'Espere por favor'
-          });
-          Swal.showLoading();
-          this.servicioOfertaEstudiante.eliminarPostulanteOfertaLaboral(this.arrayAux).subscribe(
-            siHaceBien =>{
-                if(siHaceBien['Siglas']=='OE'){
-                  const toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 5000
-                  });
-                  toast({
-                    type: 'success',
-                    title: 'Registrado'
-                  })
-                }else{
-                  Swal('Información', siHaceBien['mensaje'], 'info');
-                }
-            },siHaceMal=>{
-              Swal('Error', siHaceMal['error']['message'], 'error');
+  submitFiltrarPostulante(){
+    let arrayPosutlanteAux:any=[];
+    //recorrer todos los inputckec
+    this.check_postulantes.forEach(check => {
+      let fk_estudiante=check.nativeElement.name;
+      //buscar el id del estudiante en el arreglo de posutlante-oferta
+      this.arrayPostulante.forEach(element => {
+        if(element['fk_estudiante']==fk_estudiante){
+          //esta checado
+          if(check.nativeElement.checked){
+              const auxInstanciaPostulante={
+                fk_estudiante:element['fk_estudiante'],
+                fk_oferta_laboral:element['fk_oferta_laboral'],
+                estado:1,
+                external_of_est:element['external_of_est'],
+                external_es:element['external_es']
+              }
+              arrayPosutlanteAux.push(auxInstanciaPostulante);
+          }else{
+            const auxInstanciaPostulante={
+              fk_estudiante:element['fk_estudiante'],
+              fk_oferta_laboral:element['fk_oferta_laboral'],
+              estado:0,
+              external_of_est:element['external_of_est'],
+              external_es:element['external_es']
             }
-          );
+            arrayPosutlanteAux.push(auxInstanciaPostulante);
+          }
         }
-      })
-    }
+      });
+
+    })
+    //enviar a la api
+    Swal({
+      title: '¿Está seguro ?',
+      type: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si'
+    }).then((result) => {
+      if (result.value) {
+        Swal({
+          allowOutsideClick:false,
+          type:'info',
+          text:'Espere por favor'
+        });
+        Swal.showLoading();
+        this.servicioOfertaEstudiante.eliminarPostulanteOfertaLaboral(arrayPosutlanteAux).subscribe(
+          siHaceBien =>{
+              if(siHaceBien['Siglas']=='OE'){
+                const toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 5000
+                });
+                toast({
+                  type: 'success',
+                  title: 'Registrado'
+                })
+              }else{
+                Swal('Información', siHaceBien['mensaje'], 'info');
+              }
+          },siHaceMal=>{
+            Swal('Error', siHaceMal['error']['message'], 'error');
+          }
+        );
+      }
+    })
   }
   cursosCapacitaciones(exteneral_us:string){
     this.servicioCursosCapacitaciones.listarCursosCapacitacionesExternal_usConParametro(exteneral_us).subscribe(
       siHaceBien=>{
         this.arrayCursosCapacitaciones=siHaceBien;
       },error=>{
-        Swal('Error', error['mensaje'], 'error');
+        Swal('Error', error['message'], 'error');
       }
     );
   }
@@ -133,57 +160,6 @@ export class PostulanteOfertas implements OnInit {
         Swal('Error', error['error']['message'], 'error');
       }
     );
-  }
-  check(i:Event,fk_postulante,fk_ofertaLaboral,exteral_of,external_es) {
-    let estadoActual=(i.target as HTMLInputElement).value;
-    let estadoActualAux=null;
-    var banderaRepetido=false;
-    //verificar que valor me trae el value del input
-    switch (parseInt(estadoActual)) {
-      case 0:
-        estadoActualAux=1;
-        break;
-      case 1:
-        estadoActualAux=0;
-        break;
-      case 2:
-          alert("estado 2 permitido");
-          break;
-      default:
-        break;
-    }
-    //comprobar que el estado actual solo tenga dos valores 1 <-> 0
-    if(estadoActualAux!=null){
-        const aux={
-        fk_estudiante:fk_postulante,
-        fk_oferta_laboral:fk_ofertaLaboral,
-        estado:estadoActualAux,
-        external_of_est:exteral_of,
-        external_es:external_es
-      }
-      //antes de guardarlo en el array debemos comprobar si esta ya ingresado
-      if(this.arrayAux.length==0 ){
-        this.arrayAux.push(aux);
-      }else{
-        this.arrayAux.forEach(element => {
-          if(element['fk_estudiante']===fk_postulante){
-            //entonce debeo actualizar el estado del arreglo en donde estaba guarado
-            if(element['estado']==1){
-              element['estado']=0;
-            }else{
-              element['estado']=1;
-            }
-            banderaRepetido=true;
-          }
-        });
-        //termine de recorrer todos los datos, si no existe repetidos que se agrege uno nuevo
-        if( banderaRepetido==false){
-          this.arrayAux.push(aux);
-        }
-      }
-    }else{
-      alert("el estado es nullo");
-    }
   }
 
   obtenerOfertaLaboral(){

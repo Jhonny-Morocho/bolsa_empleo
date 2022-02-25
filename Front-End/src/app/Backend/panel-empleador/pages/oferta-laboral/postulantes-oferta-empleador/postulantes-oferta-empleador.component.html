@@ -42,7 +42,8 @@
                         </td>
                         <td>{{ postulantes.correo }}</td>
                         <td >
-                          <input #check_postulantes
+                          <input class="form-check-input me-1"
+                                  #check_postulantes
                                   type="checkbox"
                                   [checked]="postulantes.estado=='2'"
                                   [disabled]="estadoOfertaLaboralFinalizada"
